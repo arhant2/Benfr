@@ -40,6 +40,12 @@ unverifiedUserSchema.methods.createToken = function () {
   return tokenUnhashed;
 };
 
+unverifiedUserSchema.methods.attemptsExceeded = function () {
+  return (
+    this.attemptsCount >= (process.env.NEW_USER_SIGNUP_ATTEMPTS_IN_A_DAY || 3)
+  );
+};
+
 const UnverifiedUser = mongoose.model('NewUserToken', unverifiedUserSchema);
 
 module.exports = UnverifiedUser;

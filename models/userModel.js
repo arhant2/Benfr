@@ -11,8 +11,8 @@ const { createRandomString, createHash } = require('../utils/crytography');
 const nameOptions = (which, required = true) => {
   const ans = {
     type: String,
-    minlength: [2, `${which} name must have atleast 2 characters`],
-    maxlength: [20, `${which} name can have atmost 10 characters`],
+    minlength: [1, `${which} name must have atleast 1 character`],
+    maxlength: [20, `${which} name can have atmost 20 characters`],
     trim: true,
     validate: [validator.isAlpha, `Invalid ${which} name`],
     set: (val) => val.charAt(0).toUpperCase() + val.slice(1).toLowerCase(),
@@ -25,9 +25,11 @@ const nameOptions = (which, required = true) => {
 
 const userSchema = new mongoose.Schema(
   {
-    firstName: nameOptions('First'),
-    middleName: nameOptions('Middle', false),
-    lastName: nameOptions('Last'),
+    name: {
+      first: nameOptions('First'),
+      middle: nameOptions('Middle', false),
+      last: nameOptions('Last'),
+    },
     email: {
       type: String,
       validate: [validator.isEmail, 'Invalid email'],
@@ -42,29 +44,25 @@ const userSchema = new mongoose.Schema(
         validator: (val) =>
           val.match(/^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[789]\d{9}$/),
         message: 'Invalid mobile number',
-        required: true,
-        set: (val) => val.substring(val.length - 10, val.length),
-        trim: true,
       },
+      required: [true, 'User must have a mobile number'],
+      set: (val) => val.substring(val.length - 10, val.length),
+      trim: true,
     },
-    photo: String,
     role: {
       type: String,
       enum: ['deliveryPerson', 'user'],
       default: 'user',
-      select: false,
     },
     password: {
       type: String,
       minlength: [8, 'Password must be of 8 atleast characters'],
       maxlength: [50, 'Password must be of 50 characters at maximum'],
-      required: true,
-      select: false,
+      required: [true, 'User must have a password'],
     },
     passwordConfirm: {
       type: String,
-      required: true,
-      select: false,
+      required: [true, 'User must confirm his/her password'],
       validate: {
         validator: function (val) {
           return val === this.password;
@@ -72,29 +70,17 @@ const userSchema = new mongoose.Schema(
         message: 'Password and confirm password must be same',
       },
     },
-    profilePic: {
-      fieldname: {
-        type: String,
-        default: 'default-profile-pic',
-      },
-      url: {
-        type: String,
-        default: '/default-profile-pic.jpg',
-      },
-    },
-    passwordChangedAt: { type: Date, select: false },
-    passwordResetToken: { type: String, select: false },
-    passwordResetExpires: { type: Date, select: false },
+    passwordChangedAt: { type: Date },
+    passwordResetToken: { type: String },
+    passwordResetExpires: { type: Date },
     active: {
       type: Boolean,
       default: true,
-      select: false,
     },
     inActiveReason: {
       type: String,
       minlength: [5, 'Inactive reason must be of atleast 5 characters'],
       maxlength: [120, 'Inactive reason must be of 120 characters at maximum'],
-      select: false,
       trim: true,
     },
     failedLoginAttempts: {
@@ -106,7 +92,6 @@ const userSchema = new mongoose.Schema(
         type: Number,
         default: process.env.MAXIMUM_FAILED_LOGIN_ATTEMPTS_COUNT,
       },
-      select: false,
     },
     changeEmailAttemptsNew: {
       countResetAt: {
@@ -117,7 +102,6 @@ const userSchema = new mongoose.Schema(
         type: Number,
         default: process.env.MAXIMUM_CHANGE_EMAIL_ATTEMPTS_IN_A_DAY,
       },
-      select: false,
     },
     changeEmailDetails: {
       attemptsRemaining: Number,
@@ -132,7 +116,6 @@ const userSchema = new mongoose.Schema(
         otp: String,
         remainingOtpCount: Number,
       },
-      select: false,
     },
   },
   {
