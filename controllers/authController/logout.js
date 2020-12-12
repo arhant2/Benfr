@@ -3,5 +3,6 @@ module.exports.logout = (req, res, next) => {
   res.clearCookie('jwt');
   res.status(200).json({
     status: 'success',
+    message: 'Logout successful',
   });
 };

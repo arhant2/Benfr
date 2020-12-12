@@ -31,7 +31,7 @@ module.exports.login = catchAsync(async (req, res, next) => {
     );
   }
 
-  if (!user || !(await user.isCorrectPassword(req.body.password))) {
+  if (!(await user.isCorrectPassword(req.body.password))) {
     await user.save({ validateBeforeSave: false });
     return next(new AppError('Incorrect email or password', 401));
   }
@@ -43,5 +43,6 @@ module.exports.login = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
+    message: 'Login successful',
   });
 });
