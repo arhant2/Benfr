@@ -1,4 +1,5 @@
 const ms = require('ms');
+const validator = require('validator');
 
 const catchAsync = require('../../utils/catchAsync');
 const AppError = require('../../utils/AppError');
@@ -12,8 +13,11 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   if (!req.body.email) {
     return next(AppError('Please enter your email', 400));
   }
+  if (!validator.isEmail(req.body.email)) {
+    return next(AppError('Please enter valid email'));
+  }
 
-  let { email } = req.body;
+  let email = validator.normalizeEmail(req.body.email);
   const user = await User.findOne({ email });
   const response = {
     status: 'success',
@@ -25,8 +29,6 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     console.log('No user');
     return res.status(200).json(response);
   }
-
-  ({ email } = user);
 
   const resetToken = user.createToken();
   await user.save({ validateBeforeSave: false });
