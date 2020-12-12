@@ -1,31 +1,49 @@
 const express = require('express');
 
 const authController = require('../controllers/authController');
+const authFilters = require('../filters/authFilters');
 
 const router = express.Router();
 
-router.post('/signup', authController.signup);
-router.post('/signup/complete/:token', authController.signupComplete);
-router.post('/login', authController.login);
+router.post('/signup', authFilters.signup, authController.signup);
+router.post(
+  '/signup/complete/:token',
+  authFilters.signupComplete,
+  authController.signupComplete
+);
+
+router.post('/login', authFilters.login, authController.login);
+
 router.get('/logout', authController.logout);
 
-router.post('/forgotPassword', authController.forgotPassword);
-router.patch('/resetPassword/:token', authController.resetPassword);
+router.post(
+  '/forgotPassword',
+  authFilters.forgotPassword,
+  authController.forgotPassword
+);
+router.patch(
+  '/resetPassword/:token',
+  authFilters.resetPassword,
+  authController.resetPassword
+);
 
 router.patch(
   '/updateMyPassword',
+  authFilters.updateMyPassword,
   authController.protect,
   authController.updateMyPassword
 );
 
 router.patch(
   '/changeMyEmail',
+  authFilters.changeMyEmail,
   authController.protect,
   authController.changeMyEmail
 );
 
 router.patch(
   '/changeMyEmail/verify',
+  authFilters.changeMyEmailVerify,
   authController.protect,
   authController.containsOtpForEmailChange,
   authController.isValidChangeEmailSession,
@@ -34,6 +52,7 @@ router.patch(
 
 router.patch(
   '/changeMyEmail/resendOtp/old',
+  authFilters.changeMyEmailResendOtp,
   authController.protect,
   authController.isValidChangeEmailSession,
   authController.changeMyEmailResendOtp('old')
@@ -41,6 +60,7 @@ router.patch(
 
 router.patch(
   '/changeMyEmail/resendOtp/new',
+  authFilters.changeMyEmailResendOtp,
   authController.protect,
   authController.isValidChangeEmailSession,
   authController.changeMyEmailResendOtp('new')
