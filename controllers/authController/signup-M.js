@@ -14,31 +14,32 @@ exports.signup = catchAsync(async (req, res, next) => {
     message: 'Verification email has been sent',
   };
 
-  // 1) Check if given email is valid
-  if (!req.body.email) {
-    return next(new AppError('Please enter your email', 400));
+  // 1) Check if email is there and is valid
+  if (!req.body.email || !validator.isEmail(req.body.email)) {
+    return next(new AppError('Please enter a valid email', 400));
   }
 
   // 2) normalize email
-  const { email } = validator.normalizeEmail(req.body);
+  const email = validator.normalizeEmail(req.body.email);
 
   // 3) check if user exits with that email
   if (await User.findOne({ email, active: { $in: [true, false] } })) {
     console.log('Users exists with that email');
-    return next(new AppError('User already exists with that email', 400));
+    return next(
+      new AppError(
+        'User already exists with that email, please login instead',
+        400
+      )
+    );
   }
 
   // 4) If the user account does not exists but has recently requested for signup
   let unverfiedUser = await UnverifiedUser.findOne({ email });
 
   //4.1) check if the maximum signup attempts has been exhausted
-  if (
-    unverfiedUser &&
-    unverfiedUser.attemptsCount >=
-      (process.env.NEW_USER_SIGNUP_ATTEMPTS_IN_A_DAY || 3)
-  ) {
+  if (unverfiedUser && unverfiedUser.attemptsExceeded()) {
     console.log('Maximum tries exceeded');
-    return res.status(200).json(response);
+    return res.status(400).json(response);
   }
 
   // 4.2) check if signup attempt was made recently and has not exhausted, increment counter
@@ -80,7 +81,7 @@ exports.signupComplete = catchAsync(async (req, res, next) => {
   const unverfiedUser = await UnverifiedUser.findOne({
     token: hashedToken,
   });
-  // 1) Check if token belongs to an unverified user
+  // 1) Check if token actually belongs to an unverified user
   if (!unverfiedUser) {
     return next(
       new AppError(
@@ -106,7 +107,7 @@ exports.signupComplete = catchAsync(async (req, res, next) => {
   await UnverifiedUser.findByIdAndDelete(unverfiedUser._id);
 
   // 5) Issue JWT
-  await addJWTToResponseCookie(req, res, user._id);
+  await addJWTToResponseCookie(req, res, user.id);
 
   await sendEmail({
     email,
