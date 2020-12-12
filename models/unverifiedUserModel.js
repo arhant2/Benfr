@@ -1,16 +1,14 @@
-const crypto = require('crypto');
-
 const validator = require('validator');
 const mongoose = require('mongoose');
 
-const mongooseHelper = require('../utils/mogooseHelper')('New User');
+const { createHash, createRandomString } = require('../utils/crytography');
 
 const unverifiedUserSchema = new mongoose.Schema(
   {
     email: {
       type: String,
       validate: [validator.isEmail, 'Invalid email'],
-      required: mongooseHelper.validate.required('email'),
+      required: [true, 'User must have an email'],
       unique: true,
       trim: true,
       set: validator.normalizeEmail,
@@ -35,9 +33,9 @@ unverifiedUserSchema.index({ token: 1 });
 unverifiedUserSchema.index({ updatedAt: 1 }, { expires: '5min' });
 
 unverifiedUserSchema.methods.createToken = function () {
-  const tokenUnhashed = crypto.randomBytes(32).toString('hex');
+  const tokenUnhashed = createRandomString(32);
 
-  this.token = crypto.createHash('sha256').update(tokenUnhashed).digest('hex');
+  this.token = createHash(tokenUnhashed);
 
   return tokenUnhashed;
 };

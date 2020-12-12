@@ -1,0 +1,61 @@
+#Security and auhentication
+
+-> Email should be unique for every user
+
+=> Uses JWT for authentication
+  -> Security key is JWT_SECRET
+  -> Expires in JWT_EXPIRES_IN
+  -> Uses httpOnly cookie to send and receive JWT
+
+1> SIGNUP
+  -> Its a 2 step process
+  1.1> Initiate signup
+    -> This steps involve user entering an email to pass the verification email (only if no user already exits with the given email)
+    -> At max NEW_USER_SIGNUP_ATTEMPTS_IN_A_DAY can be sent in a day after which no link is sent but the success message that email is sent is displayed because user must have many links to do signup.
+    -> Link is valid for a day only after which the details are deleted from database and new link will be required if needed to signup.
+
+  1.2> Complete signup
+    -> If the unexpired link is clicked and the user has not yet signed up, he can signup by entering the required details, including the valid email for which link was issued
+    -> The signup request may fail if the email id of the other account has been changed to the current account after the creation of the link
+    -> The signup automatically login user by issuing a JWT
+
+
+2> LOGIN
+  -> Email id and password needs to be supplied
+  -> At max MAXIMUM_FAILED_LOGIN_ATTEMPTS_COUNT failed login requests can be made consecutively in a time span of MAXIMUM_FAILED_LOGIN_ATTEMPTS_TIME
+  -> Any further attempts to make login request is rejected by the server even if the correct details are supplied, the user need to wait for the time span to complete
+  -> If everything JWT is issued and the user is logged in
+  -> Logging user in resets the failed login attempts request counter
+
+
+3> PROTECTING A ROUTE
+  -> JWT is checked for its validness(corectness and expiration)
+  -> If JWT is valid, it is checked if the user associated with the token still exists
+  -> If the user exists but JWT is issued after change of password by user, then the access cannot be given
+  -> If eveything works fine user can access the protected route 
+
+
+4> Updation of password
+  -> Only logged in user can perform this action
+  -> Current password, new password and passwordConfirm needs to be supplied
+  -> If the current password is valid and new password and passwordConfirm matches the password requirement, the password if changed else password is left untouched
+  -> If everything works fine, password is changed and new JWT is issued to keep user logged in
+
+5> Password reset
+
+6> Change of email id
+-> This step can be very dangerous as once email id is changed, any access through old email id cannot be done once email is changed, hence extra care is taken
+-> It has also two step process just like signup process, but it is revolved around the otps oppositon to signup which revolves around verification link
+  6.1> Initiation of email change request
+    -> First thing is user needs to be logged in
+    -> The user supplies the new email which cannot be same as current email or the email of any other user, neither active nor inactive, but if there is a pending request for signup for new email id then the new email can be used for email change
+    -> Note that user with new email can still signup even if the request to change the email to that id for an existing is pending, this should be the favourible case as it is not the new user who demanded the email change, it is the other user, he should be protected from signup
+    -> At most MAXIMUM_CHANGE_EMAIL_ATTEMPTS_IN_A_DAY new requests can be made in a day per user id
+    -> The otp is send to both the old and new email and changeEmailJwt is issued
+    -> The email can be changed within OTP_EXPIRES_IN in time, and the changeEmailJwt cookie also expires in same time
+
+  6.2> Confirmation of otps
+    -> The user needs to enter both the new otp and the old otp
+    -> Atmost MAXIMUM_FAILED_EMAIL_CHANGE_ATTEMPTS_COUNT can be made to enter correct otp, if the limit is exhausted the user cannot change email with the current request even after resending any of otps, he needs to make a new request, this PREVENTS BRUTE FORCE ATTACKS(this should be kept low, at max 10, suggested 5)
+    -> The user can resend otp to old or new email if he wishes at most MAXIMUM_OTP_COUNT times, after the limit is exhausted no otp is send but he user is told that the otp has been resent
+    -> Each time user resend otp new otp is generated and sent, this is must as server donot keep a copy of otp is raw form and cannot detect the otp sent earlier

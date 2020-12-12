@@ -1,25 +1,47 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
 
-const mongooseHelper = require('../utils/mogooseHelper')('Product');
-
 const productSchema = new mongoose.Schema(
   {
-    name: mongooseHelper.field.minMaxString('Name', 5, 80),
-    price: mongooseHelper.field.minMaxNumber('Price', 0, undefined),
-    discountedPrice: mongooseHelper.field.minMaxNumber(
-      'Discounted price',
-      0,
-      undefined
-    ),
+    name: {
+      type: String,
+      trim: true,
+      required: [true, 'Product must be a name'],
+      min: [5, 'Product name must be of atleast 5 characters'],
+      max: [50, 'Product name must have 50 characters at maximum'],
+    },
+    price: {
+      type: Number,
+      min: ['Product price must be greater than 0'],
+      required: ['Product must have a price'],
+    },
+    discountedPrice: {
+      type: Number,
+      min: 0,
+      required: ['Discounted Product must have a price'],
+    },
     specifications: [
       {
-        field: mongooseHelper.field.minMaxString('Specification field', 5, 80),
-        value: mongooseHelper.field.minMaxString(
-          'Specification value',
-          10,
-          300
-        ),
+        field: {
+          type: String,
+          trim: true,
+          required: [true, 'Each specification must have a field'],
+          min: [5, 'Each specification field must of at least 5 characters'],
+          max: [
+            40,
+            'Each specification field must have 40 characters at maximum',
+          ],
+        },
+        value: {
+          type: String,
+          trim: true,
+          required: [true, 'Each specification must have a value'],
+          min: [5, 'Each specification value must of at least 5 characters'],
+          max: [
+            40,
+            'Each specification value must have 40 characters at maximum',
+          ],
+        },
       },
     ],
     imageCover: String,

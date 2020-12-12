@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon server.js",
     "start:prod": "set NODE_ENV=production&&nodemon server.js",
-    "dev": "ndb server.js"
+    "debug": "ndb server.js"
   },
   "author": "Arhant Jain",
   "license": "ISC",

@@ -1,50 +1,52 @@
-const crypto = require('crypto');
-
 const mongoose = require('mongoose');
 const validator = require('validator');
 const brcypt = require('bcryptjs');
 const ms = require('ms');
 
-const mongooseHelper = require('../utils/mogooseHelper')('User');
 const AppError = require('../utils/AppError');
+const otpGenerate = require('../utils/otpGenerate');
 
-const nameOptions = (type) => {
-  return {
-    validate: [validator.isAlpha, `Invalid ${type}`],
+const { createRandomString, createHash } = require('../utils/crytography');
+
+const nameOptions = (which, required = true) => {
+  const ans = {
+    type: String,
+    minlength: [2, `${which} name must have atleast 2 characters`],
+    maxlength: [20, `${which} name can have atmost 10 characters`],
+    trim: true,
+    validate: [validator.isAlpha, `Invalid ${which} name`],
     set: (val) => val.charAt(0).toUpperCase() + val.slice(1).toLowerCase(),
   };
+  if (required) {
+    ans.required = [true, `User must have a ${which} name`];
+  }
+  return ans;
 };
 
 const userSchema = new mongoose.Schema(
   {
-    firstName: mongooseHelper.field.minMaxString(
-      'First name',
-      1,
-      20,
-      nameOptions('First Name')
-    ),
-    middleName: mongooseHelper.field.minMaxString(
-      'Middle name',
-      1,
-      20,
-      nameOptions('Middle Name'),
-      false
-    ),
-    lastName: mongooseHelper.field.minMaxString(
-      'Last name',
-      1,
-      20,
-      nameOptions('Last Name')
-    ),
+    firstName: nameOptions('First'),
+    middleName: nameOptions('Middle', false),
+    lastName: nameOptions('Last'),
     email: {
       type: String,
       validate: [validator.isEmail, 'Invalid email'],
-      required: mongooseHelper.validate.required('email'),
+      required: [true, 'User must have a email'],
       unique: true,
       trim: true,
       set: validator.normalizeEmail,
     },
-    mobile: mongooseHelper.field.mobilePhone('Mobile number'),
+    mobile: {
+      type: String,
+      validate: {
+        validator: (val) =>
+          val.match(/^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[789]\d{9}$/),
+        message: 'Invalid mobile number',
+        required: true,
+        set: (val) => val.substring(val.length - 10, val.length),
+        trim: true,
+      },
+    },
     photo: String,
     role: {
       type: String,
@@ -52,33 +54,34 @@ const userSchema = new mongoose.Schema(
       default: 'user',
       select: false,
     },
-    password: mongooseHelper.field.minMaxString(
-      'Password',
-      8,
-      100,
-      {
-        select: false,
+    password: {
+      type: String,
+      minlength: [8, 'Password must be of 8 atleast characters'],
+      maxlength: [50, 'Password must be of 50 characters at maximum'],
+      required: true,
+      select: false,
+    },
+    passwordConfirm: {
+      type: String,
+      required: true,
+      select: false,
+      validate: {
+        validator: function (val) {
+          return val === this.password;
+        },
+        message: 'Password and confirm password must be same',
       },
-      true,
-      false
-    ),
-    passwordConfirm: mongooseHelper.field.minMaxString(
-      'Password confirm',
-      8,
-      100,
-      {
-        select: false,
-        validate: [
-          function (val) {
-            return val === this.password;
-          },
-          'Password and confirm password must be same',
-        ],
+    },
+    profilePic: {
+      fieldname: {
+        type: String,
+        default: 'default-profile-pic',
       },
-      true,
-      false
-    ),
-    profilePic: String,
+      url: {
+        type: String,
+        default: '/default-profile-pic.jpg',
+      },
+    },
     passwordChangedAt: { type: Date, select: false },
     passwordResetToken: { type: String, select: false },
     passwordResetExpires: { type: Date, select: false },
@@ -87,13 +90,50 @@ const userSchema = new mongoose.Schema(
       default: true,
       select: false,
     },
-    inActiveReason: mongooseHelper.field.minMaxString(
-      'Inactive Reason',
-      5,
-      120,
-      {},
-      false
-    ),
+    inActiveReason: {
+      type: String,
+      minlength: [5, 'Inactive reason must be of atleast 5 characters'],
+      maxlength: [120, 'Inactive reason must be of 120 characters at maximum'],
+      select: false,
+      trim: true,
+    },
+    failedLoginAttempts: {
+      countResetAt: {
+        type: Date,
+        default: Date.now(),
+      },
+      attemptsRemaining: {
+        type: Number,
+        default: process.env.MAXIMUM_FAILED_LOGIN_ATTEMPTS_COUNT,
+      },
+      select: false,
+    },
+    changeEmailAttemptsNew: {
+      countResetAt: {
+        type: Date,
+        default: Date.now(),
+      },
+      attemptsRemaining: {
+        type: Number,
+        default: process.env.MAXIMUM_CHANGE_EMAIL_ATTEMPTS_IN_A_DAY,
+      },
+      select: false,
+    },
+    changeEmailDetails: {
+      attemptsRemaining: Number,
+      validTill: Date,
+      old: {
+        email: String,
+        otp: String,
+        remainingOtpCount: Number,
+      },
+      new: {
+        email: String,
+        otp: String,
+        remainingOtpCount: Number,
+      },
+      select: false,
+    },
   },
   {
     timestamps: true,
@@ -106,6 +146,7 @@ userSchema.index({
   passwordResetToken: 1,
 });
 
+// hide inactive users from  output and normalizeEmail
 userSchema.pre(/^find/, function (next) {
   if (this.getFilter().active === undefined) {
     this.find({ active: true });
@@ -122,6 +163,7 @@ userSchema.pre(/^find/, function (next) {
   next();
 });
 
+// password change management
 userSchema.pre(/^save/, async function (next) {
   if (!this.isModified('password')) return next();
   this.password = await brcypt.hash(this.password, 12);
@@ -133,16 +175,10 @@ userSchema.pre(/^save/, async function (next) {
 });
 
 userSchema.methods.createToken = function () {
-  const tokenUnhashed = crypto.randomBytes(32).toString('hex');
-
-  this.passwordResetToken = crypto
-    .createHash('sha256')
-    .update(tokenUnhashed)
-    .digest('hex');
-
+  const tokenUnhashed = createRandomString(32);
+  this.passwordResetToken = createHash(tokenUnhashed);
   this.passwordResetExpires =
     Date.now() + ms(process.env.PASSWORD_RESET_TOKEN_EXPIRES_IN);
-
   return tokenUnhashed;
 };
 
@@ -153,6 +189,119 @@ userSchema.methods.isCorrectPassword = async function (candidatePassword) {
 userSchema.methods.hasChangedPasswordAfter = function (JWTTimeStamp) {
   const changedTimeStamp = parseInt(this.passwordChangedAt / 1000, 10);
   return JWTTimeStamp < changedTimeStamp;
+};
+
+userSchema.methods.failedLoginAttemptsReset = function () {
+  this.failedLoginAttempts = {
+    countResetAt:
+      Date.now() + ms(process.env.MAXIMUM_FAILED_LOGIN_ATTEMPTS_TIME),
+    attemptsRemaining: process.env.MAXIMUM_FAILED_LOGIN_ATTEMPTS_COUNT,
+  };
+};
+
+userSchema.methods.failedLoginAttemptsExceeded = function () {
+  if (this.failedLoginAttempts.countResetAt < Date.now()) {
+    // reset failed login attempts
+    this.failedLoginAttemptsReset();
+  }
+  if (this.failedLoginAttempts.attemptsRemaining <= 0) {
+    return true;
+  }
+  this.failedLoginAttempts.attemptsRemaining -= 1;
+  return false;
+};
+
+userSchema.methods.changeEmailAttemptsNewReset = function () {
+  this.changeEmailAttemptsNew = {
+    countResetAt: Date.now() + ms('24h'),
+    attemptsRemaining: process.env.MAXIMUM_FAILED_EMAIL_CHANGE_ATTEMPTS_COUNT,
+  };
+};
+
+userSchema.methods.emailChangeNewAttemptsExceeded = function () {
+  if (this.changeEmailAttemptsNew.countResetAt < Date.now()) {
+    // reset
+    this.changeEmailAttemptsNewReset();
+  }
+  if (this.changeEmailAttemptsNew.attemptsRemaining <= 0) {
+    return true;
+  }
+  this.changeEmailAttemptsNew.attemptsRemaining -= 1;
+  return false;
+};
+
+userSchema.methods.changeEmailOtpCreator = function (newEmail) {
+  newEmail = validator.normalizeEmail(newEmail);
+  const oldEmailOtp = otpGenerate(6);
+  const newEmailOtp = otpGenerate(6);
+  this.changeEmailDetails = {
+    validTill: Date.now() + ms(process.env.OTP_EXPIRES_IN),
+    attemptsRemaining: process.env.MAXIMUM_FAILED_EMAIL_CHANGE_ATTEMPTS_COUNT,
+    old: {
+      email: this.email,
+      otp: createHash(oldEmailOtp + process.env.OTP_SECRET),
+      remainingOtpCount: process.env.MAXIMUM_OTP_COUNT - 1,
+    },
+    new: {
+      email: newEmail,
+      otp: createHash(newEmailOtp + process.env.OTP_SECRET),
+      remainingOtpCount: process.env.MAXIMUM_OTP_COUNT - 1,
+    },
+  };
+  return { oldEmailOtp, newEmailOtp };
+};
+
+// userSchema.methods.resendOtpGenerator = function (type) {};
+
+userSchema.methods.areValidEmailsForChangeEmail = function (
+  oldEmail,
+  newEmail
+) {
+  if (
+    this.changeEmailDetails.expiresAt < Date.now() ||
+    this.email !== oldEmail ||
+    this.changeEmailDetails.old.email !== oldEmail ||
+    this.changeEmailDetails.new.email !== newEmail
+  ) {
+    return false;
+  }
+  return true;
+};
+
+userSchema.methods.emailChangeVerifyExceeded = function () {
+  if (this.changeEmailDetails.attemptsRemaining <= 0) {
+    return true;
+  }
+  this.changeEmailDetails.attemptsRemaining -= 1;
+  return false;
+};
+
+userSchema.methods.areValidOtpsForEmailChange = function (
+  oldEmailOtp,
+  newEmailOtp
+) {
+  const oldEmailOtpHashed = createHash(oldEmailOtp + process.env.OTP_SECRET);
+  const newEmailOtpHashed = createHash(newEmailOtp + process.env.OTP_SECRET);
+  return (
+    this.changeEmailDetails.old.otp === oldEmailOtpHashed &&
+    this.changeEmailDetails.new.otp === newEmailOtpHashed
+  );
+};
+
+userSchema.methods.otpResendExceeded = function (type) {
+  type = type.toLowerCase();
+  if (this.changeEmailDetails[type].remainingOtpCount <= 0) {
+    return true;
+  }
+  this.changeEmailDetails[type].remainingOtpCount -= 1;
+  return false;
+};
+
+userSchema.methods.recreateOtpForEmailChange = function (type) {
+  type = type.toLowerCase();
+  const otp = otpGenerate(6);
+  this.changeEmailDetails[type].otp = createHash(otp + process.env.OTP_SECRET);
+  return otp;
 };
 
 const User = mongoose.model('User', userSchema);
