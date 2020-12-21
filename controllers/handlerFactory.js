@@ -87,6 +87,31 @@ module.exports = (
       });
     }),
 
+    updateOneUsingSave: catchAsync(async (req, res, next) => {
+      const doc = await Model.findById(req.params.id);
+
+      const { body } = req;
+
+      Object.keys(body).forEach((arg) => {
+        doc[arg] = body[arg];
+      });
+
+      await doc.save();
+
+      const updatedDoc = doc.findById(req.params.id);
+
+      if (!doc) {
+        return next(error404(singularName.capital));
+      }
+
+      res.status(200).json({
+        status: 'success',
+        data: {
+          [singularName.small]: updatedDoc,
+        },
+      });
+    }),
+
     createOne: catchAsync(async (req, res, next) => {
       const doc = await Model.create(req.body);
 
