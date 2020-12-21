@@ -10,6 +10,6 @@ Object.assign(exports, handlerFactory);
 
 // exports.getAll = handlerFactory.getAll;
 // exports.getOne = handlerFactory.getOne;
-// exports.createOne = handlerFactory.createone;
+// exports.createOne = handlerFactory.createOne;
 // exports.updateOne = handlerFactory.updateOne;
 // exports.deleteOne = handlerFactory.deleteOne;
