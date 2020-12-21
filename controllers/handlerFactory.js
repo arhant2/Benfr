@@ -98,7 +98,7 @@ module.exports = (
 
       await doc.save();
 
-      const updatedDoc = doc.findById(req.params.id);
+      const updatedDoc = Model.findById(req.params.id);
 
       if (!doc) {
         return next(error404(singularName.capital));
