@@ -1,12 +1,10 @@
-const Product = require('../models/productModel');
+const Address = require('../models/addressModel');
 
 const handlerFactory = require('./handlerFactory')(
-  Product,
-  'product',
-  'products'
+  Address,
+  'address',
+  'address'
 );
-
-// Object.assign(exports, handlerFactory);
 
 exports.getAll = handlerFactory.getAll;
 exports.getOne = handlerFactory.getOne;

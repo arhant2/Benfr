@@ -14,7 +14,7 @@ exports.changeMyEmail = catchAsync(async (req, res, next) => {
     return next(new AppError('Please enter a valid email', 400));
   }
 
-  const oldEmail = req.user.email;
+  const oldEmail = req.customs.user.email;
   const newEmail = validator.normalizeEmail(req.body.email);
 
   if (oldEmail === newEmail) {
@@ -33,9 +33,11 @@ exports.changeMyEmail = catchAsync(async (req, res, next) => {
     );
   }
 
-  console.log('Abc: ', req.user);
+  console.log('Abc: ', req.customs.user);
 
-  const user = await User.findById(req.user.id).select('+changeEmailDetails');
+  const user = await User.findById(req.customs.user.id).select(
+    '+changeEmailDetails'
+  );
 
   if (user.emailChangeNewAttemptsExceeded()) {
     return next(
@@ -114,25 +116,27 @@ exports.isValidChangeEmailSession = catchAsync(async (req, res, next) => {
   } catch (err) {
     return changeEmailInvalidSessionRespond();
   }
-  if (decoded.id !== req.user.id) {
+  if (decoded.id !== req.customs.user.id) {
     return changeEmailInvalidSessionRespond();
   }
-  const user = await User.findById(req.user.id).select('+changeEmailDetails');
+  const user = await User.findById(req.customs.user.id).select(
+    '+changeEmailDetails'
+  );
   if (
     !user.changeEmailDetails ||
     !user.areValidEmailsForChangeEmail(decoded.oldEmail, decoded.newEmail)
   ) {
     return changeEmailInvalidSessionRespond();
   }
-  req.user = user;
+  req.customs.user = user;
   next();
 });
 
 // If new email id is signuped in between it is not an issue, mongodb will automatically handle that with runValidatorsBeforeSave to false as email is unique which is an index and not mongoose specific validator
 exports.changeMyEmailVerify = catchAsync(async (req, res, next) => {
-  const { user } = req;
+  const { user } = req.customs;
   const { oldEmailOtp, newEmailOtp } = req.body;
-  if (req.user.emailChangeVerifyExceeded()) {
+  if (req.customs.user.emailChangeVerifyExceeded()) {
     return next(
       new AppError(
         'Too many failed attempts to change email! Please try again later'
@@ -187,7 +191,7 @@ exports.changeMyEmailVerify = catchAsync(async (req, res, next) => {
 
 exports.changeMyEmailResendOtp = (type) =>
   catchAsync(async (req, res, next) => {
-    const { user } = req;
+    const { user } = req.customs;
     if (user.otpResendExceeded(type)) {
       console.log('!!Too many requests, not sending otp');
       return res.status(200).json({

@@ -5,50 +5,18 @@ const ms = require('ms');
 
 const AppError = require('../utils/AppError');
 const otpGenerate = require('../utils/otpGenerate');
+const userDetailsOptions = require('./helpers/userDetailsOptions')(
+  'user',
+  'users'
+);
 
 const { createRandomString, createHash } = require('../utils/crytography');
 
-const nameOptions = (which, required = true) => {
-  const ans = {
-    type: String,
-    minlength: [1, `${which} name must have atleast 1 character`],
-    maxlength: [20, `${which} name can have atmost 20 characters`],
-    trim: true,
-    validate: [validator.isAlpha, `Invalid ${which} name`],
-    set: (val) => val.charAt(0).toUpperCase() + val.slice(1).toLowerCase(),
-  };
-  if (required) {
-    ans.required = [true, `User must have a ${which} name`];
-  }
-  return ans;
-};
-
 const userSchema = new mongoose.Schema(
   {
-    name: {
-      first: nameOptions('First'),
-      middle: nameOptions('Middle', false),
-      last: nameOptions('Last'),
-    },
-    email: {
-      type: String,
-      validate: [validator.isEmail, 'Invalid email'],
-      required: [true, 'User must have a email'],
-      unique: true,
-      trim: true,
-      set: validator.normalizeEmail,
-    },
-    mobile: {
-      type: String,
-      validate: {
-        validator: (val) =>
-          val.match(/^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[789]\d{9}$/),
-        message: 'Invalid mobile number',
-      },
-      required: [true, 'User must have a mobile number'],
-      set: (val) => val.substring(val.length - 10, val.length),
-      trim: true,
-    },
+    name: userDetailsOptions.name(),
+    email: userDetailsOptions.email(),
+    mobile: userDetailsOptions.mobile(),
     role: {
       type: String,
       enum: ['deliveryPerson', 'user'],

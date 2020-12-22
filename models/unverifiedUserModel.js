@@ -3,16 +3,14 @@ const mongoose = require('mongoose');
 
 const { createHash, createRandomString } = require('../utils/crytography');
 
+const userDetailsOptions = require('./helpers/userDetailsOptions')(
+  'user',
+  'users'
+);
+
 const unverifiedUserSchema = new mongoose.Schema(
   {
-    email: {
-      type: String,
-      validate: [validator.isEmail, 'Invalid email'],
-      required: [true, 'User must have an email'],
-      unique: true,
-      trim: true,
-      set: validator.normalizeEmail,
-    },
+    email: userDetailsOptions.email(),
     attemptsCount: {
       type: Number,
       min: 1,

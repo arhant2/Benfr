@@ -25,7 +25,7 @@ module.exports.protect = catchAsync(async (req, res, next) => {
     return next(error);
   }
 
-  req.user = user;
+  req.customs.user = user;
   res.locals.user = user;
 
   next();

@@ -1,9 +1,9 @@
-const Product = require('../models/productModel');
+const Category = require('../models/categoryModel');
 
 const handlerFactory = require('./handlerFactory')(
-  Product,
-  'product',
-  'products'
+  Category,
+  'category',
+  'categories'
 );
 
 // Object.assign(exports, handlerFactory);
