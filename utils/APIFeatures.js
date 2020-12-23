@@ -1,7 +1,8 @@
 class APIFeatures {
-  constructor(mongooseQuery, queryFrontEnd) {
-    this.mongooseQuery = mongooseQuery;
+  constructor(mongooseQuery, queryFrontEnd, initialQuery) {
+    this.mongooseQuery = mongooseQuery.find();
     this.queryFrontEnd = queryFrontEnd;
+    this.initialQuery = initialQuery;
   }
 
   filter() {
@@ -17,7 +18,14 @@ class APIFeatures {
       (match) => `"$${match.substring(1, match.length - 2)}":`
     );
 
-    this.mongooseQuery = this.mongooseQuery.find(JSON.parse(queryStr));
+    if (this.initialQuery) {
+      this.mongooseQuery = this.mongooseQuery.and([
+        this.initialQuery,
+        JSON.parse(queryStr),
+      ]);
+    } else {
+      this.mongooseQuery = this.mongooseQuery.find(JSON.parse(queryStr));
+    }
 
     return this;
   }
