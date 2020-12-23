@@ -39,7 +39,7 @@ const productSchema = new mongoose.Schema(
         message:
           'Discounted product price must be less than or equals to the price',
       },
-      required: ['Product must have a discounted price'],
+      required: [true, 'Product must have a discounted price'],
     },
     specifications: {
       type: [
