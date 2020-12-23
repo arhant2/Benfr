@@ -5,7 +5,7 @@ module.exports = (inp, obj) => {
     if (inp === 'string') {
       arr = inp.split(' ');
     } else {
-      arr = {};
+      arr = [];
     }
   }
   arr.forEach((el) => {
