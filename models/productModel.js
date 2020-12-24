@@ -26,16 +26,18 @@ const productSchema = new mongoose.Schema(
     },
     price: {
       type: Number,
-      set: (val) => Math.round(val * 100) / 10,
+      set: (val) => Math.round(val * 100) / 100,
       min: [0, 'Product price must be greater than 0'],
       required: ['Product must have a price'],
     },
     discountedPrice: {
       type: Number,
-      set: (val) => Math.round(val * 100) / 10,
+      set: (val) => Math.round(val * 100) / 100,
       min: [0, 'Dicounted product price must be greater than 0'],
       validate: {
-        validator: (val) => val <= this.price,
+        validator: function (val) {
+          return val <= this.price;
+        },
         message:
           'Discounted product price must be less than or equals to the price',
       },
