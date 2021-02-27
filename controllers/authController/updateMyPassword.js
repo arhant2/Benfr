@@ -28,9 +28,9 @@ module.exports.updateMyPassword = catchAsync(async (req, res, next) => {
   await sendEmail({
     email: user.email,
     subject: 'Password is changed sucessfully',
-    message: `This is to inform you that your password on MyElectronics has been changed recently at ${dateTimeDayFormatted(
+    message: `This is to inform you that your password on Benfr has been changed recently at ${dateTimeDayFormatted(
       Date.now()
-    )}(IST).\nPlease don't share your login details with anyone even if the person claim to be MyElectronics employee.`,
+    )}(IST).\nPlease don't share your login details with anyone even if the person claim to be Benfr employee.`,
   });
 
   await addJWTToResponseCookie(req, res, user.id);

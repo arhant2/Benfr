@@ -1,0 +1,1 @@
+In fileName-M.js, -M flag refers to multiple operations(similar) that are done by the file

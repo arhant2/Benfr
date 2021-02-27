@@ -1,4 +1,4 @@
-const validator = require('validator');
+// const validator = require('validator');
 
 const catchAsync = require('../../utils/catchAsync');
 const AppError = require('../../utils/AppError');
@@ -6,18 +6,18 @@ const User = require('../../models/userModel');
 const addJWTToResponseCookie = require('./addJWTToResponseCookie');
 
 module.exports.login = catchAsync(async (req, res, next) => {
-  let { email } = req.body;
+  const { email } = req.body;
   const { password } = req.body;
 
   if (!email || !password) {
     return next(new AppError('Please provide email and password', 400));
   }
 
-  if (!validator.isEmail(email)) {
-    return next(new AppError('Please provide a valid email', 400));
-  }
+  // if (!validator.isEmail(email)) {
+  //   return next(new AppError('Please provide a valid email', 400));
+  // }
 
-  email = validator.normalizeEmail(email);
+  // email = validator.normalizeEmail(email);
 
   const user = await User.findOne({ email }).select('+password');
 

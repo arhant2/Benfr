@@ -1,5 +1,4 @@
 const ms = require('ms');
-const validator = require('validator');
 
 const catchAsync = require('../../utils/catchAsync');
 const AppError = require('../../utils/AppError');
@@ -13,11 +12,9 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   if (!req.body.email) {
     return next(AppError('Please enter your email', 400));
   }
-  if (!validator.isEmail(req.body.email)) {
-    return next(AppError('Please enter valid email'));
-  }
 
-  let email = validator.normalizeEmail(req.body.email);
+  const { email } = req.body;
+
   const user = await User.findOne({ email });
   const response = {
     status: 'success',
@@ -46,7 +43,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
       ms(process.env.PASSWORD_RESET_TOKEN_EXPIRES_IN),
       { long: true }
     )})`,
-    message: `To complete your forgot password request on MYElectronics click on the url: ${url}\nIf you haven't made the request, kindly ignore this email.`,
+    message: `To complete your forgot password request on Benfr click on the url: ${url}\nIf you haven't made the request, kindly ignore this email.`,
   });
 
   res.status(200).json(response);
@@ -71,9 +68,9 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   await sendEmail({
     email: user.email,
     subject: 'Password reset sucessfully',
-    message: `This is to inform you that your password on MyElectronics has been reseted recently at ${dateTimeDayFormatted(
+    message: `This is to inform you that your password on Benfr has been reseted recently at ${dateTimeDayFormatted(
       Date.now()
-    )}(IST).\nPlease don't share your login details with anyone even if the person claims to be and/or is MyElectronics employee.`,
+    )}(IST).\nPlease don't share your login details with anyone even if the person claims to be and/or is Benfr employee.`,
   });
 
   await addJWTToResponseCookie(req, res, user.id);

@@ -1,4 +1,4 @@
-const validator = require('validator');
+// const validator = require('validator');
 const mongoose = require('mongoose');
 
 const { createHash, createRandomString } = require('../utils/crytography');
@@ -11,11 +11,9 @@ const userDetailsOptions = require('./helpers/userDetailsOptions')(
 const unverifiedUserSchema = new mongoose.Schema(
   {
     email: userDetailsOptions.email(),
-    attemptsCount: {
+    attemptsRemaining: {
       type: Number,
-      min: 1,
-      max: process.env.NEW_USER_SIGNUP_ATTEMPTS_IN_A_DAY || 3,
-      default: 1,
+      default: process.env.NEW_USER_SIGNUP_ATTEMPTS_IN_A_DAY - 1 || 2,
     },
     token: {
       type: String,
@@ -39,9 +37,13 @@ unverifiedUserSchema.methods.createToken = function () {
 };
 
 unverifiedUserSchema.methods.attemptsExceeded = function () {
-  return (
-    this.attemptsCount >= (process.env.NEW_USER_SIGNUP_ATTEMPTS_IN_A_DAY || 3)
-  );
+  if (this.attemptsRemaining <= 0) {
+    return true;
+  }
+
+  this.attemptsRemaining -= 1;
+
+  return false;
 };
 
 const UnverifiedUser = mongoose.model('NewUserToken', unverifiedUserSchema);

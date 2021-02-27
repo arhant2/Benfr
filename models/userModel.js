@@ -3,7 +3,7 @@ const validator = require('validator');
 const brcypt = require('bcryptjs');
 const ms = require('ms');
 
-const AppError = require('../utils/AppError');
+// const AppError = require('../utils/AppError');
 const otpGenerate = require('../utils/otpGenerate');
 const userDetailsOptions = require('./helpers/userDetailsOptions')(
   'user',
@@ -19,12 +19,12 @@ const userSchema = new mongoose.Schema(
     mobile: userDetailsOptions.mobile(),
     role: {
       type: String,
-      enum: ['deliveryPerson', 'user'],
+      enum: ['user'],
       default: 'user',
     },
     password: {
       type: String,
-      minlength: [8, 'Password must be of 8 atleast characters'],
+      minlength: [8, 'Password must be of atleast 8 characters'],
       maxlength: [50, 'Password must be of 50 characters at maximum'],
       required: [true, 'User must have a password'],
     },
@@ -103,14 +103,14 @@ userSchema.pre(/^find/, function (next) {
     this.find({ active: true });
   }
 
-  if (this.getFilter().email) {
-    let { email } = this.getFilter();
-    if (!validator.isEmail(email)) {
-      throw new AppError('Please enter a valid email', 400);
-    }
-    email = validator.normalizeEmail(email);
-    this.find({ email });
-  }
+  // if (this.getFilter().email) {
+  //   let { email } = this.getFilter();
+  //   if (!validator.isEmail(email)) {
+  //     throw new AppError('Please enter a valid email', 400);
+  //   }
+  //   email = validator.normalizeEmail(email);
+  //   this.find({ email });
+  // }
   next();
 });
 

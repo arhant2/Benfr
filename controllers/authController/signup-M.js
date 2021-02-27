@@ -14,15 +14,14 @@ exports.signup = catchAsync(async (req, res, next) => {
     message: 'Verification email has been sent',
   };
 
-  // 1) Check if email is there and is valid
-  if (!req.body.email || !validator.isEmail(req.body.email)) {
-    return next(new AppError('Please enter a valid email', 400));
+  // // 1) Check if email is there
+  if (!req.body.email) {
+    return next(new AppError('Please enter an email', 400));
   }
 
-  // 2) normalize email
-  const email = validator.normalizeEmail(req.body.email);
+  const { email } = req.body;
 
-  // 3) check if user exits with that email
+  // 2) check if user exits with that email
   if (await User.findOne({ email, active: { $in: [true, false] } })) {
     console.log('Users exists with that email');
     return next(
@@ -33,7 +32,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     );
   }
 
-  // 4) If the user account does not exists but has recently requested for signup
+  // 3) If the user account does not exists but has recently requested for signup
   let unverfiedUser = await UnverifiedUser.findOne({ email });
 
   //4.1) check if the maximum signup attempts has been exhausted
@@ -42,12 +41,8 @@ exports.signup = catchAsync(async (req, res, next) => {
     return res.status(400).json(response);
   }
 
-  // 4.2) check if signup attempt was made recently and has not exhausted, increment counter
-  if (unverfiedUser) {
-    unverfiedUser.attemptsCount += 1;
-  }
-  // 4.3) if no signup attempt has been made recently, add new unverifiedUser details
-  else {
+  // 4.2) if no signup attempt has been made recently, add new unverifiedUser details
+  if (!unverfiedUser) {
     unverfiedUser = new UnverifiedUser({ email });
   }
 
@@ -62,9 +57,8 @@ exports.signup = catchAsync(async (req, res, next) => {
 
     await sendEmail({
       email,
-      subject:
-        'Complete signup request on MyElectronics(Link Valid for 5 mins)',
-      message: `To complete signup on MYElectronics click on the url: ${url}\nIf you haven't made the request, kindly ignore this email.`,
+      subject: 'Complete signup request on Benfr(Link Valid for 5 mins)',
+      message: `To complete signup on Benfr click on the url: ${url}\nIf you haven't made the request, kindly ignore this email.`,
     });
 
     console.log('Email sent for signup');
@@ -85,7 +79,7 @@ exports.signupComplete = catchAsync(async (req, res, next) => {
   if (!unverfiedUser) {
     return next(
       new AppError(
-        'Signup link expired or is invalid! Please resend the link.',
+        'Signup link expired or is invalid! Try with newer link or redo the signup process.',
         400
       )
     );
@@ -111,8 +105,8 @@ exports.signupComplete = catchAsync(async (req, res, next) => {
 
   await sendEmail({
     email,
-    subject: `Welcome to MyElectronics family`,
-    message: `You have successfully signuped at MyElectronics`,
+    subject: `Welcome to Benfr family`,
+    message: `You have successfully signuped at Benfr`,
   });
 
   // 7) Send Response

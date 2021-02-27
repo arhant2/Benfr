@@ -11,7 +11,7 @@ const sendEmail = require('../../utils/sendEmail');
 
 exports.changeMyEmail = catchAsync(async (req, res, next) => {
   if (!req.body.email || !validator.isEmail(req.body.email)) {
-    return next(new AppError('Please enter a valid email', 400));
+    return next(new AppError('Please enter an email/a valid email', 400));
   }
 
   const oldEmail = req.customs.user.email;
@@ -56,13 +56,13 @@ exports.changeMyEmail = catchAsync(async (req, res, next) => {
     await Promise.all([
       sendEmail({
         email: oldEmail,
-        subject: `Otp to change email on MyElectronics (valid for ${validFor})`,
-        message: `Otp to change on MyElectronics to ${newEmail} is: ${oldEmailOtp}`,
+        subject: `Otp to change email on Benfr (valid for ${validFor})`,
+        message: `Otp to change on Benfr to ${newEmail} is: ${oldEmailOtp}`,
       }),
       sendEmail({
         email: newEmail,
-        subject: `Otp to add your email on MyElectronics (valid for ${validFor})`,
-        message: `Otp to add your email with an account on MyElectronics is: ${newEmailOtp}`,
+        subject: `Otp to add your email on Benfr (valid for ${validFor})`,
+        message: `Otp to add your email with an account on Benfr is: ${newEmailOtp}`,
       }),
     ]);
   } catch (err) {
@@ -167,13 +167,13 @@ exports.changeMyEmailVerify = catchAsync(async (req, res, next) => {
     await Promise.all([
       sendEmail({
         email: oldEmail,
-        subject: `Email changed sucessfully on MyElectronics`,
-        message: `Your email has been changed successfully on MyElectronics.`,
+        subject: `Email changed sucessfully on Benfr`,
+        message: `Your email has been changed successfully on Benfr.`,
       }),
       sendEmail({
         email: newEmail,
         subject: `Email added sucessfully`,
-        message: `Your email has been successfully added to an existing account on MyElectronics`,
+        message: `Your email has been successfully added to an existing account on Benfr`,
       }),
     ]);
   } catch (err) {
@@ -209,12 +209,12 @@ exports.changeMyEmailResendOtp = (type) =>
         email: user.changeEmailDetails[type].email,
         subject:
           type === 'old'
-            ? `Otp to change email on MyElectronics (valid for ${validFor})`
-            : `Otp to add your email on MyElectronics (valid for ${validFor})`,
+            ? `Otp to change email on Benfr (valid for ${validFor})`
+            : `Otp to add your email on Benfr (valid for ${validFor})`,
         message:
           type === 'old'
-            ? `Otp to change on MyElectronics to ${user.changeEmailDetails.new.email} is: ${otp}`
-            : `Otp to add your email with an account on MyElectronics is: ${otp}`,
+            ? `Otp to change on Benfr to ${user.changeEmailDetails.new.email} is: ${otp}`
+            : `Otp to add your email with an account on Benfr is: ${otp}`,
       });
     } catch (err) {
       return next(new AppError('Internal server error! Try again later', 500));
