@@ -1,0 +1,51 @@
+mixin footerList(links)
+  ul.footer__list
+    each link in links
+      li.footer__item: a(href=link[0])= link[1]
+
+mixin footerBox(heading, links)
+  .footer__box
+    h3.footer__heading= heading 
+    +footerList(links)
+
+
+//- Main code
+.footer.reset-anchor: .footer__container 
+
+  .footer__main-container
+    .footer__box.footer__box--first
+      .footer__logo.typography-logo-style
+        i.fas.fa-camera-retro
+        | &nbsp;Benfr
+      .footer__tag-line
+        | Lorem ipsum dolor sit amet consectetur adipisicing elit.
+      address.footer__contact
+        a.footer__contact-each(href='mailto:arhantjain2@gmail.com')
+          span.footer__contact-icon: i.fas.fa-envelope
+          | &nbsp;arhantjain2@gmail.com
+        a.footer__contact-each(href='tel:+919999999999')
+          span.footer__contact-icon: i.fas.fa-phone-alt
+          | &nbsp;+91 9999 999 999
+    +footerBox('Information', [
+              ['#', 'About Us'], 
+              ['#', 'Delivery Information'], 
+              ['#', 'Privacy Policy'], 
+              ['#', 'Contact Us']
+              ])
+    +footerBox('Support', [
+              ['#', '24/7 Support'], 
+              ['#', 'FAQs'], 
+              ['#', 'Privacy Policy']
+              ])
+    +footerBox('Important Links', [
+              ['#', 'Blog'], 
+              ['#', 'Testiomonials'], 
+              ['#', 'Feedback']
+              ])
+
+  .footer__copyright-container
+    .footer__copyright Copyright &copy; 2021 Benfr | All Rights Reserved
+    a.footer__made-by(href='https://www.linkedin.com/')
+      | Made with&nbsp;
+      span.footer__made-by-icon: i.fas.fa-heart
+      | &nbsp;by Arhant Jain

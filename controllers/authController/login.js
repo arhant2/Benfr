@@ -41,6 +41,8 @@ module.exports.login = catchAsync(async (req, res, next) => {
 
   await addJWTToResponseCookie(req, res, user._id);
 
+  // console.log('arhant from here');
+
   res.status(200).json({
     status: 'success',
     message: 'Login successful',

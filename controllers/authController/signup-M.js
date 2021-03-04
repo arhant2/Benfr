@@ -38,7 +38,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   //4.1) check if the maximum signup attempts has been exhausted
   if (unverfiedUser && unverfiedUser.attemptsExceeded()) {
     console.log('Maximum tries exceeded');
-    return res.status(400).json(response);
+    return res.status(200).json(response);
   }
 
   // 4.2) if no signup attempt has been made recently, add new unverifiedUser details
@@ -51,9 +51,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   await unverfiedUser.save();
 
   try {
-    const url = `${req.protocol}://${req.get(
-      'host'
-    )}/api/v1/users/signup/complete/${token}`;
+    const url = `${req.protocol}://${req.get('host')}/signup/complete/${token}`;
 
     await sendEmail({
       email,

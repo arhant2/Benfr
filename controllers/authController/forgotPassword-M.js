@@ -30,12 +30,12 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   const resetToken = user.createToken();
   await user.save({ validateBeforeSave: false });
 
-  console.log('Hashed Token: ', user.passwordResetToken);
-  console.log('Unhashed Token: ', resetToken);
+  // console.log('Hashed Token: ', user.passwordResetToken);
+  // console.log('Unhashed Token: ', resetToken);
 
   const url = `${req.protocol}://${req.get(
     'host'
-  )}/api/v1/users/resetMyPassword/${resetToken}`;
+  )}/resetPassword/${resetToken}`;
 
   await sendEmail({
     email,

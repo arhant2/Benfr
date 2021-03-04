@@ -7,11 +7,16 @@
     "start": "nodemon server.js",
     "start:prod": "set NODE_ENV=production&&nodemon server.js",
     "debug": "ndb server.js",
-    "github": "git push -u origin main"
+    "github": "git push -u origin main",
+    "watch:user:scss": "parcel ./raw-assets/user/scss/style.scss --out-dir ./public/assets/user/css --out-file style.css --no-autoinstall",
+    "build:user:scss": "parcel build ./raw-assets/user/scss/style.scss --out-dir ./public/assets/user/css --out-file style.css --no-autoinstall --no-source-maps",
+    "watch:user:js": "parcel ./raw-assets/user/js/index.js --out-dir ./public/assets/user/js --out-file index.js --no-autoinstall",
+    "build:user:js": "parcel build ./raw-assets/user/js/index.js --out-dir ./public/assets/user/js --out-file index.js --no-autoinstall --no-source-maps"
   },
   "author": "Arhant Jain",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.5",
     "dotenv": "^8.2.0",
@@ -22,6 +27,7 @@
     "morgan": "^1.10.0",
     "ms": "^2.1.2",
     "nodemailer": "^6.4.16",
+    "pug": "^3.0.0",
     "slugify": "^1.4.6",
     "validator": "^13.1.17"
   },
@@ -35,7 +41,9 @@
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-react": "^7.21.5",
     "nodemon": "^2.0.6",
-    "prettier": "^2.1.2"
+    "parcel": "^1.12.4",
+    "prettier": "^2.1.2",
+    "sass": "^1.32.8"
   },
   "engines": {
     "node": ">=10.0.0"

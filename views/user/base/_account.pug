@@ -1,0 +1,24 @@
+extends _base
+
+mixin accountSidebarList(links)
+  ul.account__sidebar-list
+    each link in links
+      li.account__sidebar-item: a.btn.btn--text.btn--text-inital-dark(href=link[0])= link[1]
+
+block content
+  section.card.account
+    aside.account__sidebar
+      h2.heading-quadinary.heading-quadinary--2 Account
+      +accountSidebarList([
+          ['/myAccount', 'My Account'],
+          ['/updateMe', 'Edit Account'],
+          ['/changeMyEmail', 'Login Information'],
+          ['/updateMyPassword', 'Password'],
+          ['#', 'Address Book'],
+          ['#', 'Wishlist'],
+          ['#', 'Order History'],
+          [`/logout?redirect=${encodedUrl}`, 'Logout']
+      ])
+    .account__main
+      block accountContent
+  

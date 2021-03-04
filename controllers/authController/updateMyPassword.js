@@ -13,13 +13,13 @@ module.exports.updateMyPassword = catchAsync(async (req, res, next) => {
   ) {
     return next(
       new AppError(
-        'Please enter current password, password and confirm you password'
+        'Please enter Current password, Password and Confirm you password'
       )
     );
   }
   const user = await User.findById(req.customs.user.id).select('+password');
-  if (await user.isCorrectPassword(req.body.password)) {
-    return next(new AppError('Current password is wrong', 400));
+  if (!(await user.isCorrectPassword(req.body.currentPassword))) {
+    return next(new AppError('Current Password is wrong', 400));
   }
   user.password = req.body.password;
   user.passwordConfirm = req.body.passwordConfirm;
@@ -34,6 +34,8 @@ module.exports.updateMyPassword = catchAsync(async (req, res, next) => {
   });
 
   await addJWTToResponseCookie(req, res, user.id);
+
+  console.log('Yaha aayaikhuh');
 
   res.status(200).json({
     status: 'success',

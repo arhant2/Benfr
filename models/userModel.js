@@ -38,9 +38,9 @@ const userSchema = new mongoose.Schema(
         message: 'Password and confirm password must be same',
       },
     },
-    passwordChangedAt: { type: Date },
-    passwordResetToken: { type: String },
-    passwordResetExpires: { type: Date },
+    passwordChangedAt: { type: Date, select: false },
+    passwordResetToken: { type: String, select: false },
+    passwordResetExpires: { type: Date, select: false },
     active: {
       type: Boolean,
       default: true,

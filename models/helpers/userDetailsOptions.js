@@ -18,10 +18,10 @@ module.exports = (singularNameParam, pluralNameParam = undefined) => {
       minlength: [3, 'Name must have atleast 3 character'],
       maxlength: [40, 'Name can have atmost 40 characters'],
       trim: true,
-      validate: [
-        (val) => val.match(/^[a-zA-Z ]*$/),
-        'Invalid name, name can contain only letters and spaces',
-      ],
+      // validate: [
+      //   (val) => val.match(/^[a-zA-Z ]*$/),
+      //   'Invalid name, name can contain only letters and spaces',
+      // ],
       set: (val) => {
         return val
           .split(' ')
@@ -36,7 +36,7 @@ module.exports = (singularNameParam, pluralNameParam = undefined) => {
       type: String,
       validate: {
         validator: (val) =>
-          val.match(/^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[789]\d{9}$/),
+          val.match(/^(?:(?:\+|0{0,2})91(\s*[\- ]\s*)?|[0]?)?[789]\d{9}$/),
         message: 'Invalid mobile number',
       },
       set: (val) => val.substring(val.length - 10, val.length),

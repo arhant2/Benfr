@@ -1,0 +1,50 @@
+extends base/_account
+
+include mixins/_account-box
+
+block accountContent
+  +accountBox('Login Information', [['/myAccount', 'Account'], ['#', 'Login Information']])
+    form#change-my-email-form.form.account__form(action='#')
+      .form__group
+        label.form__label(for='email')
+          span.form__star *
+          | Email
+        input.form__input#email(type='email' name='email' placeholder='Your Email' pattern=String.raw`[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$` title='Please enter a valid email' value=user.email required)
+        
+      .form__btn-group
+        button#change-my-email-form-btn.btn.btn--round.btn--red.btn--load(data-load-class='btn--load')
+          span.btn--load__content
+            i.fas.fa-check
+            | &nbsp;Change Email
+          span.btn--load__load-content
+            i.fa.fa-circle-o-notch.fa-spin
+            | &nbsp;Loading
+
+  .account__box.u-display-none#change-my-email-verify-section(data-display-none-class='u-display-none')
+    .account__box-top
+      h2.heading-quadinary.heading-quadinary--2 Otp Verification
+    .account__box-main
+      form#change-my-email-verify-form.form.account__form(action='#')
+        .form__group
+          label.form__label(for='email')
+            span.form__star *
+            | Otp to current email
+            button.btn.btn--text.u-margin-left-small#resend-otp-old-btn(type='button') Resend Otp
+          input.form__input#oldEmailOtp(type='text' name='oldEmailOtp' placeholder='Enter otp sent to current email' pattern=String.raw`[a-z0-9]{6}` spellcheck='false' title='Please enter a valid otp' required)
+
+        .form__group
+          label.form__label(for='email')
+            span.form__star *
+            | Otp to new email
+            button.btn.btn--text.u-margin-left-small#resend-otp-new-btn(type='button') Resend Otp
+          input.form__input#newEmailOtp(type='text' name='newEmailOtp' placeholder='Enter otp sent to new email' pattern=String.raw`[a-z0-9]{6}` spellcheck='false' title='Please enter a valid otp' required)
+          
+        .form__btn-group
+          button#change-my-email-verify-form-btn.btn.btn--round.btn--red.btn--load
+            span.btn--load__content
+              i.fas.fa-check
+              | &nbsp;Verify
+            span.btn--load__load-content
+              i.fa.fa-circle-o-notch.fa-spin
+              | &nbsp;Loading
+        

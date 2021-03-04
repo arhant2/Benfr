@@ -1,0 +1,41 @@
+mixin navbarItem(href, icon, dropdown=false)
+  li.navbar__item(class=`${dropdown ? 'user-dropdown-navbar': ''}`)
+    a.navbar__link(href=href): i(class=icon)
+    if block
+      block
+
+mixin userDropdownList(href, icon, name)
+  li.user-dropdown-navbar__item: a.user-dropdown-navbar__link(href=href) 
+    span.user-dropdown-navbar__icon: i(class=icon)
+    | #{name}
+
+
+//- Main code
+nav.navbar: .navbar__inner.reset-anchor
+  // Hamburger
+  .navbar__hamburger.js--components-function--sidebar__hamburger
+    .navbar__hamburger-circle
+      .navbar__hamburger-line
+
+  // Logo
+  a(href='/')
+    .navbar__logo.typography-logo-style
+      i.fas.fa-camera-retro
+      | &nbsp;Benfr
+  
+  // Navbar features(list)
+  ul.navbar__list
+    +navbarItem('#', 'fas fa-search')
+    +navbarItem('/myAccount', 'far fa-user', true)
+      .user-dropdown-navbar__box: ul.user-dropdown-navbar__list
+        if user
+          +userDropdownList('/myAccount', 'fas fa-user-circle', `Hello, ${user.name.split(' ')[0]}`)
+        else
+          +userDropdownList(`/login?redirect=${encodedUrl}`, 'fas fa-user-circle', 'Login')
+          +userDropdownList('/signup', 'fas fa-user-circle', 'Sign up')
+        +userDropdownList('#', 'fas fa-box-open', 'My Orders')
+        +userDropdownList('#', 'fas fa-map-marker-alt', 'Addresses')
+        if user
+          +userDropdownList(`/logout?redirect=${encodedUrl}`, 'fas fa-sign-out-alt', 'Logout')
+    +navbarItem('#', 'far fa-heart')
+      +navbarItem('#', 'fas fa-shopping-basket')

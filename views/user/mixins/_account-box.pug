@@ -1,0 +1,20 @@
+mixin accountPathList(path)
+  ul.account__path-list
+    li.account__path-item: a.btn.btn--text.btn--text-inital-dark(href='/'): i.fas.fa-home
+    each pathItem in path
+      li.account__path-item: a.btn.btn--text.btn--text-inital-dark(href=pathItem[0])= pathItem[1]
+
+//- Main code
+mixin accountBox(heading, path)
+  .account__box 
+    .account__box-top
+      h2.heading-quadinary.heading-quadinary--2= heading
+      if path
+        +accountPathList(path)
+    .account__box-main
+      block
+
+mixin accountBoxList(links)
+  ul.account__box-list
+    each link in links
+      li.account-box__item: a.btn.btn--text.btn--text-inital-dark(href=link[0])= link[1]

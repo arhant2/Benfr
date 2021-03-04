@@ -1,0 +1,39 @@
+mixin eachIntroBox(heading, paragraph, link, img)
+  .home-intro-box__each.js--components-function--sliders__each: .home-intro-box__each-inner
+    .home-intro-box__left
+      h1.heading-primary= heading
+      p.heading-primary-sub= paragraph
+      a.btn.btn--yellow.btn--dark.btn--big(href=link[0])= link[1] 
+    .home-intro-box__right
+      img.home-intro-box__img(src=img[0] alt=img[1])
+
+
+
+//- Main code
+.home-top-container
+
+  include _navbar
+
+  .home-intro-box.js--components-function--sliders
+    button.home-intro-box__sliders-btn.home-intro-box__sliders-btn--left.js--components-function--sliders__btn--left &lt;
+    button.home-intro-box__sliders-btn.home-intro-box__sliders-btn--right.js--components-function--sliders__btn--right &gt;
+
+    .home-intro-box__container
+      +eachIntroBox(
+        'A Smart Devices Collection Just For You!',
+        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia in id dignissimos facilis sapiente expedita pariatur!',
+        ['#', 'SHOP NOW'],
+        ['/assets/user/img/phone_person.png', 'Image intro 1']
+      )
+      +eachIntroBox(
+        'Get gift for everyone here at best price!',
+        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia in id dignissimos facilis sapiente expedita pariatur!',
+        ['#', 'SHOP NOW'],
+        ['/assets/user/img/phone_person.png', 'Image intro 2']
+      )
+      +eachIntroBox(
+        'Yuhuuu Devices Collection Just For You!',
+        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia in id dignissimos facilis sapiente expedita pariatur!',
+        ['#', 'SHOP NOW'],
+        ['/assets/user/img/phone_person.png', 'Image intro 3']
+      )

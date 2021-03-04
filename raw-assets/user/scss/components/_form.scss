@@ -1,0 +1,54 @@
+.form {
+  font-size: 1.4rem;
+  letter-spacing: 0.4px;
+
+  &__group {
+    margin-bottom: 1.5rem;
+  }
+
+  &__btn-group {
+    margin-top: 3rem;
+  }
+
+  &__label {
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 0.5rem;
+  }
+
+  &__star {
+    font-size: 1.2em;
+    color: var(--color-red-darker);
+    line-height: 1;
+    display: inline-block;
+    margin-right: 2px;
+  }
+
+  &__input[type='text'],
+  &__input[type='tel'],
+  &__input[type='email'],
+  &__input[type='password'],
+  &__select {
+    width: 100%;
+    max-width: 60rem;
+    border: 1px solid var(--color-grey-light-4);
+    padding: 0.5rem 1rem;
+    outline: none;
+    border-radius: 0.3rem;
+    background: var(--color-white);
+
+    &:focus {
+      border-color: var(--color-grey-dark-3);
+
+      border-left: 2px solid var(--color-green);
+
+      &:invalid {
+        border-left: 3px solid var(--color-red);
+      }
+    }
+  }
+
+  &__text {
+    font-size: 0.82em;
+  }
+}

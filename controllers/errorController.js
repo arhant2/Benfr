@@ -27,6 +27,22 @@ const handleJWTExpiredError = () =>
   new AppError('You are not logged in! Login to get access', 401);
 
 const sendErrorDev = (err, req, res) => {
+  // ======================
+  // REMOVE THIS
+  // ======================
+
+  // console.log(err);
+
+  // return res.status(err.statusCode).json({
+  //   status: err.status,
+  //   error: err,
+  //   message: err.message,
+  //   stack: err.stack,
+  // });
+
+  // ======================
+  // ======================
+
   // API
   if (req.originalUrl.startsWith('/api')) {
     res.status(err.statusCode).json({
@@ -37,9 +53,15 @@ const sendErrorDev = (err, req, res) => {
     });
   } else {
     // RENDERED WEBSITE
-    res.status(err.statusCode).render('error', {
-      title: 'Something went wrong!',
-      msg: err.message,
+    // res.status(err.statusCode).render('error', {
+    //   title: 'Something went wrong!',
+    //   msg: err.message,
+    // });
+    res.status(err.statusCode).json({
+      status: err.status,
+      error: err,
+      message: err.message,
+      stack: err.stack,
     });
   }
 };
@@ -69,9 +91,14 @@ const sendErrorProd = (err, req, res) => {
     // Operational, trusted error: send message to client
     // eslint-disable-next-line no-lonely-if
     if (err.isOperational) {
-      res.status(err.statusCode).render('error', {
-        title: 'Something went wrong!',
-        msg: err.message,
+      // res.status(err.statusCode).render('error', {
+      //   title: 'Something went wrong!',
+      //   msg: err.message,
+      // });
+
+      res.status(err.statusCode).json({
+        status: 'error',
+        msg: 'Please try again later',
       });
 
       // Programming or other unknown error: don't leak error details
@@ -79,9 +106,14 @@ const sendErrorProd = (err, req, res) => {
       // 1) Log the error
       console.error('ERROR 💥', err);
       // 2) Send generic message
-      res.status(err.statusCode).render('error', {
-        title: 'Something went wrong!',
-        msg: 'Please try again later!',
+      // res.status(err.statusCode).render('error', {
+      //   title: 'Something went wrong!',
+      //   msg: 'Please try again later!',
+      // });
+
+      res.status(err.statusCode).json({
+        status: 'error',
+        msg: 'Please try again later',
       });
     }
   }

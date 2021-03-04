@@ -163,6 +163,7 @@ productSchema.pre('save', async function (next) {
   if (Array.isArray(this.categories)) {
     if (isInvalidArrayOfId(this.categories))
       throw new AppError('Invalid categories', 400);
+    // eslint-disable-next-line no-use-before-define
     const categories = await Category.find({ _id: { $in: this.categories } });
     if (!categories || categories.length === 0)
       throw new AppError('Invalid categories! Not found any categories');

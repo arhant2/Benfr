@@ -8,4 +8,6 @@ module.exports = {
   ...require('./forgotPassword-M'),
   ...require('./updateMyPassword'),
   ...require('./changeMyEmail-M'),
+  ...require('./isLoggedIn'),
+  ...require('./protectView'),
 };

@@ -20,7 +20,8 @@ exports.changeMyEmail = catchAsync(async (req, res, next) => {
   if (oldEmail === newEmail) {
     return next(
       new AppError(
-        'Current email and new email cannot be same for email updation'
+        'Current email and new email cannot be same for email updation',
+        400
       )
     );
   }
@@ -33,7 +34,7 @@ exports.changeMyEmail = catchAsync(async (req, res, next) => {
     );
   }
 
-  console.log('Abc: ', req.customs.user);
+  // console.log('Abc: ', req.customs.user);
 
   const user = await User.findById(req.customs.user.id).select(
     '+changeEmailDetails'
@@ -196,7 +197,7 @@ exports.changeMyEmailResendOtp = (type) =>
       console.log('!!Too many requests, not sending otp');
       return res.status(200).json({
         status: 'success',
-        message: 'Otp sent to change your email',
+        message: `Resend otp sent change your email to ${type} email`,
       });
     }
     const otp = user.recreateOtpForEmailChange(type);

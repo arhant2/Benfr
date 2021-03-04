@@ -1,3 +1,5 @@
+const path = require('path');
+
 const express = require('express');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
@@ -9,6 +11,7 @@ const userRouter = require('./routes/userRoutes');
 const brandRouter = require('./routes/brandRoutes');
 const categoryRouter = require('./routes/categoryRoutes');
 const addressRouter = require('./routes/addressRoutes');
+const userViewRouter = require('./routes/userViewRoutes');
 
 // START A SERVER
 const app = express();
@@ -19,6 +22,11 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use(express.json());
 app.use(cookieParser());
+
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Middleware to add an empty object so that customs can be added later
 app.use((req, res, next) => {
@@ -32,6 +40,7 @@ app.use('/api/v1/users', userRouter);
 app.use('/api/v1/brands', brandRouter);
 app.use('/api/v1/categories', categoryRouter);
 app.use('/api/v1/addresses', addressRouter);
+app.use('/', userViewRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

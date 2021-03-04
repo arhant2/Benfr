@@ -1,7 +1,9 @@
 const express = require('express');
 
 const authController = require('../controllers/authController');
+const userController = require('../controllers/userController');
 const authFilters = require('../filters/authFilters');
+const userFilters = require('../filters/userFilters');
 
 const router = express.Router();
 
@@ -21,6 +23,7 @@ router.post(
   authFilters.forgotPassword,
   authController.forgotPassword
 );
+
 router.patch(
   '/resetPassword/:token',
   authFilters.resetPassword,
@@ -64,6 +67,13 @@ router.patch(
   authController.protect,
   authController.isValidChangeEmailSession,
   authController.changeMyEmailResendOtp('new')
+);
+
+router.patch(
+  '/updateMe',
+  userFilters.updateMe,
+  authController.protect,
+  userController.updateMe
 );
 
 module.exports = router;
