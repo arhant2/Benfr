@@ -7,7 +7,7 @@ block loginSignupContent
       label.form__label(for='email')
         span.form__star *
         | Email
-      input.form__input#email(type='email' name='email' placeholder='Your Email' pattern=String.raw`[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$` title='Please enter a valid email' required)
+      input.form__input#email(type='email' name='email' placeholder='Your Email' pattern=String.raw`[a-zA-z0-9._%+-]+@[a-zA-z0-9.-]+\.[a-zA-z]{2,}$` title='Please enter a valid email' required)
 
     .form__group
       .form__text

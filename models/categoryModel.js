@@ -9,10 +9,25 @@ const categorySchema = new mongoose.Schema(
       type: String,
       min: [2, 'Category name must have atleast 2 characters'],
       max: [30, 'Category name can have atmost 30 characters'],
+      required: true,
+      trim: true,
     },
     nameNormalized: {
       type: String,
       unique: true,
+    },
+    productsCount: {
+      type: Number,
+      default: 0,
+    },
+    images: {
+      type: [
+        {
+          path: String,
+          filename: String,
+        },
+      ],
+      default: [],
     },
   },
   {

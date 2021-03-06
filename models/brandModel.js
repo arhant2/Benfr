@@ -11,10 +11,24 @@ const brandSchema = new mongoose.Schema(
       min: [2, 'Brand name must have atleast 2 characters'],
       max: [30, 'Brand name can have atmost 30 characters'],
       required: true,
+      trim: true,
     },
     nameNormalized: {
       type: String,
       unique: true,
+    },
+    productsCount: {
+      type: Number,
+      default: 0,
+    },
+    images: {
+      type: [
+        {
+          path: String,
+          filename: String,
+        },
+      ],
+      default: [],
     },
   },
   {

@@ -6,6 +6,13 @@ const handlerFactory = require('./handlerFactory')(
   'categories'
 );
 
+const { upload, uploadFilesCloudinaryMiddlware } = require('../cloudinary');
+
+exports.uploadFiles = upload.fields([{ name: 'image0', maxCount: 1 }]);
+exports.uploadFilesCloudinary = uploadFilesCloudinaryMiddlware(
+  'benfr/categories'
+);
+
 // Object.assign(exports, handlerFactory);
 
 exports.getAll = handlerFactory.getAll;

@@ -102,15 +102,6 @@ userSchema.pre(/^find/, function (next) {
   if (this.getFilter().active === undefined) {
     this.find({ active: true });
   }
-
-  // if (this.getFilter().email) {
-  //   let { email } = this.getFilter();
-  //   if (!validator.isEmail(email)) {
-  //     throw new AppError('Please enter a valid email', 400);
-  //   }
-  //   email = validator.normalizeEmail(email);
-  //   this.find({ email });
-  // }
   next();
 });
 

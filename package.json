@@ -18,6 +18,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
+    "cloudinary": "^1.25.0",
     "cookie-parser": "^1.4.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
@@ -26,6 +27,7 @@
     "mongoose": "^5.10.15",
     "morgan": "^1.10.0",
     "ms": "^2.1.2",
+    "multer": "^1.4.2",
     "nodemailer": "^6.4.16",
     "pug": "^3.0.0",
     "slugify": "^1.4.6",
@@ -46,6 +48,6 @@
     "sass": "^1.32.8"
   },
   "engines": {
-    "node": ">=10.0.0"
+    "node": ">=15.0.0"
   }
 }

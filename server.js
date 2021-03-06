@@ -6,6 +6,7 @@ const dotenv = require('dotenv');
 process.on('uncaughtException', (err) => {
   console.log('UNCAUGHT EXCEPTION! 💥 Shutting down...');
   console.log(err);
+  console.log('Error stack: ', err.stack);
   process.exit(1);
 });
 
@@ -33,9 +34,11 @@ const server = app.listen(PORT, () => {
   console.log(`👍 App listening on ${PORT}...`);
 });
 
-process.on('unhandledRejection', (err) => {
+process.on('unhandledRejection', (err, p) => {
   console.log('UNHANDLED REJECTION! 💥 Shutting down...');
   console.log(err);
+  console.log('Error stack: ', err.stack);
+  console.log('Rejected promise: ', p);
   server.close(() => {
     process.exit(1);
   });
