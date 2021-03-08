@@ -1,0 +1,17 @@
+.section-stats-charts {
+  display: grid;
+
+  grid-template-columns: 2fr 1fr;
+
+  grid-gap: var(--margin-main);
+
+  //   &__item {
+  //     &--big {
+  //       grid-column: span 3;
+  //     }
+
+  //     &--small {
+  //       grid-column: span 1;
+  //     }
+  //   }
+}

@@ -11,14 +11,20 @@
     "watch:user:scss": "parcel ./raw-assets/user/scss/style.scss --out-dir ./public/assets/user/css --out-file style.css --no-autoinstall",
     "build:user:scss": "parcel build ./raw-assets/user/scss/style.scss --out-dir ./public/assets/user/css --out-file style.css --no-autoinstall --no-source-maps",
     "watch:user:js": "parcel ./raw-assets/user/js/index.js --out-dir ./public/assets/user/js --out-file index.js --no-autoinstall",
-    "build:user:js": "parcel build ./raw-assets/user/js/index.js --out-dir ./public/assets/user/js --out-file index.js --no-autoinstall --no-source-maps"
+    "build:user:js": "parcel build ./raw-assets/user/js/index.js --out-dir ./public/assets/user/js --out-file index.js --no-autoinstall --no-source-maps",
+    "watch:admin:scss": "parcel ./raw-assets/admin/scss/style.scss --out-dir ./public/assets/admin/css --out-file style.css --no-autoinstall",
+    "build:admin:scss": "parcel build ./raw-assets/admin/scss/style.scss --out-dir ./public/assets/admin/css --out-file style.css --no-autoinstall --no-source-maps",
+    "watch:admin:js": "parcel ./raw-assets/admin/js/index.js --out-dir ./public/assets/admin/js --out-file index.js --no-autoinstall",
+    "build:admin:js": "parcel build ./raw-assets/admin/js/index.js --out-dir ./public/assets/admin/js --out-file index.js --no-autoinstall --no-source-maps"
   },
   "author": "Arhant Jain",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
+    "chart.js": "^2.9.4",
     "cloudinary": "^1.25.0",
+    "color-alpha": "^1.1.2",
     "cookie-parser": "^1.4.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",

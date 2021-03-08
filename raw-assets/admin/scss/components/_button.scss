@@ -1,0 +1,70 @@
+.btn {
+  display: inline-block;
+
+  & > * {
+    display: inline-block;
+  }
+
+  @include currentColorOptions;
+
+  border: none;
+  background: var(--current-color);
+
+  text-decoration: none;
+  cursor: pointer;
+  outline: none;
+
+  color: white;
+  font-size: inherit;
+  font-family: inherit;
+  font-weight: 300;
+  text-align: center;
+  line-height: inherit;
+
+  padding: 0.8rem 1.8rem;
+  border-radius: 3px;
+
+  transition: all 0.2s;
+
+  &--only-icon {
+    font-size: 1rem;
+    padding: 1rem 1.4rem;
+  }
+
+  &:hover,
+  &:active {
+    background-color: var(--current-color-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 6px rgba(#000, 0.2);
+  }
+
+  &--text {
+    padding: 0;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    background-color: transparent;
+    color: var(--current-color);
+
+    &:hover,
+    &:active {
+      color: var(--current-color-dark);
+      background-color: transparent;
+      transform: translateY(0);
+      box-shadow: none;
+      text-decoration: underline;
+    }
+  }
+
+  &--small-cta {
+    background-color: var(--color-grey-light-1);
+    color: var(--color-grey-dark-1);
+    font-size: 0.8em;
+    padding: 0.5rem 1.5rem;
+    border-radius: 100px;
+
+    &:hover {
+      background-color: var(--color-grey-light-1);
+    }
+  }
+}

@@ -12,6 +12,7 @@ const brandRouter = require('./routes/brandRoutes');
 const categoryRouter = require('./routes/categoryRoutes');
 const addressRouter = require('./routes/addressRoutes');
 const userViewRouter = require('./routes/userViewRoutes');
+const adminViewRouter = require('./routes/adminViewRoutes');
 
 // START A SERVER
 const app = express();
@@ -41,6 +42,7 @@ app.use('/api/v1/brands', brandRouter);
 app.use('/api/v1/categories', categoryRouter);
 app.use('/api/v1/addresses', addressRouter);
 app.use('/', userViewRouter);
+app.use('/a', adminViewRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

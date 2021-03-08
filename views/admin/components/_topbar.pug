@@ -1,0 +1,26 @@
+mixin topDropdownListItem(href, icon, name)
+  li.topbar__dropdown-item: a.topbar__dropdown-link(href=href) 
+    span.topbar__dropdown-icon: i(class=icon)
+    | #{name}
+
+section.topbar
+  .topbar__extra-feature
+    a.btn.btn--only-icon(href=topbarFeatureBtn[0])
+      i(class=topbarFeatureBtn[2])
+    p.topbar__extra-feature-name= topbarFeatureBtn[1]
+
+  form.topbar__form
+    input.topbar__form-input(type='text'  placeholder='Type anything here...')
+    button.btn.topbar__form-btn
+      i.fas.fa-search
+      | &nbsp;Search
+  
+  .topbar__profile.topbar__dropdown.reset-anchor
+    img.topbar__profile-img(src='/assets/admin/img/admin.png' alt='Admin')
+    p.topbar__profile-name
+      | Arhant Jain 
+      i.fas.fa-sort
+    .topbar__dropdown-box: ul.topbar__dropdown-list
+      +topDropdownListItem('/a/dashboard', 'fas fa-network-wired', 'Admin panel')
+      +topDropdownListItem('/myAccount', 'fas fa-user-circle', 'My Account')
+      +topDropdownListItem(`/logout?redirect=${encodedUrl}`, 'fas fa-sign-out-alt', 'Logout')

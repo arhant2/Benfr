@@ -52,9 +52,21 @@ class APIFeatures {
     return this;
   }
 
-  paginate() {
-    const page = this.queryFrontEnd.page * 1 || 1;
-    const limit = this.queryFrontEnd.limit * 1 || 100;
+  paginate(obj = {}) {
+    let page = this.queryFrontEnd.page * 1 || 1;
+    let limit = this.queryFrontEnd.limit * 1 || 100;
+
+    if (!Number.isInteger(page) || page <= 0) {
+      page = 1;
+    }
+
+    if (!Number.isInteger(limit) || limit <= 0) {
+      limit = 100;
+    }
+
+    obj.page = String(page);
+    obj.limit = String(limit);
+
     const skip = (page - 1) * limit;
 
     this.mongooseQuery = this.mongooseQuery.skip(skip).limit(limit);

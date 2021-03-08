@@ -1,0 +1,40 @@
+//- links, href, name
+mixin menuDropdown(name, links, active, noMin=false)
+  .menu-dropdown.js--components-function--dropdown
+    button.menu-dropdown__btn.js--components-function--dropdown__btn
+      | #{name}&nbsp;
+      i.fas.fa-chevron-down
+
+    //- menu-dropdown__list--show
+    ul.menu-dropdown__list.js--components-function--dropdown__list(class=noMin?'menu-dropdown__list--no-min':'')
+      each link, i in links
+        li.menu-dropdown__item: a.menu-dropdown__link(href=link[0] class=i===active?'menu-dropdown__link--active':'')= link[1]
+
+//- href, name, disabled(true or false/undefined)
+mixin menuBtnCollection(links, active)
+  .menu-btn-collection
+    each link, i in links
+      - 
+        let extraClass = i===active? 'menu-btn-collection__item--active': '';
+        if(link[2]) extraClass += 'menu-btn-collection__item--disabled';
+      if link[0] || link[2]
+        a.menu-btn-collection__item(href=link[0] class=extraClass)= link[1]
+      else
+        div.menu-btn-collection__item(class=extraClass)= link[1]
+
+mixin menuPagination(collectionName)
+  +menuBtnCollection([
+    [querystringPrev?`/a/${collectionName}?${querystringPrev}`:undefined, '<', !querystringPrev],
+    [undefined, `Page ${page}`],
+    [querystringNext?`/a/${collectionName}?${querystringNext}`:undefined, '>', !querystringNext]
+    ], 1)
+
+mixin menuLimit(collectionName, options = [5, 10, 15, 20])
+  - let arr = [], active;
+  each option, i in options
+    -
+      arr.push([`/a/${collectionName}?limit=${option}&sort=${sort}`, option])
+      if(option === limit * 1){
+        active = i;
+      }
+  +menuDropdown('Enteries', arr, active, true)

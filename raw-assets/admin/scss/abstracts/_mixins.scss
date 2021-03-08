@@ -1,0 +1,57 @@
+@mixin position-absolute-element(
+  $horizontal-position,
+  $vertical-position,
+  $z-index: 0
+) {
+  position: absolute;
+  z-index: $z-index;
+
+  $translateX: 0;
+  $translateY: 0;
+
+  @if ($vertical-position == top) {
+    bottom: 100%;
+  } @else if ($vertical-position == middle) {
+    top: 50%;
+    $translateY: -50%;
+  } @else {
+    top: 100%;
+  }
+
+  @if ($horizontal-position == left) {
+    right: 100%;
+  } @else if($horizontal-position == center) {
+    left: 50%;
+    $translateX: -50%;
+  } @else {
+    left: 100%;
+  }
+
+  transform: translate($translateX, $translateY);
+}
+
+@mixin clearfix {
+  &::after {
+    content: '';
+    clear: both;
+    display: table;
+  }
+}
+
+@mixin currentColorOptions($colorDefault: primary) {
+  --current-color-lighter: var(--color-#{$colorDefault}-lighter);
+  --current-color-light: var(--color-#{$colorDefault}-light);
+  --current-color: var(--color-#{$colorDefault});
+  --current-color-dark: var(--color-#{$colorDefault}-dark);
+  --current-color-darker: var(--color-#{$colorDefault}-darker);
+
+  @each $color in $colors {
+    &--#{$color} {
+      --current-color-lighter: var(--color-#{$color}-lighter);
+      --current-color-light: var(--color-#{$color}-light);
+      --current-color: var(--color-#{$color});
+      --current-color-dark: var(--color-#{$color}-dark);
+      --current-color-darker: var(--color-#{$color}-darker);
+    }
+  }
+}

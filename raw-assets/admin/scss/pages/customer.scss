@@ -1,0 +1,65 @@
+// Customer imp - image, name and since
+.customer-imp {
+  display: grid;
+  grid-template-columns: min-content auto;
+  grid-template-rows: auto auto;
+  column-gap: 2rem;
+
+  &__img {
+    grid-row: 1 / span 2;
+    align-self: center;
+  }
+
+  &__heading-base {
+    margin-top: -0.3rem;
+  }
+}
+
+// Customer Contact
+.customer-contact {
+  padding: 2rem 0 0;
+
+  &__box {
+    display: grid;
+    grid-template-columns: 4rem max-content;
+    margin-bottom: 1rem;
+
+    font-size: 1.6rem;
+    font-weight: 300;
+  }
+
+  &__icon {
+    color: var(--color-yellow);
+  }
+
+  &__information {
+    // color: var(--color-grey-dark-2);
+  }
+}
+
+// Customer features
+.customer-features {
+  display: flex;
+  justify-content: space-evenly;
+  margin: 4rem 0;
+}
+
+// Customer status
+.customer-status {
+  margin-top: 1rem;
+
+  display: grid;
+  grid-template-columns: min-content 1fr;
+  align-items: center;
+  justify-items: start;
+  gap: 1rem;
+
+  &__name {
+    @include currentColorOptions;
+
+    background-color: var(--current-color);
+    color: var(--color-grey-light-1);
+    padding: 0.2rem 1.5rem;
+    border-radius: 5rem;
+  }
+}

@@ -1,0 +1,17 @@
+.main {
+  margin: var(--margin-main);
+  margin-top: 0;
+
+  &--small-layout {
+    width: 100%;
+    max-width: var(--small-layout-width);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  // background-color: var(--color-yellow);
+
+  & > * {
+    margin-bottom: var(--margin-main);
+  }
+}

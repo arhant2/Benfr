@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Benfr - Admin panel</title>
+    <!-- font-family: 'Roboto', sans-serif; -->
+    <script
+      src="https://kit.fontawesome.com/208182354f.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/style.css" />
+  </head>
+  <body class="body">
+    <nav class="sidebar">
+      <div class="sidebar__brand">
+        <i class="fas fa-camera-retro sidebar__brand-logo"></i>
+        <p class="sidebar__brand-name">Benfr</p>
+        <p class="sidebar__brand-tagline">Best Electronics at your Doorstep!</p>
+        <a href="#" class="btn btn--secondary"
+          ><i class="fas fa-cog"></i> Management</a
+        >
+      </div>
+
+      <ul class="sidebar__list">
+        <li class="sidebar__item">
+          <a href="./index.html" class="sidebar__link">
+            <i class="fas fa-home"></i>
+            Home
+          </a>
+        </li>
+
+        <li class="sidebar__item">
+          <a href="./orders.html" class="sidebar__link sidebar__link--active">
+            <i class="fas fa-luggage-cart"></i>
+            Orders
+          </a>
+        </li>
+
+        <li class="sidebar__item">
+          <a href="./customers.html" class="sidebar__link">
+            <i class="fas fa-user-tie"></i>
+            Customers
+          </a>
+        </li>
+
+        <li class="sidebar__item">
+          <a href="products.html" class="sidebar__link">
+            <i class="fas fa-box-open"></i>
+            Products
+          </a>
+        </li>
+
+        <li class="sidebar__item">
+          <a href="./brands.html" class="sidebar__link">
+            <i class="fas fa-cube"></i>
+            Brands
+          </a>
+        </li>
+
+        <li class="sidebar__item">
+          <a href="./categories.html" class="sidebar__link">
+            <i class="fas fa-folder-open"></i>
+            Categories
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="topbar">
+      <div class="topbar__extra-feature">
+        <a class="btn btn--only-icon" href="#"
+          ><i class="fas fa-globe-europe"></i
+        ></a>
+        <p class="topbar__extra-feature-name">View store live</p>
+      </div>
+
+      <form action="#" class="topbar__form">
+        <input
+          type="text"
+          class="topbar__form-input"
+          placeholder="Type anything here..."
+        />
+        <button class="btn topbar__form-btn">
+          <i class="fas fa-search"></i> Search
+        </button>
+      </form>
+
+      <div class="topbar__profile">
+        <img src="img/profile-3.jpg" alt="Admin" class="topbar__profile-img" />
+        <p class="topbar__profile-name">
+          Arhant Jain <i class="fas fa-sort"></i>
+        </p>
+      </div>
+    </div>
+
+    <header class="header">
+      <h1 class="header__heading heading-primary">Order #1234567890</h1>
+
+      <ul class="header__path">
+        <li class="header__path-item"><a href="#">Home</a></li>
+        <li class="header__path-item"><a href="#">Dashboard</a></li>
+        <li class="header__path-item"><a href="#">Orders</a></li>
+        <li class="header__path-item"><a href="#">Order #1234567890</a></li>
+      </ul>
+    </header>
+
+    <main class="main">
+      <div class="order-top">
+        <div class="order-top__left">
+          <div class="card card--partition order-card-user-status">
+            <div>
+              <div class="customer-imp">
+                <img
+                  class="icon-round icon-round customer-imp__img"
+                  src="img/profile.jpg"
+                  alt=""
+                />
+                <h2 class="heading-secondary customer-imp__heading">
+                  John Doe (john@doe.com)
+                </h2>
+                <p
+                  class="small-text small-text--light customer-imp__heading-base"
+                >
+                  Customer for 1 year
+                </p>
+              </div>
+            </div>
+            <div class="order-status">
+              <div class="order-status__box order-status__box--active">
+                <div class="order-status__circle"></div>
+                <div class="order-status__name">Ordered</div>
+                <div class="order-status__date light-text smaller-text">
+                  23rd Jan 2020
+                </div>
+              </div>
+              <div class="order-status__box order-status__box--active">
+                <div class="order-status__circle"></div>
+                <div class="order-status__name">Confirmed</div>
+                <div class="order-status__date light-text smaller-text">
+                  23rd Jan 2020
+                </div>
+              </div>
+              <div class="order-status__box order-status__box--active">
+                <div class="order-status__circle"></div>
+                <div class="order-status__name">Packed</div>
+                <div class="order-status__date light-text smaller-text">
+                  23rd Jan 2020
+                </div>
+              </div>
+              <div
+                class="order-status__box order-status__box--inactive light-text"
+              >
+                <div class="order-status__circle"></div>
+                <div class="order-status__name">Shipped</div>
+                <div class="order-status__date light-text smaller-text">
+                  XX XXX XXXX
+                </div>
+              </div>
+              <div
+                class="order-status__box order-status__box--inactive light-text"
+              >
+                <div class="order-status__circle"></div>
+                <div class="order-status__name">Delivered</div>
+                <div class="order-status__date light-text smaller-text">
+                  XX XXX XXXX
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="order-top__right">
+          <div class="card">
+            <h3 class="card__heading heading-secondary">
+              Delivery Information
+            </h3>
+            <div class="customer-contact">
+              <div class="customer-contact__box">
+                <div class="customer-contact__icon">
+                  <i class="fas fa-envelope"></i>
+                </div>
+                <div class="customer-contact__information">
+                  <p class="small-text small-text--light">Arhant Jain</p>
+                  <p class="small-text small-text--light">123 Johson Ave.,</p>
+                  <p class="small-text small-text--light">Appartment 101,</p>
+                  <p class="small-text small-text--light">Victorial BC,</p>
+                  <p class="small-text small-text--light">CA, 101</p>
+                </div>
+              </div>
+              <div class="customer-contact__box">
+                <div class="customer-contact__icon">
+                  <i class="fas fa-phone-alt"></i>
+                </div>
+                <div class="customer-contact__information">
+                  <p class="small-text small-text--light">+91 9876543210</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- <div class="card card--partition u-margin-bottom-main">
+            <div>
+              <h3 class="card__heading heading-secondary">Status</h3>
+              <div class="customer-status">
+                <div class="icon-round icon-round--green customer-status__icon">
+                  <i class="fas fa-check-double"></i>
+                </div>
+                <div class="customer-status__name customer-status__name--green">
+                  Currently active
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <button class="btn btn--red tooltip">
+                Make Inactive
+                <div class="tooltip__element tooltip__element--right">
+                  Revoke customer access
+                </div>
+              </button>
+            </div>
+          </div> -->
+        </div>
+      </div>
+
+      <div class="order-middle">
+        <h2
+          class="heading-secondary heading-secondary--big order-middle__heading"
+        >
+          Order Details
+        </h2>
+        <div class="order-middle__btns">
+          <button class="btn btn--primary">
+            Mark as shipped <i class="fas fa-shipping-fast"></i>
+          </button>
+          <button class="btn btn--green">
+            <i class="fas fa-download"></i> Download Invoice
+          </button>
+          <button class="btn btn--red">
+            <i class="fas fa-times"></i> Cancel order
+          </button>
+          <button class="btn btn--text">Reset Changes</button>
+        </div>
+      </div>
+
+      <div class="main-table main-table--orders">
+        <div class="main-table__heading-container">
+          <div class="main-table__heading">Item</div>
+          <div class="main-table__heading main-table__heading--unimportant">
+            Original Price
+          </div>
+          <div class="main-table__heading main-table__heading--important">
+            Price
+          </div>
+          <div class="main-table__heading main-table__heading--important">
+            Quantity
+          </div>
+          <div class="main-table__heading main-table__heading--important">
+            Total Price
+          </div>
+        </div>
+
+        <div class="main-table__row">
+          <div class="main-table__item main-table__item--first">
+            <img
+              src="img/product-6.jpg"
+              alt="Product image"
+              class="main-table__item-img"
+            />
+            <div class="main-table__item-first-text">
+              Apple iPhone 11 (256GB) - Black (Includes EarPods, Power Adapter)
+            </div>
+          </div>
+          <div class="main-table__item main-table_item--unimportant">
+            ₹71,999
+          </div>
+          <div class="main-table__item main-table__item--important">
+            ₹60,999
+          </div>
+          <div class="main-table__item main-table__item--important">
+            <p>Ordered - 5</p>
+            <p>Cofirmed - 3</p>
+            <p>
+              Deliver -
+              <input
+                type="number"
+                class="form-group-input form__input--small"
+                placeholder="3"
+                min="0"
+                max="3"
+                value="3"
+              />
+            </p>
+          </div>
+          <div class="main-table__item main-table__item--important">
+            ₹1,80,999
+          </div>
+        </div>
+
+        <div class="main-table__row">
+          <div class="main-table__item main-table__item--first">
+            <img
+              src="img/product-1.jpg"
+              alt="Product image"
+              class="main-table__item-img"
+            />
+            <div class="main-table__item-first-text">
+              All-new Echo Dot (4th Gen) | Next generation smart speaker with
+              improved bass and Alexa (Blue)
+            </div>
+          </div>
+          <div class="main-table__item main-table_item--unimportant">
+            ₹5,999
+          </div>
+          <div class="main-table__item main-table__item--important">₹4,999</div>
+          <div class="main-table__item main-table__item--important">
+            <p>Ordered - 2</p>
+            <p>Cofirmed - 1</p>
+            <p>
+              Deliver -
+              <input
+                type="number"
+                class="form-group-input form__input--small"
+                placeholder="3"
+                min="0"
+                max="1"
+                value="1"
+              />
+            </p>
+          </div>
+          <div class="main-table__item main-table__item--important">₹4,999</div>
+        </div>
+
+        <div class="main-table__row">
+          <div class="main-table__item main-table__item--first">
+            <img
+              src="img/product-7.jpg"
+              alt="Product image"
+              class="main-table__item-img"
+            />
+            <div class="main-table__item-first-text">
+              Canon EOS 1500D 24.1 Digital SLR Camera (Black)
+            </div>
+          </div>
+          <div class="main-table__item main-table_item--unimportant">
+            ₹71,999
+          </div>
+          <div class="main-table__item main-table__item--important">
+            ₹60,999
+          </div>
+          <div class="main-table__item main-table__item--important">
+            <p>Ordered - 1</p>
+            <p>Cofirmed - 1</p>
+            <p>
+              Deliver -
+              <input
+                type="number"
+                class="form-group-input form__input--small"
+                placeholder="1"
+                min="0"
+                max="1"
+                value="1"
+              />
+            </p>
+          </div>
+          <div class="main-table__item main-table__item--important">
+            ₹60,999
+          </div>
+        </div>
+
+        <div class="main-table__row">
+          <div class="main-table__item main-table__item--first">
+            <img
+              src="img/product-8.jpg"
+              alt="Product image"
+              class="main-table__item-img"
+            />
+            <div class="main-table__item-first-text">
+              New Apple MacBook Pro with Apple M1 Chip (13-inch, 8GB RAM, 256GB
+              SSD)
+            </div>
+          </div>
+          <div class="main-table__item main-table_item--unimportant">
+            ₹1,11,999
+          </div>
+          <div class="main-table__item main-table__item--important">
+            ₹1,11,999
+          </div>
+          <div class="main-table__item main-table__item--important">
+            <p>Ordered - 1</p>
+            <p>Cofirmed - 1</p>
+            <p>
+              Deliver -
+              <input
+                type="number"
+                class="form-group-input form__input--small"
+                placeholder="1"
+                min="0"
+                max="1"
+                value="1"
+              />
+            </p>
+          </div>
+          <div class="main-table__item main-table__item--important">
+            ₹1,11,999
+          </div>
+        </div>
+      </div>
+
+      <div class="order-total">
+        <div class="card order-total__content">
+          <div class="order-total__row">
+            <h3 class="heading-secondary order-total__name">Subtotal</h3>
+            <div class="order-total__value">₹10,80,999</div>
+          </div>
+          <div class="order-total__row">
+            <h3 class="heading-secondary order-total__name">Shipping</h3>
+            <div class="order-total__value">₹10</div>
+          </div>
+          <div class="order-total__row">
+            <h3 class="heading-secondary order-total__name">Total</h3>
+            <div class="order-total__value order-total__value--grand">
+              ₹10,80,999
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="../js/index.js"></script>
+  </body>
+</html>

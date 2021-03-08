@@ -1,0 +1,5 @@
+.divided-main {
+  display: grid;
+  grid-template-columns: 1.8fr minmax(20rem, 1fr);
+  gap: var(--margin-main);
+}

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Benfr - Admin panel</title>
+    <!-- font-family: 'Roboto', sans-serif; -->
+    <script
+      src="https://kit.fontawesome.com/208182354f.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/style.css" />
+  </head>
+  <body class="body">
+    <nav class="sidebar">
+      <div class="sidebar__brand">
+        <i class="fas fa-camera-retro sidebar__brand-logo"></i>
+        <p class="sidebar__brand-name">Benfr</p>
+        <p class="sidebar__brand-tagline">Best Electronics at your Doorstep!</p>
+        <a href="#" class="btn btn--secondary"
+          ><i class="fas fa-cog"></i> Management</a
+        >
+      </div>
+
+      <ul class="sidebar__list">
+        <li class="sidebar__item">
+          <a href="./index.html" class="sidebar__link">
+            <i class="fas fa-home"></i>
+            Home
+          </a>
+        </li>
+
+        <li class="sidebar__item">
+          <a href="./orders.html" class="sidebar__link">
+            <i class="fas fa-luggage-cart"></i>
+            Orders
+          </a>
+        </li>
+
+        <li class="sidebar__item">
+          <a href="./customers.html" class="sidebar__link">
+            <i class="fas fa-user-tie"></i>
+            Customers
+          </a>
+        </li>
+
+        <li class="sidebar__item">
+          <a href="products.html" class="sidebar__link">
+            <i class="fas fa-box-open"></i>
+            Products
+          </a>
+        </li>
+
+        <li class="sidebar__item">
+          <a href="./brands.html" class="sidebar__link sidebar__link--active">
+            <i class="fas fa-cube"></i>
+            Brands
+          </a>
+        </li>
+
+        <li class="sidebar__item">
+          <a href="./categories.html" class="sidebar__link">
+            <i class="fas fa-folder-open"></i>
+            Categories
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="topbar">
+      <div class="topbar__extra-feature">
+        <a class="btn btn--only-icon" href="#"
+          ><i class="fas fa-globe-europe"></i
+        ></a>
+        <p class="topbar__extra-feature-name">View store live</p>
+      </div>
+
+      <form action="#" class="topbar__form">
+        <input
+          type="text"
+          class="topbar__form-input"
+          placeholder="Type anything here..."
+        />
+        <button class="btn topbar__form-btn">
+          <i class="fas fa-search"></i> Search
+        </button>
+      </form>
+
+      <div class="topbar__profile">
+        <img src="img/profile-3.jpg" alt="Admin" class="topbar__profile-img" />
+        <p class="topbar__profile-name">
+          Arhant Jain <i class="fas fa-sort"></i>
+        </p>
+      </div>
+    </div>
+
+    <header class="header">
+      <h1 class="header__heading heading-primary">Brands</h1>
+
+      <ul class="header__path">
+        <li class="header__path-item"><a href="#">Home</a></li>
+        <li class="header__path-item"><a href="#">Dashboard</a></li>
+        <li class="header__path-item"><a href="#">Brand</a></li>
+      </ul>
+
+      <div class="header__features">
+        <div class="menu-dropdown js--components-function--dropdown">
+          <button
+            class="menu-dropdown__btn js--components-function--dropdown__btn"
+          >
+            Sort By <i class="fas fa-chevron-down"></i>
+          </button>
+          <!-- menu-dropdown__list--show -->
+          <ul
+            class="menu-dropdown__list js--components-function--dropdown__list"
+          >
+            <li class="menu-dropdown__item">
+              <a href="#" class="menu-dropdown__link"> Name [A-Z] </a>
+            </li>
+            <li class="menu-dropdown__item">
+              <a href="#" class="menu-dropdown__link"> Name [Z-A] </a>
+            </li>
+            <li class="menu-dropdown__item">
+              <a href="#" class="menu-dropdown__link">
+                Created (Oldest First)
+              </a>
+            </li>
+            <li class="menu-dropdown__item">
+              <a
+                href="#"
+                class="menu-dropdown__link menu-dropdown__link--active"
+              >
+                Created (Newest First)
+              </a>
+            </li>
+            <li class="menu-dropdown__item">
+              <a href="#" class="menu-dropdown__link">
+                Updated (Oldest First)
+              </a>
+            </li>
+            <li class="menu-dropdown__item">
+              <a href="#" class="menu-dropdown__link">
+                Updated (Newest First)
+              </a>
+            </li>
+            <li class="menu-dropdown__item">
+              <a href="#" class="menu-dropdown__link"> Items (Lowest First) </a>
+            </li>
+            <li class="menu-dropdown__item">
+              <a href="#" class="menu-dropdown__link">
+                Items (Highest First)
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="menu-btn-collection">
+          <a href="#" class="menu-btn-collection__item">&lt;</a>
+          <div
+            class="menu-btn-collection__item menu-btn-collection__item--active"
+          >
+            Page 1 of 5
+          </div>
+          <button class="menu-btn-collection__item">&gt;</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="main-table">
+        <div class="main-table__heading-container">
+          <div class="main-table__heading">Brand</div>
+          <div class="main-table__heading main-table__heading--important">
+            Products
+          </div>
+          <div class="main-table__heading main-table__heading--important">
+            Since
+          </div>
+        </div>
+        <div class="main-table__row">
+          <div class="main-table__item main-table__item--first">
+            <img
+              src="img/brand-apple.jpg"
+              alt="Product image"
+              class="main-table__item-img"
+            />
+            <div class="main-table__item-first-text">Apple</div>
+          </div>
+          <div class="main-table__item main-table__item--important">30</div>
+          <div class="main-table__item main-table__item--important">
+            1st Jan, 2020
+          </div>
+        </div>
+
+        <div class="main-table__row">
+          <div class="main-table__item main-table__item--first">
+            <img
+              src="img/brand-microsoft.jpg"
+              alt="Product image"
+              class="main-table__item-img"
+            />
+            <div class="main-table__item-first-text">Microsoft</div>
+          </div>
+          <div class="main-table__item main-table__item--important">55</div>
+          <div class="main-table__item main-table__item--important">
+            3rd Jan, 2020
+          </div>
+        </div>
+
+        <div class="main-table__row">
+          <div class="main-table__item main-table__item--first">
+            <img
+              src="img/brand-google.jpg"
+              alt="Product image"
+              class="main-table__item-img"
+            />
+            <div class="main-table__item-first-text">Google</div>
+          </div>
+          <div class="main-table__item main-table__item--important">52</div>
+          <div class="main-table__item main-table__item--important">
+            22nd March, 2020
+          </div>
+        </div>
+
+        <div class="main-table__row">
+          <div class="main-table__item main-table__item--first">
+            <img
+              src="img/brand-samsung.png"
+              alt="Product image"
+              class="main-table__item-img"
+            />
+            <div class="main-table__item-first-text">Samsung</div>
+          </div>
+          <div class="main-table__item main-table__item--important">30</div>
+          <div class="main-table__item main-table__item--important">
+            1st Jan, 2020
+          </div>
+        </div>
+
+        <div class="main-table__row">
+          <div class="main-table__item main-table__item--first">
+            <img
+              src="img/brand-dell.jpg"
+              alt="Product image"
+              class="main-table__item-img"
+            />
+            <div class="main-table__item-first-text">Dell</div>
+          </div>
+          <div class="main-table__item main-table__item--important">30</div>
+          <div class="main-table__item main-table__item--important">
+            1st Jan, 2020
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="../js/index.js"></script>
+  </body>
+</html>

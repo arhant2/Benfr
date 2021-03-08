@@ -1,0 +1,54 @@
+extends base/_base
+
+block append variables
+  - sidebarActive = 'Brands';
+
+block content
+  +header('Brands', [['/a/brands', 'Brands']])
+    +menuDropdown('Sort By', [
+      [`/a/brands?limit=${limit}&sort=name`, 'Name [A-Z]'],
+      [`/a/brands?limit=${limit}&sort=-name`, 'Name [Z-A]'],
+      [`/a/brands?limit=${limit}&sort=-createdAt`, 'Created (Newest First)'],
+      [`/a/brands?limit=${limit}&sort=createdAt`, 'Created (Oldest First)'],
+      [`/a/brands?limit=${limit}&sort=-updatedAt`, 'Updated (Newest First)'],
+      [`/a/brands?limit=${limit}&sort=updatedAt`, 'Updated (Oldest First)'],
+      [`/a/brands?limit=${limit}&sort=-productsCount`, 'Items (Highest First)'],
+      [`/a/brands?limit=${limit}&sort=productsCount`, 'Items (Lowest First)'],
+    ], ['name', '-name', '-createdAt', 'createdAt', '-updatedAt', 'updatedAt', '-productsCount', 'productsCount'].indexOf(sort))
+    
+    +menuLimit('brands')
+    +menuPagination('brands')
+
+  main.main
+    .main-table 
+      .main-table__heading-container 
+        .main-table__heading Brand 
+        .main-table__heading.main-table__heading--important Products
+        .main-table__heading.main-table__heading--important Created
+      
+      each brand in documents
+        a.main-table__row.reset-anchor(href=`/a/brands/${brand.id}/${brand.nameNormalized}`)
+          .main-table__item.main-table__item--first
+            - 
+              let src = '/assets/admin/img/no-image.png';
+              if(brand.images && brand.images[0] && brand.images[0].path){
+                src = brand.images[0].path;
+              }
+            img.main-table__item-img(src=src alt='Product image')
+            .main-table__item-first-text= brand.name 
+          .main-table__item.main-table__item--important= brand.productsCount
+          .main-table__item.main-table__item--important= dateFormator.dateFormatted(brand.createdAt)
+
+
+//- <div class="header__features">
+
+//-   <div class="menu-btn-collection">
+//-     <a href="#" class="menu-btn-collection__item">&lt;</a>
+//-     <div
+//-       class="menu-btn-collection__item menu-btn-collection__item--active"
+//-     >
+//-       Page 1 of 5
+//-     </div>
+//-     <button class="menu-btn-collection__item">&gt;</button>
+//-   </div>
+//- </div>

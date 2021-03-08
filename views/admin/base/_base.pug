@@ -1,0 +1,35 @@
+block variables
+  -
+    let sidebarActive = 'Home';
+    let topbarFeatureBtn = ['/', 'View store live', 'fas fa-globe-europe'];
+
+include ../mixins/_header
+include ../mixins/_menu
+
+doctype html
+html(lang='en')
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+    title Benfr - Admin Panel
+
+    // Font awesome
+    script(src='https://kit.fontawesome.com/208182354f.js' crossorigin='anonymous')
+
+    // Google Fonts
+    //- font-family: 'Roboto', sans-serif;
+    link(rel='preconnect' href='https://fonts.gstatic.com')
+    link(href='https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"' rel='stylesheet')
+  
+    link(rel='stylesheet' href='/assets/admin/css/style.css')
+
+  body.body
+
+    include ../components/_sidebar
+
+    include ../components/_topbar
+
+    block content
+
+    script(src='/assets/admin/js/index.js')
+

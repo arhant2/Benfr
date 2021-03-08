@@ -1,0 +1,55 @@
+.rotatable-circle {
+  width: 13rem;
+  height: 13rem;
+  border-radius: 50%;
+  position: relative;
+
+  @include currentColorOptions;
+
+  &__side {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    box-shadow: var(--shadow-primary);
+    color: var(--color-grey-light-1);
+    background: linear-gradient(
+      to right,
+      var(--current-color-light),
+      var(--current-color-dark)
+    );
+
+    backface-visibility: hidden;
+    position: absolute;
+    transition: all 0.5s;
+
+    &--front {
+    }
+
+    &--back {
+      transform: rotateY(180deg);
+    }
+  }
+
+  &:hover &__side--front {
+    transform: rotateY(-180deg);
+  }
+
+  &:hover &__side--back {
+    transform: translateY(0);
+  }
+
+  &__quantity-number {
+    font-size: 4rem;
+    font-weight: 500;
+    line-height: 1;
+  }
+
+  &__quantity-name {
+    letter-spacing: 1px;
+  }
+}

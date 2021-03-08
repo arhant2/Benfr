@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Benfr - Admin panel</title>
+    <!-- font-family: 'Roboto', sans-serif; -->
+    <script
+      src="https://kit.fontawesome.com/208182354f.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/style.css" />
+  </head>
+  <body class="body">
+    <nav class="sidebar">
+      <div class="sidebar__brand">
+        <i class="fas fa-camera-retro sidebar__brand-logo"></i>
+        <p class="sidebar__brand-name">Benfr</p>
+        <p class="sidebar__brand-tagline">Best Electronics at your Doorstep!</p>
+        <a href="#" class="btn btn--secondary"
+          ><i class="fas fa-cog"></i> Management</a
+        >
+      </div>
+
+      <ul class="sidebar__list">
+        <li class="sidebar__item">
+          <a href="./index.html" class="sidebar__link">
+            <i class="fas fa-home"></i>
+            Home
+          </a>
+        </li>
+
+        <li class="sidebar__item">
+          <a href="./orders.html" class="sidebar__link">
+            <i class="fas fa-luggage-cart"></i>
+            Orders
+          </a>
+        </li>
+
+        <li class="sidebar__item">
+          <a
+            href="./customers.html"
+            class="sidebar__link sidebar__link--active"
+          >
+            <i class="fas fa-user-tie"></i>
+            Customers
+          </a>
+        </li>
+
+        <li class="sidebar__item">
+          <a href="products.html" class="sidebar__link">
+            <i class="fas fa-box-open"></i>
+            Products
+          </a>
+        </li>
+
+        <li class="sidebar__item">
+          <a href="./brands.html" class="sidebar__link">
+            <i class="fas fa-cube"></i>
+            Brands
+          </a>
+        </li>
+
+        <li class="sidebar__item">
+          <a href="./categories.html" class="sidebar__link">
+            <i class="fas fa-folder-open"></i>
+            Categories
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="topbar">
+      <div class="topbar__extra-feature">
+        <a class="btn btn--only-icon" href="#"
+          ><i class="fas fa-globe-europe"></i
+        ></a>
+        <p class="topbar__extra-feature-name">View store live</p>
+      </div>
+
+      <form action="#" class="topbar__form">
+        <input
+          type="text"
+          class="topbar__form-input"
+          placeholder="Type anything here..."
+        />
+        <button class="btn topbar__form-btn">
+          <i class="fas fa-search"></i> Search
+        </button>
+      </form>
+
+      <div class="topbar__profile">
+        <img src="img/profile-3.jpg" alt="Admin" class="topbar__profile-img" />
+        <p class="topbar__profile-name">
+          Arhant Jain <i class="fas fa-sort"></i>
+        </p>
+      </div>
+    </div>
+
+    <header class="header header--small-layout">
+      <h1 class="header__heading heading-primary">John Doe</h1>
+
+      <ul class="header__path">
+        <li class="header__path-item"><a href="#">Home</a></li>
+        <li class="header__path-item"><a href="#">Dashboard</a></li>
+        <li class="header__path-item"><a href="#">Customers</a></li>
+        <li class="header__path-item"><a href="#">Customer</a></li>
+      </ul>
+    </header>
+
+    <main class="main main--small-layout divided-main">
+      <div class="divided-main__left">
+        <div class="card card--partition">
+          <div>
+            <div class="customer-imp">
+              <img
+                class="icon-round icon-round customer-imp__img"
+                src="img/profile.jpg"
+                alt=""
+              />
+              <h2 class="heading-secondary customer-imp__heading">John Doe</h2>
+              <p
+                class="small-text small-text--light customer-imp__heading-base"
+              >
+                Customer for 1 year
+              </p>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="card__heading heading-secondary">Contact Information</h3>
+            <div class="customer-contact">
+              <div class="customer-contact__box">
+                <div class="customer-contact__icon">
+                  <i class="fas fa-envelope"></i>
+                </div>
+                <div class="customer-contact__information">
+                  john12@gmail.com
+                </div>
+              </div>
+              <div class="customer-contact__box">
+                <div class="customer-contact__icon">
+                  <i class="fas fa-phone-alt"></i>
+                </div>
+                <div class="customer-contact__information">+91 9876543210</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="customer-features">
+          <div class="rotatable-circle rotatable-circle--red">
+            <div class="rotatable-circle__side rotatable-circle__side--front">
+              <div class="rotatable-circle__quantity-number">29</div>
+              <div class="rotatable-circle__quantity-name">Orders</div>
+            </div>
+
+            <div class="rotatable-circle__side rotatable-circle__side--back">
+              <p>View orders</p>
+              <button class="btn btn--small-cta u-margin-top-smaller">
+                Click here!
+              </button>
+            </div>
+          </div>
+
+          <div class="rotatable-circle rotatable-circle--green">
+            <div class="rotatable-circle__side rotatable-circle__side--front">
+              <div class="rotatable-circle__quantity-number">75</div>
+              <div class="rotatable-circle__quantity-name">Reviews</div>
+            </div>
+
+            <div class="rotatable-circle__side rotatable-circle__side--back">
+              <p>View reviews</p>
+              <button class="btn btn--small-cta u-margin-top-smaller">
+                Click here!
+              </button>
+            </div>
+          </div>
+
+          <div class="rotatable-circle rotatable-circle--blue">
+            <div class="rotatable-circle__side rotatable-circle__side--front">
+              <div class="rotatable-circle__quantity-number">1yr</div>
+              <div class="rotatable-circle__quantity-name">Since</div>
+            </div>
+            <div class="rotatable-circle__side rotatable-circle__side--back">
+              <p>Registered on</p>
+              <p class="heading-secondary">27th Jan, 2020</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divided-main__right">
+        <div class="card card--partition u-margin-bottom-main">
+          <div>
+            <h3 class="card__heading heading-secondary">Status</h3>
+            <div class="customer-status">
+              <div class="icon-round icon-round--green customer-status__icon">
+                <i class="fas fa-check-double"></i>
+              </div>
+              <div class="customer-status__name customer-status__name--green">
+                Currently active
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <button class="btn btn--red tooltip">
+              Make Inactive
+              <div class="tooltip__element tooltip__element--right">
+                Revoke customer access
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <div class="card card--partition">
+          <div>
+            <h3 class="card__heading heading-secondary">Addresses</h3>
+          </div>
+          <div>
+            <div class="customer-contact__box u-margin-bottom-small">
+              <div class="customer-contact__icon">A</div>
+              <div>
+                <p class="small-text small-text--light">Arhant Jain</p>
+                <p class="small-text small-text--light">123 Johson Ave.,</p>
+                <p class="small-text small-text--light">Appartment 101,</p>
+                <p class="small-text small-text--light">Victorial BC,</p>
+                <p class="small-text small-text--light">CA, 101</p>
+              </div>
+            </div>
+
+            <button class="btn btn--text">
+              <i class="fas fa-location-arrow"></i> See more
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="../js/index.js"></script>
+  </body>
+</html>

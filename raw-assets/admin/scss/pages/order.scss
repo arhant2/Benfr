@@ -1,0 +1,112 @@
+.order-top {
+  display: grid;
+  grid-template-columns: 1.8fr minmax(20rem, 1fr);
+  gap: var(--margin-main);
+
+  & > * {
+    height: 100%;
+  }
+
+  &__left > *,
+  &__right > * {
+    height: 100%;
+  }
+}
+
+.order-card-user-status {
+  display: grid;
+  grid-template-rows: max-content 1fr;
+  align-items: center;
+}
+
+.order-status {
+  --current-color: var(--color-purple);
+
+  display: grid;
+  display: flex;
+
+  &__box {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+
+    &:not(:first-child)::before {
+      content: '';
+      height: 3px;
+      width: 100%;
+      background-color: var(--current-color);
+
+      position: absolute;
+      top: 1.25rem;
+      right: 50%;
+    }
+
+    &--active {
+      --current-color: var(--color-purple);
+    }
+
+    &--inactive {
+      --current-color: var(--color-grey-light-3);
+    }
+  }
+
+  &__circle {
+    padding: 1px;
+    z-index: 1;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    border: 0.5rem solid var(--color-white);
+    background-color: var(--color-purple);
+    box-shadow: 0 10px 20px rgb(0 0 0 / 19%), 0 6px 6px rgb(0 0 0 / 23%);
+    transition: all 0.2s;
+    cursor: pointer;
+
+    &:hover {
+      transform: scale(1.2);
+      box-shadow: 0 14px 28px rgb(0 0 0 / 25%), 0 10px 10px rgb(0 0 0 / 22%);
+    }
+  }
+
+  &__name {
+    margin-top: 1rem;
+    margin-bottom: -0.2rem;
+  }
+}
+
+.order-total {
+  display: grid;
+  grid-template-columns: minmax(20rem, 2fr) repeat(4, minmax(5rem, 1fr));
+  align-items: center;
+
+  &__content {
+    grid-column: -3 / -1;
+  }
+
+  &__row {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem calc(9%) 1rem 1.25rem;
+    border-radius: 0.5rem;
+    &:last-child {
+      background-color: var(--color-grey-light-2);
+    }
+  }
+
+  &__value--grand {
+    font-size: 1.2em;
+  }
+}
+
+.order-middle {
+  margin-top: 5rem;
+  display: flex;
+  justify-content: space-between;
+
+  &__btns > * {
+    margin-left: 0.3rem;
+  }
+}

@@ -1,0 +1,19 @@
+.card {
+  // display: block;
+  background-color: var(--color-white);
+  box-shadow: var(--shadow-primary);
+  border-radius: 0.7rem;
+  padding: 1.6rem 2.5rem;
+
+  &--partition {
+    padding: 0;
+
+    & > * {
+      padding: 1.6rem 2.5rem;
+
+      &:not(:last-child) {
+        border-bottom: 2px solid var(--color-grey-light-3);
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+.stats-chart {
+  &__canvas-outer {
+    margin-top: 5%;
+  }
+
+  &--small {
+    .stats-chart__canvas-outer {
+      margin-top: 10%;
+    }
+  }
+}

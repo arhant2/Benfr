@@ -1,0 +1,25 @@
+mixin sidebarList(links)
+  ul.sidebar__list
+    each link in links
+      li.sidebar__item
+        a.sidebar__link(class=sidebarActive===link[1]?'sidebar__link--active':'' href=link[0])
+          i(class=link[2])
+          | &nbsp;#{link[1]}
+
+nav.sidebar
+  .sidebar__brand
+    i.fas.fa-camera-retro.sidebar__brand-logo
+    p.sidebar__brand-name Benfr
+    p.sidebar__brand-tagline Best Electronics at your Doorstep!
+    a.btn.btn--secondary
+      i.fas.fa-cog 
+      | &nbsp;Management
+
+  +sidebarList([
+    ['/a/dashboard', 'Home', 'fas fa-home'],
+    ['/a/orders', 'Orders', 'fas fa-luggage-cart'],
+    ['/a/customers', 'Customers', 'fas fa-user-tie'],
+    ['/a/products', 'Products', 'fas fa-box-open'],
+    ['/a/brands', 'Brands', 'fas fa-cube'],
+    ['/a/categories', 'Categories', 'fas fa-folder-open']
+  ])

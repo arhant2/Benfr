@@ -1,0 +1,108 @@
+.main-table {
+  background-color: var(--color-white);
+  font-size: 1.4rem;
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow-primary);
+
+  // display: block;
+
+  // tr {
+  //   display: block;
+  // }
+
+  // td {
+  //   display: inline-block;
+  // }
+
+  &__heading-container,
+  &__row {
+    display: grid;
+    grid-template-columns: minmax(20rem, 2fr) repeat(
+        auto-fit,
+        minmax(5rem, 1fr)
+      );
+    align-items: center;
+    justify-items: start;
+  }
+
+  &__heading-container,
+  &__row:not(:last-child) {
+    border-bottom: 1px solid var(--color-grey-light-3);
+  }
+
+  &__row:nth-child(even) {
+    background-color: var(--color-grey-light-2);
+  }
+
+  &__row {
+    cursor: pointer;
+    position: relative;
+  }
+
+  &__row:hover {
+    &::before {
+      content: '';
+      display: block;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 2px;
+      height: 100%;
+      background-color: var(--color-primary);
+    }
+  }
+
+  &__heading,
+  &__item {
+    padding: 1.4rem 2.5rem;
+  }
+
+  &__heading {
+    font-weight: 500;
+    font-size: 1.5rem;
+  }
+
+  .main-table__item--first {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    align-items: center;
+  }
+
+  &__item-img {
+    // display: block;
+    width: 4rem;
+    height: 4rem;
+    margin-right: 2rem;
+    object-fit: contain;
+
+    &--round {
+      border-radius: 50%;
+    }
+  }
+
+  .main-table_item--status {
+    font-size: 1.2rem;
+    letter-spacing: 0.3px;
+
+    span {
+      background-color: var(--color-primary);
+      padding: 2px 1rem;
+      color: var(--color-white);
+      border-radius: 50px;
+    }
+
+    @each $color in $colors {
+      &-#{$color} span {
+        background-color: var(--color-#{$color});
+      }
+    }
+  }
+
+  &--orders {
+    .main-table__heading:last-child,
+    .main-table__item:last-child {
+      justify-self: right;
+      padding-right: 30%;
+    }
+  }
+}
