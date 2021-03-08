@@ -6,7 +6,7 @@ mixin menuDropdown(name, links, active, noMin=false)
       i.fas.fa-chevron-down
 
     //- menu-dropdown__list--show
-    ul.menu-dropdown__list.js--components-function--dropdown__list(class=noMin?'menu-dropdown__list--no-min':'')
+    ul.menu-dropdown__list.js--components-function--dropdown__list(class=noMin?'menu-dropdown__list--no-min':'' data-show-class='menu-dropdown__list--show')
       each link, i in links
         li.menu-dropdown__item: a.menu-dropdown__link(href=link[0] class=i===active?'menu-dropdown__link--active':'')= link[1]
 

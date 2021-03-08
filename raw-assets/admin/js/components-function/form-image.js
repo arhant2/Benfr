@@ -1,3 +1,5 @@
+const imageOuters = document.getElementsByClassName('js--components--image');
+
 const fileInputs = document.getElementsByClassName(
   'js--components--image__add'
 );
@@ -54,46 +56,59 @@ const removedImage = (anyInnerElement) => {
   return !!(removeCheckBox && removeCheckBox.checked);
 };
 
-Array.from(fileInputs).forEach((fileInput) => {
-  fileInput.addEventListener('change', function () {
-    let notUploaded = this.files.length === 0;
+const changeImageHandler = (fileInput) => {
+  let notUploaded = fileInput.files.length === 0;
 
-    if (!notUploaded) {
-      const size = this.files[0].size / (1024 * 1024);
-      if (size > 5) {
-        alert('File larger than 5mb. Cannot upload.');
-        notUploaded = true;
-      }
+  if (!notUploaded) {
+    if (!fileInput.files[0].type.startsWith('image')) {
+      alert('Cannot upload! Please upload image only');
+      notUploaded = true;
     }
+  }
 
-    if (notUploaded) {
-      console.log('Arhant');
-      if (removedImage(this)) {
-        changeStateImage(this, 'none');
-        return;
-      }
-      changeStateImage(this, 'original');
+  if (!notUploaded) {
+    const size = fileInput.files[0].size / (1024 * 1024);
+    if (size > 5) {
+      alert('File larger than 5mb. Cannot upload.');
+      notUploaded = true;
+    }
+  }
+
+  if (notUploaded) {
+    if (removedImage(fileInput)) {
+      changeStateImage(fileInput, 'none');
       return;
     }
+    changeStateImage(fileInput, 'original');
+    return;
+  }
 
-    const reader = new FileReader();
+  const reader = new FileReader();
 
-    reader.onload = ((anyInnerElement) => (e) => {
-      const imageCurrent = getElement(
-        this,
-        '.js--components--image__image-current'
-      );
-      const removeCheckBox = getElement(this, '.js--components--image__remove');
-      if (imageCurrent) {
-        imageCurrent.src = e.target.result;
-      }
-      if (removeCheckBox) {
-        removeCheckBox.checked = false;
-      }
-      changeStateImage(this, 'current');
-    })(this);
+  reader.onload = ((anyInnerElement) => (e) => {
+    const imageCurrent = getElement(
+      fileInput,
+      '.js--components--image__image-current'
+    );
+    const removeCheckBox = getElement(
+      fileInput,
+      '.js--components--image__remove'
+    );
+    if (imageCurrent) {
+      imageCurrent.src = e.target.result;
+    }
+    if (removeCheckBox) {
+      removeCheckBox.checked = false;
+    }
+    changeStateImage(fileInput, 'current');
+  })(fileInput);
 
-    reader.readAsDataURL(this.files[0]);
+  reader.readAsDataURL(fileInput.files[0]);
+};
+
+Array.from(fileInputs).forEach((fileInput) => {
+  fileInput.addEventListener('change', function () {
+    changeImageHandler(this);
   });
 });
 
@@ -113,9 +128,9 @@ Array.from(resets).forEach((reset) => {
 });
 
 Array.from(removeCheckBoxes).forEach((removeCheckBox) => {
-  console.log(removeCheckBox);
-
   removeCheckBox.addEventListener('change', function () {
+    // console.log(this);
+
     const fileInput = getElement(this, '.js--components--image__add');
     if (fileInput) {
       fileInput.value = '';
@@ -125,5 +140,39 @@ Array.from(removeCheckBoxes).forEach((removeCheckBox) => {
     } else {
       changeStateImage(this, 'original');
     }
+  });
+});
+
+Array.from(imageOuters).forEach((imageOuter) => {
+  ['dragover', 'dragleave', 'dragend'].forEach((eventType) => {
+    imageOuter.addEventListener(eventType, function (e) {
+      e.preventDefault();
+    });
+  });
+
+  imageOuter.addEventListener('drop', function (e) {
+    e.preventDefault();
+
+    const data = e.dataTransfer.files[0];
+
+    if (!data) {
+      return;
+    }
+
+    if (!data.type.startsWith('image')) {
+      alert('Cannot upload! Please upload image only');
+      return;
+    }
+
+    if (data.size / (1024 * 1024) > 5) {
+      alert('File larger than 5mb. Cannot upload.');
+      return;
+    }
+
+    const fileInput = this.querySelector('.js--components--image__add');
+
+    fileInput.files = e.dataTransfer.files;
+
+    changeImageHandler(fileInput);
   });
 });

@@ -2,3 +2,5 @@
 import './components-function/chart';
 import './components-function/dropdown';
 import './components-function/form-image';
+
+import './pages/each-product';

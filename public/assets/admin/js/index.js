@@ -22444,18 +22444,37 @@ Array.from(document.getElementsByClassName('js--components-function--chart')).fo
 },{"chart.js":"../../../node_modules/chart.js/dist/Chart.js","color-alpha":"../../../node_modules/color-alpha/index.js","../utilities/cssGlobalVariables":"utilities/cssGlobalVariables.js"}],"components-function/dropdown.js":[function(require,module,exports) {
 Array.from(document.getElementsByClassName('js--components-function--dropdown__btn')).forEach(function (btn) {
   btn.addEventListener('click', function () {
-    this.nextElementSibling.classList.toggle('menu-dropdown__list--show');
+    var dropdown = this.closest('.js--components-function--dropdown');
+
+    if (!dropdown) {
+      return;
+    }
+
+    var list = dropdown.getElementsByClassName('js--components-function--dropdown__list')[0];
+
+    if (!list) {
+      return;
+    } // console.log(this.dataset.showClass);
+
+
+    if (list.dataset.showClass) {
+      list.classList.toggle(list.dataset.showClass);
+    }
   });
 });
-var lists = Array.from(document.getElementsByClassName('menu-dropdown__list'));
+var lists = Array.from(document.getElementsByClassName('js--components-function--dropdown__list'));
 window.addEventListener('click', function (event) {
   if (!event.target.matches('.js--components-function--dropdown') && !event.target.matches('.js--components-function--dropdown *')) {
     lists.forEach(function (list) {
-      list.classList.remove('menu-dropdown__list--show');
+      // 'menu-dropdown__list--show'
+      if (list.dataset.showClass) {
+        list.classList.remove(list.dataset.showClass);
+      }
     });
   }
 });
 },{}],"components-function/form-image.js":[function(require,module,exports) {
+var imageOuters = document.getElementsByClassName('js--components--image');
 var fileInputs = document.getElementsByClassName('js--components--image__add');
 var removeCheckBoxes = document.getElementsByClassName('js--components--image__remove');
 var resets = document.getElementsByClassName('js--components--image__reset');
@@ -22503,53 +22522,60 @@ var removedImage = function removedImage(anyInnerElement) {
   return !!(removeCheckBox && removeCheckBox.checked);
 };
 
-Array.from(fileInputs).forEach(function (fileInput) {
-  fileInput.addEventListener('change', function () {
-    var _this = this;
+var changeImageHandler = function changeImageHandler(fileInput) {
+  var notUploaded = fileInput.files.length === 0;
 
-    var notUploaded = this.files.length === 0;
-
-    if (!notUploaded) {
-      var size = this.files[0].size / (1024 * 1024);
-
-      if (size > 5) {
-        alert('File larger than 5mb. Cannot upload.');
-        notUploaded = true;
-      }
+  if (!notUploaded) {
+    if (!fileInput.files[0].type.startsWith('image')) {
+      alert('Cannot upload! Please upload image only');
+      notUploaded = true;
     }
+  }
 
-    if (notUploaded) {
-      console.log('Arhant');
+  if (!notUploaded) {
+    var size = fileInput.files[0].size / (1024 * 1024);
 
-      if (removedImage(this)) {
-        changeStateImage(this, 'none');
-        return;
-      }
+    if (size > 5) {
+      alert('File larger than 5mb. Cannot upload.');
+      notUploaded = true;
+    }
+  }
 
-      changeStateImage(this, 'original');
+  if (notUploaded) {
+    if (removedImage(fileInput)) {
+      changeStateImage(fileInput, 'none');
       return;
     }
 
-    var reader = new FileReader();
+    changeStateImage(fileInput, 'original');
+    return;
+  }
 
-    reader.onload = function (anyInnerElement) {
-      return function (e) {
-        var imageCurrent = getElement(_this, '.js--components--image__image-current');
-        var removeCheckBox = getElement(_this, '.js--components--image__remove');
+  var reader = new FileReader();
 
-        if (imageCurrent) {
-          imageCurrent.src = e.target.result;
-        }
+  reader.onload = function (anyInnerElement) {
+    return function (e) {
+      var imageCurrent = getElement(fileInput, '.js--components--image__image-current');
+      var removeCheckBox = getElement(fileInput, '.js--components--image__remove');
 
-        if (removeCheckBox) {
-          removeCheckBox.checked = false;
-        }
+      if (imageCurrent) {
+        imageCurrent.src = e.target.result;
+      }
 
-        changeStateImage(_this, 'current');
-      };
-    }(this);
+      if (removeCheckBox) {
+        removeCheckBox.checked = false;
+      }
 
-    reader.readAsDataURL(this.files[0]);
+      changeStateImage(fileInput, 'current');
+    };
+  }(fileInput);
+
+  reader.readAsDataURL(fileInput.files[0]);
+};
+
+Array.from(fileInputs).forEach(function (fileInput) {
+  fileInput.addEventListener('change', function () {
+    changeImageHandler(this);
   });
 });
 Array.from(resets).forEach(function (reset) {
@@ -22569,8 +22595,8 @@ Array.from(resets).forEach(function (reset) {
   });
 });
 Array.from(removeCheckBoxes).forEach(function (removeCheckBox) {
-  console.log(removeCheckBox);
   removeCheckBox.addEventListener('change', function () {
+    // console.log(this);
     var fileInput = getElement(this, '.js--components--image__add');
 
     if (fileInput) {
@@ -22584,7 +22610,113 @@ Array.from(removeCheckBoxes).forEach(function (removeCheckBox) {
     }
   });
 });
-},{}],"index.js":[function(require,module,exports) {
+Array.from(imageOuters).forEach(function (imageOuter) {
+  ['dragover', 'dragleave', 'dragend'].forEach(function (eventType) {
+    imageOuter.addEventListener(eventType, function (e) {
+      e.preventDefault();
+    });
+  });
+  imageOuter.addEventListener('drop', function (e) {
+    e.preventDefault();
+    var data = e.dataTransfer.files[0];
+
+    if (!data) {
+      return;
+    }
+
+    if (!data.type.startsWith('image')) {
+      alert('Cannot upload! Please upload image only');
+      return;
+    }
+
+    if (data.size / (1024 * 1024) > 5) {
+      alert('File larger than 5mb. Cannot upload.');
+      return;
+    }
+
+    var fileInput = this.querySelector('.js--components--image__add');
+    fileInput.files = e.dataTransfer.files;
+    changeImageHandler(fileInput);
+  });
+});
+},{}],"pages/each-product__template.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.categoriesTemplate = exports.specificationsTemplate = void 0;
+var specificationsTemplate = "\n<div\n  class=\"form__group-outer-remove js--page-each-product--specifications__each\"\n>\n  <div class=\"form__group form__group--partition-1-2\">\n    <div>\n      <input\n        type=\"text\"\n        name=\"specifications[{%NUM%}][field]\"\n        class=\"form-group-input form__input--single-line u-width-full\"\n        placeholder=\"Title\"\n      />\n    </div>\n    <div>\n      <textarea\n        name=\"[{%NUM%}][value]\"\n        class=\"form-group-input form__input--textarea u-width-full\"\n        placeholder=\"Write a description here...\"\n        rows=\"2\"\n      ></textarea>\n    </div>\n  </div>\n  <button\n    type=\"button\"\n    class=\"btn btn--text btn--red tooltip js--page-each-product--specifications__each--remove-btn\"\n    data-tooltip-direction=\"right\"\n  >\n    <i class=\"far fa-trash-alt\"></i>\n    <div class=\"tooltip__element tooltip__element--right\">Delete</div>\n  </button>\n</div>\n";
+exports.specificationsTemplate = specificationsTemplate;
+var categoriesTemplate = "\n<div\nclass=\"form-tags__inputs-each-outer js--page-each-product--category__input\"\n>\n<input\n  type=\"text\"\n  class=\"form-tags__inputs-input\"\n  value=\"{%VALUE%}\"\n  readonly\n/>\n<span class=\"form-tags__inputs-text\">{%NAME%}</span>\n<button\n  type=\"button\"\n  class=\"form-tags__inputs-remove-btn js--page-each-product--category__input-remove-btn\"\n>\n  &Cross;\n</button>\n</div>\n";
+exports.categoriesTemplate = categoriesTemplate;
+},{}],"pages/each-product.js":[function(require,module,exports) {
+"use strict";
+
+var _eachProduct__template = require("./each-product__template");
+
+var addSpecificationBtn = document.getElementsByClassName('js--page-each-product--specifications__add-btn')[0];
+var specificationBox = document.getElementsByClassName('js--page-each-product--specifications__box')[0];
+
+if (specificationBox) {
+  window.addEventListener('click', function (e) {
+    if (!(e.target.matches('.js--page-each-product--specifications__each-remove-btn') || e.target.matches('.js--page-each-product--specifications__each-remove-btn *'))) {
+      return;
+    }
+
+    var each = e.target.closest('.js--page-each-product--specifications__each');
+
+    if (!each) {
+      return;
+    }
+
+    each.remove();
+  });
+
+  if (addSpecificationBtn) {
+    addSpecificationBtn.addEventListener('click', function () {
+      specificationBox.insertAdjacentHTML('beforeend', _eachProduct__template.specificationsTemplate);
+    });
+  }
+}
+/*
+==================================================================================
+                              Category
+==================================================================================
+*/
+
+
+var category = document.getElementsByClassName('js--page-each-product--category')[0];
+var categoryInputsContainer = document.getElementsByClassName('js--page-each-product--category__inputs-container')[0];
+var categoryEachBtns = document.getElementsByClassName('js--page-each-product--category__each-btn');
+
+if (category && categoryInputsContainer) {
+  window.addEventListener('click', function (e) {
+    if (!(e.target.matches('.js--page-each-product--category__input-remove-btn') || e.target.matches('.js--page-each-product--category__input-remove-btn *'))) {
+      return;
+    }
+
+    var each = e.target.closest('.js--page-each-product--category__input');
+
+    if (!each) {
+      return;
+    }
+
+    each.remove();
+  });
+  Array.from(categoryEachBtns).forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      if (!btn.dataset.value) {
+        return;
+      }
+
+      var html = _eachProduct__template.categoriesTemplate.replace('{%VALUE%}', this.dataset.value).replace('{%NAME%}', this.textContent);
+
+      categoryInputsContainer.insertAdjacentHTML('beforeend', html);
+    });
+  });
+}
+},{"./each-product__template":"pages/each-product__template.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
 require("./components-function/chart");
@@ -22592,7 +22724,9 @@ require("./components-function/chart");
 require("./components-function/dropdown");
 
 require("./components-function/form-image");
-},{"./components-function/chart":"components-function/chart.js","./components-function/dropdown":"components-function/dropdown.js","./components-function/form-image":"components-function/form-image.js"}],"../../../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+
+require("./pages/each-product");
+},{"./components-function/chart":"components-function/chart.js","./components-function/dropdown":"components-function/dropdown.js","./components-function/form-image":"components-function/form-image.js","./pages/each-product":"pages/each-product.js"}],"../../../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -22620,7 +22754,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61871" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60785" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

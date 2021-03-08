@@ -108,6 +108,15 @@
         <li class="header__path-item"><a href="#">Products</a></li>
         <li class="header__path-item"><a href="#">Add</a></li>
       </ul>
+
+      <div class="header__features">
+        <button class="btn btn--red">
+          <i class="fas fa-times"></i> Discard Changes
+        </button>
+        <button class="btn btn--primary">
+          <i class="fas fa-save"></i> &nbsp;Save Changes
+        </button>
+      </div>
     </header>
 
     <main class="main main--small-layout">
@@ -175,6 +184,60 @@
                   </div>
 
                   <div class="form__images-btns-box">
+                    <label for="image0" class="form__images-label">
+                      &plus;
+                      <input
+                        id="image0"
+                        type="file"
+                        class="form__images-btn js--components--image__add"
+                        accept="image/*"
+                      />
+                    </label>
+
+                    <label for="deleteImage0" class="form__images-remove-label">
+                      <i class="fas fa-trash-alt"></i>
+                      <input
+                        id="deleteImage0"
+                        type="checkbox"
+                        class="form__images-remove-btn js--components--image__remove"
+                        value="true"
+                      />
+                    </label>
+
+                    <button
+                      type="button"
+                      class="form__images-reset-btn js--components--image__reset"
+                    >
+                      <i class="fas fa-undo-alt"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <div
+                  class="form__images-box js--components--image"
+                  data-none-image-class="u-display-none"
+                >
+                  <div class="form__images-image-outer">
+                    <div class="form__images-image-inner">
+                      <img
+                        class="form__images-image js--components--image__image-original"
+                        src="./img/product-2.jpg"
+                        alt=""
+                      />
+                      <img
+                        class="form__images-image js--components--image__image-none u-display-none"
+                        src="./img/no-img.jpg"
+                        alt=""
+                      />
+                      <img
+                        class="form__images-image js--components--image__image-current u-display-none"
+                        src=""
+                        alt=""
+                      />
+                    </div>
+                  </div>
+
+                  <div class="form__images-btns-box">
                     <label for="image1" class="form__images-label">
                       &plus;
                       <input
@@ -204,90 +267,110 @@
                   </div>
                 </div>
 
-                <div class="form__images-box">
+                <div
+                  class="form__images-box js--components--image"
+                  data-none-image-class="u-display-none"
+                >
                   <div class="form__images-image-outer">
                     <div class="form__images-image-inner">
                       <img
-                        class="form__images-image"
+                        class="form__images-image js--components--image__image-original"
                         src="./img/product-3.jpg"
                         alt=""
                       />
-                    </div>
-                  </div>
-
-                  <div class="form__images-btns-box">
-                    <label for="image1" class="form__images-label">
-                      &plus;
-                      <input
-                        id="image1"
-                        type="file"
-                        class="form__images-btn"
-                        accept="image/*"
-                      />
-                    </label>
-
-                    <button type="button" class="form__images-remove-btn">
-                      <i class="fas fa-trash-alt"></i>
-                    </button>
-                  </div>
-                </div>
-
-                <div class="form__images-box">
-                  <div class="form__images-image-outer">
-                    <div class="form__images-image-inner">
                       <img
-                        class="form__images-image"
-                        src="./img/product-2.jpg"
-                        alt=""
-                      />
-                    </div>
-                  </div>
-
-                  <div class="form__images-btns-box">
-                    <label for="image1" class="form__images-label">
-                      &plus;
-                      <input
-                        id="image1"
-                        type="file"
-                        class="form__images-btn"
-                        accept="image/*"
-                      />
-                    </label>
-
-                    <button type="button" class="form__images-remove-btn">
-                      <i class="fas fa-trash-alt"></i>
-                    </button>
-                  </div>
-                </div>
-
-                <div class="form__images-box">
-                  <div class="form__images-image-outer">
-                    <div class="form__images-image-inner">
-                      <img
-                        class="form__images-image"
+                        class="form__images-image js--components--image__image-none u-display-none"
                         src="./img/no-img.jpg"
                         alt=""
                       />
+                      <img
+                        class="form__images-image js--components--image__image-current u-display-none"
+                        src=""
+                        alt=""
+                      />
                     </div>
                   </div>
 
                   <div class="form__images-btns-box">
-                    <label for="image1" class="form__images-label">
+                    <label for="image2" class="form__images-label">
                       &plus;
                       <input
-                        id="image1"
+                        id="image2"
                         type="file"
-                        class="form__images-btn"
+                        class="form__images-btn js--components--image__add"
                         accept="image/*"
+                      />
+                    </label>
+
+                    <label for="deleteImage2" class="form__images-remove-label">
+                      <i class="fas fa-trash-alt"></i>
+                      <input
+                        id="deleteImage2"
+                        type="checkbox"
+                        class="form__images-remove-btn js--components--image__remove"
+                        value="true"
                       />
                     </label>
 
                     <button
                       type="button"
-                      class="form__images-remove-btn"
-                      disabled
+                      class="form__images-reset-btn js--components--image__reset"
                     >
+                      <i class="fas fa-undo-alt"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <div
+                  class="form__images-box js--components--image"
+                  data-none-image-class="u-display-none"
+                >
+                  <div class="form__images-image-outer">
+                    <div class="form__images-image-inner">
+                      <img
+                        class="form__images-image js--components--image__image-original"
+                        src="./img/product-4.jpg"
+                        alt=""
+                      />
+                      <img
+                        class="form__images-image js--components--image__image-none u-display-none"
+                        src="./img/no-img.jpg"
+                        alt=""
+                      />
+                      <img
+                        class="form__images-image js--components--image__image-current u-display-none"
+                        src=""
+                        alt=""
+                      />
+                    </div>
+                  </div>
+
+                  <div class="form__images-btns-box">
+                    <label for="image3" class="form__images-label">
+                      &plus;
+                      <input
+                        id="image3"
+                        type="file"
+                        class="form__images-btn js--components--image__add"
+                        accept="image/*"
+                      />
+                    </label>
+
+                    <label for="deleteImage3" class="form__images-remove-label">
                       <i class="fas fa-trash-alt"></i>
+                      <input
+                        id="deleteImage3"
+                        type="checkbox"
+                        class="form__images-remove-btn js--components--image__remove"
+                        value="true"
+                      />
+                    </label>
+
+                    <button
+                      type="button"
+                      class="form__images-reset-btn js--components--image__reset"
+                    >
+                      <i class="fas fa-undo-alt"></i>
                     </button>
                   </div>
                 </div>
@@ -326,39 +409,52 @@
           </div>
 
           <div class="card u-margin-bottom-main">
-            <h3 class="card__heading heading-secondary">Specifications</h3>
-            <div class="form__group-outer-remove">
-              <div class="form__group form__group--partition-1-2">
-                <div>
-                  <input
-                    type="text"
-                    class="form-group-input form__input--single-line u-width-full"
-                    placeholder="Title"
-                  />
-                </div>
-                <div>
-                  <textarea
-                    name=""
-                    id=""
-                    class="form-group-input form__input--textarea u-width-full"
-                    placeholder="Write a description here..."
-                    rows="2"
-                  ></textarea>
-                </div>
-              </div>
-              <button
-                type="button"
-                class="btn btn--text btn--red tooltip"
-                data-tooltip-direction="right"
+            <h3
+              class="card__heading heading-secondary js--page-each-product--specifications"
+            >
+              Specifications
+            </h3>
+            <div class="js--page-each-product--specifications__box">
+              <div
+                class="form__group-outer-remove js--page-each-product--specifications__each"
               >
-                <i class="far fa-trash-alt"></i>
-                <div class="tooltip__element tooltip__element--right">
-                  Delete
+                <div class="form__group form__group--partition-1-2">
+                  <div>
+                    <input
+                      type="text"
+                      name="specifications[{%NUM%}][field]"
+                      class="form-group-input form__input--single-line u-width-full"
+                      placeholder="Title"
+                    />
+                  </div>
+                  <div>
+                    <textarea
+                      name="[{%NUM%}][value]"
+                      class="form-group-input form__input--textarea u-width-full"
+                      placeholder="Write a description here..."
+                      rows="2"
+                    ></textarea>
+                  </div>
                 </div>
-              </button>
+                <button
+                  type="button"
+                  class="btn btn--text btn--red tooltip js--page-each-product--specifications__each-remove-btn"
+                  data-tooltip-direction="right"
+                >
+                  <i class="far fa-trash-alt"></i>
+                  <div class="tooltip__element tooltip__element--right">
+                    Delete
+                  </div>
+                </button>
+              </div>
             </div>
 
-            <button type="button" class="btn btn--text">Add more</button>
+            <button
+              type="button"
+              class="btn btn--text js--page-each-product--specifications__add-btn"
+            >
+              Add more
+            </button>
           </div>
         </div>
         <div class="divided-main__right">
@@ -377,6 +473,122 @@
                 customer can book if it is not out-of-stock (inventory is
                 positive).
               </p>
+            </div>
+          </div>
+
+          <div class="card u-margin-bottom-main">
+            <h3 class="card__heading heading-secondary">Categories</h3>
+
+            <div class="form-tags js--page-each-product--category">
+              <div
+                class="form-tags__inputs js--page-each-product--category__inputs-container"
+              >
+                <div
+                  class="form-tags__inputs-each-outer js--page-each-product--category__input"
+                >
+                  <input
+                    type="text"
+                    class="form-tags__inputs-input"
+                    value="12345678"
+                    readonly
+                  />
+                  <span class="form-tags__inputs-text">Speaker</span>
+                  <button
+                    type="button"
+                    class="form-tags__inputs-remove-btn js--page-each-product--category__input-remove-btn"
+                  >
+                    &Cross;
+                  </button>
+                </div>
+
+                <div
+                  class="form-tags__inputs-each-outer js--page-each-product--category__input"
+                >
+                  <input
+                    type="text"
+                    class="form-tags__inputs-input"
+                    value="12345679"
+                    readonly
+                  />
+                  <span class="form-tags__inputs-text">Arhant</span>
+                  <button
+                    type="button"
+                    class="form-tags__inputs-remove-btn js--page-each-product--category__input-remove-btn"
+                  >
+                    &Cross;
+                  </button>
+                </div>
+              </div>
+
+              <div
+                class="form-tags__list-outer js--components-function--dropdown"
+              >
+                <button
+                  type="button"
+                  class="form-tags__btn js--components-function--dropdown__btn"
+                >
+                  Add
+                </button>
+                <ul
+                  class="form-tags__list js--components-function--dropdown__list"
+                  data-show-class="form-tags__list--show"
+                >
+                  <li class="form-tags__list-item">
+                    <button
+                      type="button"
+                      class="form-tags__list-btn js--page-each-product--category__each-btn"
+                      data-value="1234567"
+                    >
+                      Speaker
+                    </button>
+                  </li>
+                  <li class="form-tags__list-item">
+                    <button
+                      type="button"
+                      class="form-tags__list-btn js--page-each-product--category__each-btn"
+                      data-value="1234567"
+                    >
+                      Mobile
+                    </button>
+                  </li>
+                  <li class="form-tags__list-item">
+                    <button
+                      type="button"
+                      class="form-tags__list-btn js--page-each-product--category__each-btn"
+                      data-value="1234567"
+                    >
+                      Laptop
+                    </button>
+                  </li>
+                  <li class="form-tags__list-item">
+                    <button
+                      type="button"
+                      class="form-tags__list-btn js--page-each-product--category__each-btn"
+                      data-value="1234567"
+                    >
+                      Dekstop
+                    </button>
+                  </li>
+                  <li class="form-tags__list-item">
+                    <button
+                      type="button"
+                      class="form-tags__list-btn js--page-each-product--category__each-btn"
+                      data-value="5234567"
+                    >
+                      Smart Watches
+                    </button>
+                  </li>
+                  <li class="form-tags__list-item">
+                    <button
+                      type="button"
+                      class="form-tags__list-btn js--page-each-product--category__each-btn"
+                      data-value="1234587"
+                    >
+                      Camera
+                    </button>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
