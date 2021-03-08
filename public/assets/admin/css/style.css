@@ -146,6 +146,10 @@ textarea {
   color: var(--color-grey-dark-2);
 }
 
+.u-display-none {
+  display: none !important;
+}
+
 .u-width-full {
   width: 100% !important;
 }
@@ -459,8 +463,10 @@ textarea {
   top: 0;
   right: 0;
 }
-.form__images-label, .form__images-remove-btn {
+.form__images-label, .form__images-remove-label, .form__images-reset-btn {
   display: block;
+  margin: 0 auto;
+  margin-bottom: 2px;
   border: none;
   outline: none;
   cursor: pointer;
@@ -476,28 +482,38 @@ textarea {
   line-height: 2.5rem;
   transition: all 0.2s;
 }
-.form__images-label:hover, .form__images-remove-btn:hover {
+.form__images-label:hover, .form__images-remove-label:hover, .form__images-reset-btn:hover {
   transform: translateY(-1px);
 }
 .form__images-label {
   background-color: var(--color-secondary);
-  margin-bottom: 2px;
 }
 .form__images-label:hover {
   background-color: var(--color-secondary-dark);
 }
-.form__images-remove-btn {
+.form__images-remove-label {
   background-color: var(--color-red);
 }
-.form__images-remove-btn:hover {
+.form__images-remove-label:hover {
   background-color: var(--color-red-dark);
 }
-.form__images-remove-btn:disabled {
+.form__images-remove-label:disabled {
   background-color: var(--color-red-lighter);
   transform: translateY(0);
   cursor: no-drop;
 }
-.form__images-btn {
+.form__images-reset-btn {
+  background-color: var(--color-blue);
+}
+.form__images-reset-btn:hover {
+  background-color: var(--color-blue-dark);
+}
+.form__images-reset-btn:disabled {
+  background-color: var(--color-blue-lighter);
+  transform: translateY(0);
+  cursor: no-drop;
+}
+.form__images-btn, .form__images-remove-btn {
   display: none;
 }
 .form__text {

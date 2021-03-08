@@ -150,17 +150,25 @@
             <h3 class="card__heading heading-secondary">Gallery</h3>
             <div class="form__group form">
               <div class="form__images">
-                <div class="form__images-box">
+                <div
+                  class="form__images-box js--components--image"
+                  data-none-image-class="u-display-none"
+                >
                   <div class="form__images-image-outer">
                     <div class="form__images-image-inner">
                       <img
-                        class="form__images-imageform__images-original"
+                        class="form__images-image js--components--image__image-original"
                         src="./img/product-1.jpg"
                         alt=""
                       />
                       <img
-                        class="form__images-imageform__images-current"
-                        src="./img/product-1.jpg"
+                        class="form__images-image js--components--image__image-none u-display-none"
+                        src="./img/no-img.jpg"
+                        alt=""
+                      />
+                      <img
+                        class="form__images-image js--components--image__image-current u-display-none"
+                        src=""
                         alt=""
                       />
                     </div>
@@ -172,17 +180,26 @@
                       <input
                         id="image1"
                         type="file"
-                        class="form__images-btn"
+                        class="form__images-btn js--components--image__add"
                         accept="image/*"
                       />
                     </label>
 
-                    <button type="button" class="form__images-remove-btn">
+                    <label for="deleteImage1" class="form__images-remove-label">
                       <i class="fas fa-trash-alt"></i>
-                    </button>
+                      <input
+                        id="deleteImage1"
+                        type="checkbox"
+                        class="form__images-remove-btn js--components--image__remove"
+                        value="true"
+                      />
+                    </label>
 
-                    <button type="button" class="form__images-reset">
-                      <i class="fas fa-trash-alt"></i>
+                    <button
+                      type="button"
+                      class="form__images-reset-btn js--components--image__reset"
+                    >
+                      <i class="fas fa-undo-alt"></i>
                     </button>
                   </div>
                 </div>

@@ -22455,13 +22455,144 @@ window.addEventListener('click', function (event) {
     });
   }
 });
+},{}],"components-function/form-image.js":[function(require,module,exports) {
+var fileInputs = document.getElementsByClassName('js--components--image__add');
+var removeCheckBoxes = document.getElementsByClassName('js--components--image__remove');
+var resets = document.getElementsByClassName('js--components--image__reset');
+
+var getElement = function getElement(anyInnerElement, query) {
+  var ancestor = anyInnerElement.closest('.js--components--image');
+
+  if (!ancestor) {
+    return;
+  }
+
+  return ancestor.querySelector(query);
+};
+
+var changeStateImage = function changeStateImage(anyInnerElement, activateState) {
+  activateState = activateState.toLowerCase();
+  var ancestor = anyInnerElement.closest('.js--components--image');
+
+  if (!ancestor) {
+    return;
+  }
+
+  var noneImageClass = ancestor.dataset.noneImageClass;
+
+  if (!noneImageClass) {
+    return;
+  }
+
+  var images = {
+    original: ancestor.getElementsByClassName('js--components--image__image-original')[0],
+    none: ancestor.getElementsByClassName('js--components--image__image-none')[0],
+    current: ancestor.getElementsByClassName('js--components--image__image-current')[0]
+  };
+  Object.keys(images).forEach(function (key) {
+    if (activateState === key) {
+      images[key].classList.remove(noneImageClass);
+    } else {
+      images[key].classList.add(noneImageClass);
+    }
+  });
+};
+
+var removedImage = function removedImage(anyInnerElement) {
+  var removeCheckBox = getElement(anyInnerElement, '.js--components--image__remove');
+  return !!(removeCheckBox && removeCheckBox.checked);
+};
+
+Array.from(fileInputs).forEach(function (fileInput) {
+  fileInput.addEventListener('change', function () {
+    var _this = this;
+
+    var notUploaded = this.files.length === 0;
+
+    if (!notUploaded) {
+      var size = this.files[0].size / (1024 * 1024);
+
+      if (size > 5) {
+        alert('File larger than 5mb. Cannot upload.');
+        notUploaded = true;
+      }
+    }
+
+    if (notUploaded) {
+      console.log('Arhant');
+
+      if (removedImage(this)) {
+        changeStateImage(this, 'none');
+        return;
+      }
+
+      changeStateImage(this, 'original');
+      return;
+    }
+
+    var reader = new FileReader();
+
+    reader.onload = function (anyInnerElement) {
+      return function (e) {
+        var imageCurrent = getElement(_this, '.js--components--image__image-current');
+        var removeCheckBox = getElement(_this, '.js--components--image__remove');
+
+        if (imageCurrent) {
+          imageCurrent.src = e.target.result;
+        }
+
+        if (removeCheckBox) {
+          removeCheckBox.checked = false;
+        }
+
+        changeStateImage(_this, 'current');
+      };
+    }(this);
+
+    reader.readAsDataURL(this.files[0]);
+  });
+});
+Array.from(resets).forEach(function (reset) {
+  reset.addEventListener('click', function () {
+    var removeCheckBox = getElement(this, '.js--components--image__remove');
+    var fileInput = getElement(this, '.js--components--image__add');
+
+    if (removeCheckBox) {
+      removeCheckBox.checked = false;
+    }
+
+    if (fileInput) {
+      fileInput.value = '';
+    }
+
+    changeStateImage(this, 'original');
+  });
+});
+Array.from(removeCheckBoxes).forEach(function (removeCheckBox) {
+  console.log(removeCheckBox);
+  removeCheckBox.addEventListener('change', function () {
+    var fileInput = getElement(this, '.js--components--image__add');
+
+    if (fileInput) {
+      fileInput.value = '';
+    }
+
+    if (this.checked) {
+      changeStateImage(this, 'none');
+    } else {
+      changeStateImage(this, 'original');
+    }
+  });
+});
 },{}],"index.js":[function(require,module,exports) {
 "use strict";
 
 require("./components-function/chart");
 
 require("./components-function/dropdown");
-},{"./components-function/chart":"components-function/chart.js","./components-function/dropdown":"components-function/dropdown.js"}],"../../../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+
+require("./components-function/form-image");
+},{"./components-function/chart":"components-function/chart.js","./components-function/dropdown":"components-function/dropdown.js","./components-function/form-image":"components-function/form-image.js"}],"../../../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -22489,7 +22620,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58557" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61871" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

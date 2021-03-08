@@ -104,8 +104,12 @@
   }
 
   &__images-label,
-  &__images-remove-btn {
+  &__images-remove-label,
+  &__images-reset-btn {
     display: block;
+    margin: 0 auto;
+
+    margin-bottom: 2px;
 
     border: none;
     outline: none;
@@ -130,14 +134,13 @@
 
   &__images-label {
     background-color: var(--color-secondary);
-    margin-bottom: 2px;
 
     &:hover {
       background-color: var(--color-secondary-dark);
     }
   }
 
-  &__images-remove-btn {
+  &__images-remove-label {
     background-color: var(--color-red);
 
     &:hover {
@@ -151,7 +154,26 @@
     }
   }
 
-  &__images-btn {
+  &__images-reset-btn {
+    background-color: var(--color-blue);
+
+    &:hover {
+      background-color: var(--color-blue-dark);
+    }
+
+    &:disabled {
+      background-color: var(--color-blue-lighter);
+      transform: translateY(0);
+      cursor: no-drop;
+    }
+  }
+
+  // &__images-remove-btn {
+  //   display: inline-block;
+  // }
+
+  &__images-btn,
+  &__images-remove-btn {
     display: none;
   }
 
