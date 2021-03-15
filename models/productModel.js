@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 // var Brand = require('./brandModel'); // defined below to handle circular dependencies
 
 const AppError = require('../utils/AppError');
+const stringNormalize = require('../utils/stringNormalize');
 // const arrayRemoveReduntantAndUnecessary = require('../utils/arrayRemoveReduntantAndUnecessary');
 
 const productSchema = new mongoose.Schema(
@@ -16,10 +17,39 @@ const productSchema = new mongoose.Schema(
       min: [3, 'Product name must be of atleast 3 characters'],
       max: [40, 'Product name must have 40 characters at maximum'],
     },
+    nameNormalized: {
+      type: String,
+      unique: true,
+    },
+    brandIdString: {
+      type: String,
+      required: true,
+      validate: [(val) => mongoose.isValidObjectId(val), 'Invalid brand'],
+    },
+    review: {
+      count: {
+        type: Number,
+        default: 0,
+      },
+      totalSum: {
+        type: Number,
+        default: 0,
+      },
+      average: {
+        type: Number,
+        default: 0,
+      },
+    },
     brand: {
       type: mongoose.Mixed,
-      required: true,
     },
+    categoriesIdString: [
+      {
+        type: String,
+        required: true,
+        validate: [(val) => mongoose.isValidObjectId(val), 'Invalid category'],
+      },
+    ],
     categories: {
       type: mongoose.Mixed,
       default: [],
@@ -43,6 +73,13 @@ const productSchema = new mongoose.Schema(
       },
       required: [true, 'Product must have a discounted price'],
     },
+    description: {
+      type: String,
+      trim: true,
+      required: true,
+      minlength: [3, 'Description should of atleast 3 characters'],
+      maxlength: [100, 'Description can be of 100 characters at maximum'],
+    },
     specifications: {
       type: [
         {
@@ -62,7 +99,7 @@ const productSchema = new mongoose.Schema(
             required: [true, 'Each specification must have a value'],
             min: [2, 'Each specification value must of at least 2 characters'],
             max: [
-              150,
+              75,
               'Each specification value must have 150 characters at maximum',
             ],
           },
@@ -84,10 +121,7 @@ const productSchema = new mongoose.Schema(
       default: 0,
       set: Math.trunc,
       required: true,
-      min: [
-        -1,
-        'Current stock of product must be greater than equals to 0 or -1(infinite)',
-      ],
+      min: [0, 'Current stock of product must be greater than equals to 0'],
     },
     maxPerOrder: {
       type: Number,
@@ -131,50 +165,58 @@ productSchema.index({
 
 productSchema.post('init', function () {
   this.originalFields = {
-    brand: this.brand,
-    categories: this.categories,
+    brandIdString: this.brandIdString,
+    categoriesIdString: this.categoriesIdString,
   };
+});
+
+// Save normalized name
+productSchema.pre('save', function (next) {
+  if (!this.isModified('name')) return next();
+  this.nameNormalized = stringNormalize.toString(this.name);
+  next();
+});
+
+// Handling reviews
+productSchema.pre('save', function (next) {
+  if (!this.isModified('review.count' || !this.isModified('review.totalSum')))
+    return next();
 });
 
 // Handling brands
 productSchema.pre('save', async function (next) {
-  if (!this.isModified('brand')) return next();
-
-  if (!mongoose.isValidObjectId(this.brand))
-    throw new AppError('Invalid request! Invalid brand', 400);
+  if (!this.isModified('brandIdString')) return next();
 
   // eslint-disable-next-line no-use-before-define
-  const brand = await Brand.findById(this.brand).select('name');
-
+  const brand = await Brand.findById(this.brandIdString).select('name');
   if (!brand) throw new AppError('Brand not found', 400);
-
-  this.brand = brand;
-
+  this.brand = brand.toObject();
   next();
 });
 
 // //Handling categories
 productSchema.pre('save', async function (next) {
-  if (!this.isModified('categories')) return next();
-
-  if (
-    !Array.isArray(this.categories) ||
-    !this.categories.every((el) => mongoose.isValidObjectId(el))
-  )
-    throw new AppError('Invalid categories', 400);
+  if (!this.isModified('categoriesIdString')) return next();
 
   // eslint-disable-next-line no-use-before-define
-  const categories = await Category.find({
-    _id: { $in: this.categories },
+  let categories = await Category.find({
+    _id: { $in: this.categoriesIdString },
   }).select('name');
+
+  if (categories) {
+    categories = categories.map((category) => category.toObject());
+  }
   this.categories = categories || [];
+
+  this.categoriesIdString = this.categories.map((category) => category.id);
+
   next();
 });
 
 productSchema.pre('save', function () {
   this.wasNew = this.isNew;
-  this.wasmodifiedBrand = this.isModified('brand');
-  this.wasModifiedCategories = this.isModified('categories');
+  this.wasmodifiedBrand = this.isModified('brandIdString');
+  this.wasModifiedCategories = this.isModified('categoriesIdString');
 });
 
 productSchema.post('save', async function () {
@@ -188,7 +230,7 @@ productSchema.post('save', async function () {
   };
 
   const updateCategories = (_idArray, inc) => {
-    if (this.categories.length) {
+    if (_idArray.length) {
       promises.push(
         // eslint-disable-next-line no-use-before-define
         Category.updateMany(
@@ -200,27 +242,26 @@ productSchema.post('save', async function () {
   };
 
   if (this.wasNew) {
-    updateBrand(this.brand._id, 1);
-    updateCategories(
-      this.categories.map((c) => c._id),
-      1
-    );
+    updateBrand(this.brandIdString, 1);
+    updateCategories(this.categoriesIdString, 1);
   } else {
     if (this.wasmodifiedBrand) {
-      updateBrand(this.brand._id, 1);
-      updateBrand(this.originalFields.brand._id, -1);
+      updateBrand(this.brandIdString, 1);
+      updateBrand(this.originalFields.brandIdString, -1);
     }
 
-    if (this.wasmodifiedBrand) {
-      let originalCategories = this.originalFields.categories.map((c) => c._id);
-      let categoriesNow = this.originalCategories.categories.map((c) => c._id);
+    if (this.wasModifiedCategories) {
+      let originalCategories = this.originalFields.categoriesIdString;
+      let categoriesNow = this.categoriesIdString;
 
       const flags = {};
       originalCategories.forEach((id) => {
         flags[id] = 1;
       });
       categoriesNow.forEach((id) => {
-        flags[id] = 2;
+        if (flags[id] === 1) {
+          flags[id] = 2;
+        }
       });
       originalCategories = originalCategories.filter((el) => flags[el] !== 2);
       categoriesNow = categoriesNow.filter((el) => flags[el] !== 2);
@@ -235,17 +276,20 @@ productSchema.post('save', async function () {
 
 productSchema.post(/delete/i, async function (doc) {
   // console.log('fired');
+  if (!doc) {
+    return;
+  }
 
   const promises = [];
   promises.push(
     // eslint-disable-next-line no-use-before-define
-    Brand.findByIdAndUpdate(doc.brand._id, { $inc: { productsCount: -1 } })
+    Brand.findByIdAndUpdate(doc.brandIdString, { $inc: { productsCount: -1 } })
   );
   if (doc.categories.length) {
     promises.push(
       // eslint-disable-next-line no-use-before-define
       Category.updateMany(
-        { _id: { $in: doc.categories.map((el) => el._id) } },
+        { _id: { $in: doc.categoriesIdString } },
         { $inc: { productsCount: -1 } }
       )
     );

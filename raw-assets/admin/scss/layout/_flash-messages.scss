@@ -1,0 +1,68 @@
+.flash-messages {
+  margin: var(--margin-main);
+  margin-top: 0rem;
+  margin-bottom: 0rem;
+
+  &--small-layout {
+    width: 100%;
+    max-width: var(--small-layout-width);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  &__message {
+    @include currentColorOptions;
+    background-color: var(--color-white);
+
+    box-shadow: var(--shadow-primary);
+
+    border-left: 0.5rem solid var(--current-color);
+    border-radius: 3px;
+
+    padding: 1rem 2.5rem;
+    display: grid;
+    grid-template-columns: min-content auto min-content;
+    gap: 2.5rem;
+    align-items: center;
+
+    font-size: 1.4rem;
+    letter-spacing: 0.1px;
+
+    margin-bottom: 1.5rem;
+
+    &:last-child {
+      margin-bottom: var(--margin-main);
+    }
+  }
+
+  &__heading {
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+
+  &__icon {
+    background-color: var(--current-color);
+    font-size: 1.4rem;
+    height: 2rem;
+    width: 2rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-white);
+  }
+
+  &__close-btn {
+    background: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    font-size: 2.2rem;
+    color: var(--color-grey-dark-2);
+    transition: all 0.2s;
+
+    &:hover {
+      color: var(--color-grey-dark-1);
+    }
+  }
+}

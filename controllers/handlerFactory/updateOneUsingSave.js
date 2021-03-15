@@ -83,6 +83,7 @@ module.exports = (Model, { singularName }) => {
 
       res.status(200).json({
         status: 'success',
+        message: `Updated ${singularName.small} successfully`,
         data: {
           [singularName.small]: updatedDoc,
         },

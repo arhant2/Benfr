@@ -1,40 +1,56 @@
+const qs = require('qs');
+
 const catchAsync = require('../../utils/catchAsync');
 const APIFeatures = require('../../utils/APIFeatures');
-const queryStringNextPrevGenerator = require('../../utils/queryStringNextPrevGenerator');
 
+// queryObjParsed = {page, sort, filter, filterStringified, prevLink, nextLink}
 module.exports = (Model, { pluralName }) => {
-  return (sortDefault = '-updatedAt', pageDefault = '1', limitDefault = '10') =>
-    catchAsync(async (req, res, next) => {
-      const page = req.query.page || pageDefault;
-      const sortOriginal = req.query.sort || sortDefault;
-      const sort = `${sortOriginal},${sortDefault}`;
-      const limit = req.query.limit || limitDefault;
+  return catchAsync(async (req, res, next) => {
+    console.log(req.query);
 
-      const pageLimitObj = {};
+    const queryObjParsed = {};
+    const features = new APIFeatures(
+      Model.find(),
+      req.query,
+      undefined,
+      queryObjParsed
+    )
+      .filter()
+      .sort()
+      .paginate();
 
-      const features = new APIFeatures(Model.find(), {
-        page,
-        sort,
-        limit,
-      })
-        .sort()
-        .paginate(pageLimitObj);
+    const documents = await features.mongooseQuery;
 
-      const documents = await features.mongooseQuery;
-
-      const { querystringPrev, querystringNext } = queryStringNextPrevGenerator(
-        pageLimitObj,
-        sortOriginal,
-        documents.length
-      );
-
-      res.render(`admin/${pluralName.small}`, {
-        documents,
-        querystringNext,
-        page,
-        querystringPrev,
-        sort: sortOriginal,
-        limit: pageLimitObj.limit,
-      });
+    queryObjParsed.filterStringified = qs.stringify(queryObjParsed.filter, {
+      encode: false,
     });
+
+    const addFilter = (str) => {
+      if (queryObjParsed.filterStringified) {
+        str += `&${queryObjParsed.filterStringified}`;
+      }
+      return str;
+    };
+
+    if (queryObjParsed.page > 1) {
+      queryObjParsed.prevLink = addFilter(
+        `/a/${pluralName.small}?page=${queryObjParsed.page * 1 - 1}&limit=${
+          queryObjParsed.limit
+        }&sort=${queryObjParsed.sort}`
+      );
+    }
+
+    if (documents.length >= queryObjParsed.limit) {
+      queryObjParsed.nextLink = addFilter(
+        `/a/${pluralName.small}?page=${queryObjParsed.page * 1 + 1}&limit=${
+          queryObjParsed.limit
+        }&sort=${queryObjParsed.sort}`
+      );
+    }
+
+    res.render(`admin/${pluralName.small}`, {
+      documents,
+      queryObjParsed,
+    });
+  });
 };

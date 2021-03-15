@@ -1,0 +1,126 @@
+extends base/_base
+
+include mixins/_form-image
+
+block append variables
+  - sidebarActive = 'Products';
+
+block content 
+  form#generic-form.form(data-generic-form-singular-name='product' data-generic-form-plural-name='products' action='#') 
+    +headerOne('Product', 'Products')
+
+    main.main--small-layout.divided-main 
+
+      //- ==========================
+      //-            Left
+      //- ==========================
+      .divided-main__left
+
+        // Meta info
+        .card.u-margin-bottom-main
+          h3.card__heading.heading-secondary Meta Info 
+          .form__group
+            label.form__group-label(for='name')
+              span.form__star *
+              | Name 
+            input.form-group-input.form__input--single-line.u-width-full(type='text' placeholder='Apple iPhone 11' minlength=3 maxlength=40 id='name' required name='name' value=document && document.name)
+          .form__group
+            label.form__group-label(for='brand')
+              span.form__star *
+              | Brand 
+            select.form__select.u-width-full(name="brandIdString" id='brand') 
+              each brand in brands 
+                if (document && document.brand && document.brand.id) === brand.id
+                  option(value=brand.id selected)= brand.name 
+                else 
+                  option(value=brand.id)= brand.name 
+          .form__group
+            label.form__group-label(for='description')
+              span.form__star *
+              | Description 
+            textarea.form-group-input.form__input--textarea.u-width-full(name='description' id='description' placeholder='Write a description here...' rows='4' required)= (document && document.description)
+
+        // Gallery
+        .card.u-margin-bottom-main
+          h3.card__heading.heading-secondary Gallery
+          .form__group
+            - 
+              const srcs = [];
+              for(let i=0; i<4; ++i){
+                srcs.push(document&&document.images&&document.images[i]&&document.images[i].path || '/assets/admin/img/no-image.jpg');
+              } 
+            +formImage('Product', srcs)
+
+        // Price and Inventory
+        .card.u-margin-bottom-main
+          h3.card__heading.heading-secondary Price and Inventory
+          .form__group.form__group--partition-half
+            div
+              label.form__group-label(for='price')
+                span.form__star *
+                | Actual Price
+              input.form-group-input.form__input--single-line.u-width-full(type='number' name='price' min=0 placeholder='₹ 6,999' required value=(document && document.price))
+            div
+              label.form__group-label(for='discountedPrice')
+                span.form__star *
+                | Discounted Price
+              input.form-group-input.form__input--single-line.u-width-full(type='number' name='discountedPrice' min=0 placeholder='₹ 5,999' required value=(document && document.discountedPrice))
+          .form__group
+            label.form__group-label(for='currentStock')
+              span.form__star *
+              | Current Inventory
+            input.form-group-input.form__input--single-line(type='number' name='currentStock' min=0 placeholder='100' required value=(document && document.currentStock || 0))
+
+        // Specifications
+        .card.u-margin-bottom-main.js--page-each-product--specifications
+          h3.card__heading.heading-secondary Specifications
+          .js--page-each-product--specifications__box
+            each specification in document && document.specifications || [{}]
+              .form__group-outer-remove.js--page-each-product--specifications__each
+                .form__group.form__group--partition-1-2
+                  div 
+                    input.form-group-input.form__input--single-line.u-width-full(type='text' name='specifications[{%NUM%}][field]' placeholder='Title' required minlength=2 maxlength=25 value=specification.field)
+                  div 
+                    textarea.form-group-input.form__input--textarea.u-width-full(name='specifications[{%NUM%}][value]' placeholder='Write a description here...' rows='2' minlength=2 maxlength=75 required)= specification.value
+                button(type='button').btn.btn--text.btn--red.tooltip.js--page-each-product--specifications__each-remove-btn()
+                  i.far.fa-trash-alt
+                  .tooltip__element.tooltip__element--right Delete 
+          button(type='button').btn.btn--text.js--page-each-product--specifications__add-btn Add more
+
+      //- ==========================
+      //-            Right
+      //- ==========================
+      .divided-main__right
+
+        // Status
+        .card.u-margin-bottom-main
+          h3.card__heading.heading-secondary Status
+          .form__group
+            select.form__select.u-width-full(name='published')
+              if document && document.published 
+                option(value='true' selected) Active 
+                option(value='false') Inactive 
+              else 
+                option(value='true') Active 
+                option(value='false' selected) Inactive 
+          .form__group
+            p.small-text The item marked inactive will not be visible to the customers. Only active item will be visible to the customers, which customer can book if it is not out-of-stock (inventory is positive).
+
+        // Categories
+        .card.u-margin-bottom-main
+          h3.card__heading.heading-secondary Categories
+          .form-tags.js--page-each-product--category
+            .form-tags__inputs.js--page-each-product--category__inputs-container
+              if document && document.categories
+                each category in document.categories 
+                  .form-tags__inputs-each-outer.js--page-each-product--category__input
+                    input.form-tags__inputs-input(type='text' name='categoriesIdString[]' value=category.id readonly)
+                    span.form-tags__inputs-text= category.name
+                    button.form-tags__inputs-remove-btn.js--page-each-product--category__input-remove-btn(type='button') &Cross;
+
+            .form-tags__list-outer.js--components-function--dropdown
+              button.form-tags__btn.js--components-function--dropdown__btn(type='button') Add 
+              ul.form-tags__list.js--components-function--dropdown__list(data-show-class='form-tags__list--show')
+                each category in categories 
+                  li.form-tags__list-item
+                    button.form-tags__list-btn.js--page-each-product--category__each-btn(type='button' data-value=category.id)= category.name

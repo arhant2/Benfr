@@ -9,20 +9,26 @@ export const specificationsTemplate = `
         name="specifications[{%NUM%}][field]"
         class="form-group-input form__input--single-line u-width-full"
         placeholder="Title"
+        minlength=2 
+        maxlength=25
+        required
       />
     </div>
     <div>
       <textarea
-        name="[{%NUM%}][value]"
+        name="specifications[{%NUM%}][value]"
         class="form-group-input form__input--textarea u-width-full"
         placeholder="Write a description here..."
         rows="2"
+        minlength=2
+        maxlength=75
+        required
       ></textarea>
     </div>
   </div>
   <button
     type="button"
-    class="btn btn--text btn--red tooltip js--page-each-product--specifications__each--remove-btn"
+    class="btn btn--text btn--red tooltip js--page-each-product--specifications__each-remove-btn"
     data-tooltip-direction="right"
   >
     <i class="far fa-trash-alt"></i>
@@ -39,6 +45,7 @@ class="form-tags__inputs-each-outer js--page-each-product--category__input"
   type="text"
   class="form-tags__inputs-input"
   value="{%VALUE%}"
+  name="categoriesIdString[]"
   readonly
 />
 <span class="form-tags__inputs-text">{%NAME%}</span>

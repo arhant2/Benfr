@@ -2,12 +2,12 @@ extends base/_base
 
 block append variables
   - 
-    sidebarActive = 'Brands';
-    topbarFeatureBtn = ['/a/brands/new', 'Add new brand', 'fas fa-plus'];
+    sidebarActive = 'Categories';
+    topbarFeatureBtn = ['/a/categories/new', 'Add new category', 'fas fa-plus']
 
 block content
-  +header('Brands', [['/a/brands', 'Brands']])
-    +menuSort('brands', [
+  +header('Categories', [['/a/categories', 'Categories']])
+    +menuSort('categories', [
       ['name', 'Name [A-Z]'],
       ['-name', 'Name [Z-A]'],
       ['-createdAt', 'Created (Newest First)'],
@@ -18,25 +18,25 @@ block content
       ['productsCount', 'Items (Lowest First)']
     ])
     
-    +menuLimit('brands')
+    +menuLimit('categories')
     +menuPagination
 
   main.main
     .main-table 
       .main-table__heading-container 
-        .main-table__heading Brand 
+        .main-table__heading Category 
         .main-table__heading.main-table__heading--important Products
         .main-table__heading.main-table__heading--important Created
       
-      each brand in documents
-        a.main-table__row.reset-anchor(href=`/a/brands/${brand.nameNormalized}/${brand.id}`)
+      each category in documents
+        a.main-table__row.reset-anchor(href=`/a/categories/${category.nameNormalized}/${category.id}`)
           .main-table__item.main-table__item--first
             - 
               let src = '/assets/admin/img/no-image-2.png';
-              if(brand.images && brand.images[0] && brand.images[0].path){
-                src = brand.images[0].path;
+              if(category.images && category.images[0] && category.images[0].path){
+                src = category.images[0].path;
               }
             img.main-table__item-img(src=src alt='Product image')
-            .main-table__item-first-text= brand.name 
-          .main-table__item.main-table__item--important= brand.productsCount
-          .main-table__item.main-table__item--important= helpers.dateFormator.dateFormatted(brand.createdAt)
+            .main-table__item-first-text= category.name 
+          .main-table__item.main-table__item--important= category.productsCount
+          .main-table__item.main-table__item--important= helpers.dateFormator.dateFormatted(category.createdAt)

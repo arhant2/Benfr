@@ -1,82 +1,41 @@
-mixin header(heading, path=[], smallLayout=false)
-  header.header 
-    h1.header__heading.heading-primary Brands 
+mixin header(heading, path=[], smallLayout=false, headerFeaturesLessGap=false)
+  header.header(class=smallLayout?'header--small-layout':'')
+    h1.header__heading.heading-primary= heading 
     ul.header__path
       - const pathNow = [['/', 'Home'], ['/a/dashboard', 'Dashboard'], ...path];
       each item in pathNow 
         li.header__path-item: a(href=item[0])= item[1]
     if block
-      .header__features
+      .header__features(class=headerFeaturesLessGap?'header__features--less-gap':'')
         block
 
-//- <header class="header">
-//-   <h1 class="header__heading heading-primary">Brands</h1>
 
-//-   <ul class="header__path">
-//-     <li class="header__path-item"><a href="#">Home</a></li>
-//-     <li class="header__path-item"><a href="#">Dashboard</a></li>
-//-     <li class="header__path-item"><a href="#">Brand</a></li>
-//-   </ul>
+mixin headerOne(nameCapital, namePluralCapital)
+  - 
+    const nameSmall = nameCapital.toLowerCase();
+    const namePluralSmall = namePluralCapital.toLowerCase();
+    let heading = nameCapital, linkNow = [`/a/${nameSmall}/new`, `Add New ${nameCapital}`];;
+    if(document){
+      heading += ` (${document.name})`;
+      linkNow = [`/a/${namePluralSmall}/${document.name}/${document.id}`, document.name];
+    }
+  +header(heading, [[`/a/${namePluralSmall}`, namePluralCapital], linkNow], true, true)
+    button#form-discard-btn.btn.btn--yellow.js--components-function--btn-confirm-redirect(type='button' data-redirect-to=`/a/${namePluralSmall}` data-confirm-message='Are you sure, you want to discard changes?') &Cross;&nbsp;Discard Changes
 
-//-   <div class="header__features">
-//-     <div class="menu-dropdown js--components-function--dropdown">
-//-       <button
-//-         class="menu-dropdown__btn js--components-function--dropdown__btn"
-//-       >
-//-         Sort By <i class="fas fa-chevron-down"></i>
-//-       </button>
-//-       <!-- menu-dropdown__list--show -->
-//-       <ul
-//-         class="menu-dropdown__list js--components-function--dropdown__list"
-//-       >
-//-         <li class="menu-dropdown__item">
-//-           <a href="#" class="menu-dropdown__link"> Name [A-Z] </a>
-//-         </li>
-//-         <li class="menu-dropdown__item">
-//-           <a href="#" class="menu-dropdown__link"> Name [Z-A] </a>
-//-         </li>
-//-         <li class="menu-dropdown__item">
-//-           <a href="#" class="menu-dropdown__link">
-//-             Created (Oldest First)
-//-           </a>
-//-         </li>
-//-         <li class="menu-dropdown__item">
-//-           <a
-//-             href="#"
-//-             class="menu-dropdown__link menu-dropdown__link--active"
-//-           >
-//-             Created (Newest First)
-//-           </a>
-//-         </li>
-//-         <li class="menu-dropdown__item">
-//-           <a href="#" class="menu-dropdown__link">
-//-             Updated (Oldest First)
-//-           </a>
-//-         </li>
-//-         <li class="menu-dropdown__item">
-//-           <a href="#" class="menu-dropdown__link">
-//-             Updated (Newest First)
-//-           </a>
-//-         </li>
-//-         <li class="menu-dropdown__item">
-//-           <a href="#" class="menu-dropdown__link"> Items (Lowest First) </a>
-//-         </li>
-//-         <li class="menu-dropdown__item">
-//-           <a href="#" class="menu-dropdown__link">
-//-             Items (Highest First)
-//-           </a>
-//-         </li>
-//-       </ul>
-//-     </div>
+    if document 
+      button#form-delete-btn.btn.btn--red(type='button' data-load-class='btn--load')
+        span.btn--load__content
+            i.fas.fa-check
+            | &nbsp;&nbsp;Delete #{nameCapital}
+        span.btn--load__load-content
+          i.fa.fa-circle-o-notch.fa-spin
+          | &nbsp;&nbsp;Loading
+      input.u-display-none(type='text' name='id' id='id' value=document.id readonly)
 
-//-     <div class="menu-btn-collection">
-//-       <a href="#" class="menu-btn-collection__item">&lt;</a>
-//-       <div
-//-         class="menu-btn-collection__item menu-btn-collection__item--active"
-//-       >
-//-         Page 1 of 5
-//-       </div>
-//-       <button class="menu-btn-collection__item">&gt;</button>
-//-     </div>
-//-   </div>
-//- </header>
+    button#form-save-btn.btn.btn--primary(data-load-class='btn--load')      
+      span.btn--load__content
+        i.fas.fa-save
+        | &nbsp;&nbsp;Save Changes
+      span.btn--load__load-content
+        i.fa.fa-circle-o-notch.fa-spin
+        | &nbsp;&nbsp;Loading

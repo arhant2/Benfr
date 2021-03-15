@@ -5,7 +5,7 @@
   min-height: 100vh;
 
   display: grid;
-  grid-template-rows: repeat(2, auto) 1fr;
+  grid-template-rows: repeat(3, auto) 1fr;
   grid-template-columns: [nav-start] 27.5rem [nav-end full-start] 1fr [full-end];
 
   // &--bg-1 {

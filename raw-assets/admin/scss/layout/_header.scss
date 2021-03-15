@@ -57,5 +57,9 @@
     grid-auto-flow: column;
     align-items: end;
     gap: 2rem;
+
+    &--less-gap {
+      gap: 1rem;
+    }
   }
 }

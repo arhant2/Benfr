@@ -2,8 +2,9 @@ const filterBodyMiddleware = require('../utils/filterBodyMiddleware');
 
 exports.createOne = filterBodyMiddleware([
   'name',
-  'brand',
-  'categories',
+  'brandIdString',
+  'categoriesIdString',
+  'description',
   'price',
   'discountedPrice',
   'specifications',
@@ -14,8 +15,9 @@ exports.createOne = filterBodyMiddleware([
 
 exports.updateOne = filterBodyMiddleware([
   'name',
-  'brand',
-  'categories',
+  'brandIdString',
+  'categoriesIdString',
+  'description',
   'price',
   'discountedPrice',
   'specifications',

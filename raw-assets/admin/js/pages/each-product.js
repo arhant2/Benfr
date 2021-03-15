@@ -94,3 +94,18 @@ if (category && categoryInputsContainer) {
     });
   });
 }
+
+export const productFormDataSpecificationsManage = (formData) => {
+  const fields = formData.getAll('specifications[{%NUM%}][field]');
+  const values = formData.getAll('specifications[{%NUM%}][value]');
+
+  console.log(values);
+
+  for (let i = 0; i < fields.length; ++i) {
+    formData.append(`specifications[${i}][field]`, fields[i]);
+    formData.append(`specifications[${i}][value]`, values[i]);
+  }
+
+  formData.delete('specifications[{%NUM%}][field]');
+  formData.delete('specifications[{%NUM%}][value]');
+};

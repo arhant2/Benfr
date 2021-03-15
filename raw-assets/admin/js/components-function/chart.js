@@ -1,7 +1,7 @@
 import 'chart.js';
 import colorAlpha from 'color-alpha';
 
-import cssGlobalVariables from '../utilities/cssGlobalVariables';
+import cssGlobalVariables from '../utils/cssGlobalVariables';
 
 Array.from(
   document.getElementsByClassName('js--components-function--chart')

@@ -1,6 +1,8 @@
 const singularPluralManager = require('../../utils/singularPluralManager');
 
 const getAll = require('./getAll');
+const getOne = require('./getOne');
+const getNewForm = require('./getNewForm');
 
 module.exports = (
   Model,
@@ -14,5 +16,7 @@ module.exports = (
 
   return {
     getAll: getAll(Model, singularPluaralObj),
+    getOne: getOne(Model, singularPluaralObj),
+    getNewForm: getNewForm(Model, singularPluaralObj),
   };
 };

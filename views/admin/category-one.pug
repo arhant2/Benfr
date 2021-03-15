@@ -1,0 +1,49 @@
+extends base/_base
+
+include mixins/_form-image
+
+block append variables
+  - sidebarActive = 'Categories';
+
+block content 
+  form#generic-form.form(data-generic-form-singular-name='category' data-generic-form-plural-name='categories' action='#') 
+    +headerOne('Category', 'Categories')
+      
+    main.main--small-layout.divided-main 
+      .divided-main__left
+        .card.u-margin-bottom-main
+          h3.card__heading.heading-secondary Meta Info 
+          .form__group
+            label.form__group-label(for='name')
+              span.form__star *
+              | Name 
+            input.form-group-input.form__input--single-line.u-width-full(type='text' placeholder='Bluetooth Speaker' minlength=2 maxlength=30 id='name' required name='name' value=document && document.name)
+          .form__group
+            label.form__group-label(for='since') Since 
+            .form-group-input.form__input--single-line.form__input--disabled.u-width-full.tooltip
+              | #{helpers.dateFormator.dateFormatted(document&&document.createdAt || Date.now())}
+              .tooltip__element.tooltip__element--right You cannot edit this
+
+        .card.u-margin-bottom-main
+          h3.card__heading.heading-secondary Gallery
+          .form__group
+            +formImage('Category', [document&&document.images&&document.images[0]&&document.images[0].path || '/assets/admin/img/no-image.jpg'])
+        
+      .divided-main__right
+        .card.u-margin-bottom-main
+          h3.card__heading.heading-secondary Products
+          .form__group
+            label.form__group-label(for='productsCount') Products Count 
+            .form-group-input.form__input--single-line.form__input--disabled.u-width-full.tooltip
+              | #{document && document.productsCount || 0}
+              .tooltip__element.tooltip__element--left You cannot edit this
+          .form__group.form 
+            if document
+              a.btn.btn--text(target='_blank' href=`/a/products?category.id=${document.id}`)
+                | View Products&nbsp;
+                i.fas.fa-eye
+            else 
+              .btn.btn--text.btn--disabled 
+                | View Products&nbsp;
+                i.fas.fa-eye
+            

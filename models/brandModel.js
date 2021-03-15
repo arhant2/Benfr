@@ -49,10 +49,17 @@ brandSchema.pre('save', function (next) {
   next();
 });
 
-brandSchema.post('save', async function (next) {
+brandSchema.post('save', async function (doc) {
+  // console.log(typeof doc.toObject()._id);
   if (this.notNewAndmodifiedName) {
+    const brand = {
+      _id: doc._id,
+      id: doc.id,
+      name: doc.name,
+    };
+
     // eslint-disable-next-line no-use-before-define
-    await Product.updateMany({ 'brand._id': this._id }, { brand: this });
+    await Product.updateMany({ 'brand._id': this._id }, { brand });
   }
 });
 

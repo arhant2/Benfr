@@ -3,23 +3,16 @@ const AppError = require('../../utils/AppError');
 
 module.exports = (Model, { singularName }) => {
   return catchAsync(async (req, res, next) => {
-    const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
+    const document = await Model.findById(req.params.id);
 
-    if (!doc) {
+    if (!document) {
       return next(
         new AppError(`No ${singularName.capital} found with with that ID`, 404)
       );
     }
 
-    res.status(200).json({
-      status: 'success',
-      message: `Updated ${singularName.small} successfully`,
-      data: {
-        [singularName.small]: doc,
-      },
+    res.render(`admin/${singularName.small}-one`, {
+      document,
     });
   });
 };

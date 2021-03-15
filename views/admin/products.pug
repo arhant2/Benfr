@@ -1,0 +1,107 @@
+extends base/_base
+
+block append variables
+  - 
+    sidebarActive = 'Products';
+    topbarFeatureBtn = ['/a/products/new', 'Add new product', 'fas fa-plus'];
+
+block content
+  +header('Products', [['/a/products', 'Products']])
+
+    - 
+      const linkCreator = (query) => `/a/products?limit=${queryObjParsed.limit}&sort=${queryObjParsed.sort}${query?'&':''}${query}`;
+
+      const types = [
+        [linkCreator(''), 'All'],
+        [linkCreator('published=true&currentStock[gt]=0'), 'Active'],
+        [linkCreator('published=false'), 'Inactive'],
+        [linkCreator('published=true&currentStock=0'), 'Sold Out']
+      ];
+
+      let currentActive = 0;
+
+      if(queryObjParsed.filter.published === 'true' && queryObjParsed.filter.currentStock*1 === 0){
+        currentActive = 3;
+      }else if(queryObjParsed.filter.published === 'false'){
+        currentActive = 2;
+      }else if(queryObjParsed.filter.published === 'true'){
+        currentActive = 1;
+      }
+
+    +menuBtnCollection(types, currentActive)
+
+
+    +menuSort('products', [
+      ['name', 'Name [A-Z]'],
+      ['-name', 'Name [Z-A]'],
+      ['-createdAt', 'Created (Newest First)'],
+      ['createdAt', 'Created (Oldest First)'],
+      ['-updatedAt', 'Updated (Newest First)'],
+      ['updatedAt', 'Updated (Oldest First)'],
+      ['-currentStock', 'Inventory (Highest First)'],
+      ['currentStock', 'Inventory (Lowest First)'],
+      ['-price', 'Price (Highest First)'],
+      ['price', 'Price (Lowest First)']
+    ])
+
+    +menuLimit('products')
+    +menuPagination
+
+  main.main
+    .main-table 
+      .main-table__heading-container 
+        .main-table__heading Product 
+        .main-table__heading.main-table__heading--status Status
+        .main-table__heading.main-table__heading--important Brand
+        .main-table__heading.main-table__heading--important Amount
+        .main-table__heading.main-table__heading--unimportant Inventory
+
+      each product in documents
+        a.main-table__row.reset-anchor(href=`/a/products/${product.name}/${product.id}`)
+          .main-table__item.main-table__item--first
+            - 
+              let src = '/assets/admin/img/no-image-2.png';
+              if(product.images && product.images[0] && product.images[0].path){
+                src = product.images[0].path;
+              }
+            img.main-table__item-img(src=src alt='Product image')
+            .main-table__item-first-text= product.name 
+
+          -
+            let status, color;
+            if(!product.published){
+              status = 'Inactive';
+              color = 'blue';
+            }else if(product.currentStock <= 0){
+              status = 'Sold Out';
+              color = 'red';
+            }else{
+              status = 'Active';
+              color = 'green';
+            }
+          
+          .main-table__item.main-table_item--status(class=`main-table_item--status-${color}`): span= status
+
+          .main-table__item.main-table__item--important= product.brand.name
+          .main-table__item.main-table__item--important= product.discountedPrice
+          .main-table__item.main-table__item--unimportant= product.currentStock 
+
+
+//- <div class="main-table__row">
+//-   <div class="main-table__item main-table__item--first">
+//-     <img
+//-       src="img/product-1.jpg"
+//-       alt="Product image"
+//-       class="main-table__item-img"
+//-     />
+//-     <div class="main-table__item-first-text">Amazon Alexa 3</div>
+//-   </div>
+//-   <div
+//-     class="main-table__item main-table_item--status main-table_item--status-green"
+//-   >
+//-     <span>Active</span>
+//-   </div>
+//-   <div class="main-table__item main-table__item--important">Amazon</div>
+//-   <div class="main-table__item main-table__item--important">₹5,999</div>
+//-   <div class="main-table__item main-table__item--unimportant">123</div>
+//-         </div>

@@ -1,8 +1,9 @@
 class APIFeatures {
-  constructor(mongooseQuery, queryFrontEnd, initialQuery) {
+  constructor(mongooseQuery, queryFrontEnd, initialQuery, queryObjParsed = {}) {
     this.mongooseQuery = mongooseQuery.find();
     this.queryFrontEnd = queryFrontEnd;
     this.initialQuery = initialQuery;
+    this.queryObjParsed = queryObjParsed;
   }
 
   filter() {
@@ -18,25 +19,32 @@ class APIFeatures {
       (match) => `"$${match.substring(1, match.length - 2)}":`
     );
 
+    const filterQuery = JSON.parse(queryStr);
+
     if (this.initialQuery) {
       this.mongooseQuery = this.mongooseQuery.and([
         this.initialQuery,
-        JSON.parse(queryStr),
+        filterQuery,
       ]);
     } else {
-      this.mongooseQuery = this.mongooseQuery.find(JSON.parse(queryStr));
+      this.mongooseQuery = this.mongooseQuery.find(filterQuery);
     }
+
+    this.queryObjParsed.filter = filterQuery;
 
     return this;
   }
 
   sort() {
-    if (this.queryFrontEnd.sort) {
-      const sortBy = this.queryFrontEnd.sort.split(',').join(' ');
-      this.mongooseQuery = this.mongooseQuery.sort(sortBy);
-    } else {
-      this.mongooseQuery = this.mongooseQuery.sort('-createdAt');
+    let sort = this.queryFrontEnd.sort || '-updatedAt';
+    this.queryObjParsed.sort = sort;
+
+    if (sort !== '-updatedAt') {
+      sort = `${sort},-updatedAt`;
     }
+
+    const sortBy = sort.replace(',', ' ');
+    this.mongooseQuery = this.mongooseQuery.sort(sortBy);
 
     return this;
   }
@@ -52,20 +60,20 @@ class APIFeatures {
     return this;
   }
 
-  paginate(obj = {}) {
+  paginate() {
     let page = this.queryFrontEnd.page * 1 || 1;
-    let limit = this.queryFrontEnd.limit * 1 || 100;
+    let limit = this.queryFrontEnd.limit * 1 || 10;
 
     if (!Number.isInteger(page) || page <= 0) {
       page = 1;
     }
 
     if (!Number.isInteger(limit) || limit <= 0) {
-      limit = 100;
+      limit = 10;
     }
 
-    obj.page = String(page);
-    obj.limit = String(limit);
+    this.queryObjParsed.page = page;
+    this.queryObjParsed.limit = limit;
 
     const skip = (page - 1) * limit;
 

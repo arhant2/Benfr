@@ -99,8 +99,43 @@
       </div>
     </div>
 
+    <section class="flash-messages js--components-function--flash-messages">
+      <div
+        class="flash-messages__message flash-messages__message--green js--components-function--flash-messages__message"
+      >
+        <div class="flash-messages__icon">&checkmark;</div>
+        <div class="flash-messages__content">
+          <h4 class="flash-messages__heading">Success</h4>
+          <div class="flash-messages__body">
+            This will be the success message
+          </div>
+        </div>
+        <button
+          class="flash-messages__close-btn js--components-function--flash-close-btn"
+        >
+          &Cross;
+        </button>
+      </div>
+      <div
+        class="flash-messages__message flash-messages__message--yellow js--components-function--flash-messages__message"
+      >
+        <div class="flash-messages__icon">&excl;</div>
+        <div class="flash-messages__content">
+          <h4 class="flash-messages__heading">Warning</h4>
+          <div class="flash-messages__body">
+            This will be the warning message
+          </div>
+        </div>
+        <button
+          class="flash-messages__close-btn js--components-function--flash-close-btn"
+        >
+          &Cross;
+        </button>
+      </div>
+    </section>
+
     <header class="header header--small-layout">
-      <h1 class="header__heading heading-primary">Product</h1>
+      <h1 class="header__heading heading-primary">Add Product</h1>
 
       <ul class="header__path">
         <li class="header__path-item"><a href="#">Home</a></li>
@@ -120,7 +155,7 @@
     </header>
 
     <main class="main main--small-layout">
-      <form class="divided-main form">
+      <form class="divided-main">
         <div class="divided-main__left">
           <div class="card u-margin-bottom-main">
             <h3 class="card__heading heading-secondary">Meta Info</h3>
@@ -403,7 +438,7 @@
               <input
                 type="number"
                 class="form-group-input form__input--single-line"
-                placeholder="100"
+                placeholder="10 (-1 for unmanaged)"
               />
             </div>
           </div>
@@ -429,7 +464,7 @@
                   </div>
                   <div>
                     <textarea
-                      name="specifications[{%NUM%}][value]"
+                      name="[{%NUM%}][value]"
                       class="form-group-input form__input--textarea u-width-full"
                       placeholder="Write a description here..."
                       rows="2"

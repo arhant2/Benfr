@@ -18,6 +18,7 @@ module.exports = (Model, { singularName }) => {
 
     res.status(204).json({
       status: 'success',
+      message: `Deleted ${singularName.small} successfully`,
       data: null,
     });
   });

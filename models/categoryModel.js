@@ -56,11 +56,22 @@ categorySchema.pre('save', function (next) {
 
 categorySchema.post('save', async function (doc) {
   if (this.notNewAndmodifiedName) {
-    // eslint-disable-next-line no-use-before-define
-    await Product.updateMany(
-      { 'categories._id': doc._id },
-      { $set: { 'categories.$': doc } }
-    );
+    const category = {
+      _id: doc._id,
+      id: doc.id,
+      name: doc.name,
+    };
+
+    try {
+      // eslint-disable-next-line no-use-before-define
+      await Product.updateMany(
+        { 'categories._id': doc._id },
+        { $set: { 'categories.$': category } }
+      );
+    } catch (err) {
+      console.log("🔥 Couldn't update products while updating category");
+      console.log(err);
+    }
   }
 });
 

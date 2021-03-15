@@ -1,0 +1,18 @@
+mixin formImage(nameCapital, srcs)
+  .form__images
+    each src, i in srcs
+      .form__images-box.js--components--image(data-none-image-class='u-display-none')
+        .form__images-image-outer: .form__images-image-inner
+          img.form__images-image.js--components--image__image-original(src=src alt=`${nameCapital} image original`)
+          img.form__images-image.u-display-none.js--components--image__image-none(src='/assets/admin/img/no-image.jpg' alt='No image')
+          img.form__images-image.u-display-none.js--components--image__image-current(alt=`${nameCapital} image current`)
+
+        .form__images-btns-box
+          label.form__images-label(for=`image${i}`)
+            | &plus;
+            input.form__images-btn.js--components--image__add(id=`image${i}` name=`image${i}` type='file' accept='image/*')
+          label.form__images-remove-label(for=`deleteImage${i}`)
+            i.fas.fa-trash-alt
+            input.form__images-remove-btn.js--components--image__remove(id=`deleteImage${i}` name=`deleteImage${i}` type='checkbox' value='true')
+          button.form__images-reset-btn.js--components--image__reset(type='button')
+            i.fas.fa-undo-alt
