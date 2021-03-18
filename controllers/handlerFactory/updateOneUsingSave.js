@@ -50,7 +50,7 @@ const handleImagesAndData = async (req, doc) => {
 module.exports = (Model, { singularName }) => {
   return catchAsync(async (req, res, next) => {
     try {
-      const doc = await Model.findById(req.params.id);
+      const doc = req.customs.document || (await Model.findById(req.params.id));
 
       if (!doc) {
         return next(

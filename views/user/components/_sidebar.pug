@@ -1,0 +1,35 @@
+mixin sidebarList(links)
+  each link in links
+    ul.sidebar__list.reset-anchor
+      li.sidebar__item: a.sidebar__link(href=link[0])= link[1]
+
+if sidebarDocuments
+  .sidebar__container.js--components-function--sidebar__container(data-toggle-class='sidebar__container--show')
+    aside.sidebar.js--components-function--sidebar.scrollbar
+      .sidebar__cross.js--components-function--sidebar__cross &Cross;
+
+      .sidebar__card 
+        .sidebar__brand.typography-logo-style.reset-anchor: a(href='/')
+          i.fas.fa-camera-retro
+          | &nbsp;Benfr
+      
+      .sidebar__card
+        h4.sidebar__heading By Brand
+        +sidebarList([
+          ...sidebarDocuments.brands.map(brand => linkToItem('brands', brand)),
+          ['/brands', 'All Brands']
+        ])
+
+      .sidebar__card
+        h4.sidebar__heading By Category
+        +sidebarList([
+          ...sidebarDocuments.categories.map(category => linkToItem('categories', category)),
+          ['/brands', 'All Categories']
+        ])
+
+      a.reset-anchor.sidebar__user(href=user?'/myAccount': `/login?redirect=${encodedUrl}`)
+        span.sidebar__user-icon: i.fas.fa-user-circle
+        if user
+          | &nbsp;#{user.name} 
+        else
+          | &nbsp;Login

@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
-// const slugify = require('slugify');
 
+// ====== CICULAR DEPENDENCIES ======
 // var Category = require('./categoryModel'); // defined below to handle circular dependencies
 // var Brand = require('./brandModel'); // defined below to handle circular dependencies
+// var Review = require('./reviewModel'); // defined below to handle circular dependencies
 
 const AppError = require('../utils/AppError');
 const stringNormalize = require('../utils/stringNormalize');
@@ -179,8 +180,15 @@ productSchema.pre('save', function (next) {
 
 // Handling reviews
 productSchema.pre('save', function (next) {
-  if (!this.isModified('review.count' || !this.isModified('review.totalSum')))
+  if (!this.isModified('review.count') && !this.isModified('review.totalSum'))
     return next();
+
+  if (this.review.count === 0) {
+    this.review.average = 0;
+  } else {
+    this.review.average = this.review.totalSum / this.review.count;
+  }
+  next();
 });
 
 // Handling brands
@@ -213,10 +221,11 @@ productSchema.pre('save', async function (next) {
   next();
 });
 
-productSchema.pre('save', function () {
+productSchema.pre('save', function (next) {
   this.wasNew = this.isNew;
   this.wasmodifiedBrand = this.isModified('brandIdString');
   this.wasModifiedCategories = this.isModified('categoriesIdString');
+  next();
 });
 
 productSchema.post('save', async function () {
@@ -274,7 +283,7 @@ productSchema.post('save', async function () {
   await Promise.allSettled(promises);
 });
 
-productSchema.post(/delete/i, async function (doc) {
+productSchema.post(/delete/i, async function (doc, next) {
   // console.log('fired');
   if (!doc) {
     return;
@@ -296,6 +305,15 @@ productSchema.post(/delete/i, async function (doc) {
   }
 
   await Promise.allSettled(promises);
+
+  next();
+});
+
+productSchema.post(/delete/i, async function (doc, next) {
+  await Review.deleteMany({
+    product: doc._id,
+  });
+  next();
 });
 
 const Product = mongoose.model('Product', productSchema);
@@ -306,3 +324,5 @@ module.exports = Product;
 var Brand = require('./brandModel');
 // eslint-disable-next-line no-var, vars-on-top
 var Category = require('./categoryModel');
+// eslint-disable-next-line no-var, vars-on-top
+var Review = require('./reviewModel');

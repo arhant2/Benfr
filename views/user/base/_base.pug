@@ -20,9 +20,13 @@ html(lang='en')
   body.body.scrollbar
     block body
 
+      include ../utils/_functions
+
       block top
         // Navbar
         include ../components/_navbar
+
+      include ../components/_sidebar
 
       include ../components/_flash-message
 

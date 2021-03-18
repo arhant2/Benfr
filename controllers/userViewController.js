@@ -3,12 +3,29 @@ const AppError = require('../utils/AppError');
 const cryptography = require('../utils/crytography');
 const User = require('../models/userModel');
 const UnverifiedUser = require('../models/unverifiedUserModel');
+const Brand = require('../models/brandModel');
+const Category = require('../models/categoryModel');
 
 exports.setEncodedUrl = (req, res, next) => {
   res.locals.encodedUrl = encodeURIComponent(req.originalUrl);
   req.customs.encodedUrl = res.locals.encodedUrl;
   next();
 };
+
+exports.setSidebarItems = catchAsync(async (req, res, next) => {
+  try {
+    const [brands, categories] = await Promise.all([
+      Brand.find().sort('-score -productsCount -updatedAt').limit(4),
+      Category.find().sort('-score -productsCount -updatedAt').limit(4),
+    ]);
+
+    res.locals.sidebarDocuments = { brands, categories };
+  } catch (err) {
+    res.locals.sidebarDocuments = undefined;
+  }
+
+  next();
+});
 
 exports.getIndex = (req, res, next) => {
   res.render('user/index');

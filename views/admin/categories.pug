@@ -15,7 +15,9 @@ block content
       ['-updatedAt', 'Updated (Newest First)'],
       ['updatedAt', 'Updated (Oldest First)'],
       ['-productsCount', 'Items (Highest First)'],
-      ['productsCount', 'Items (Lowest First)']
+      ['productsCount', 'Items (Lowest First)'],
+      ['-score', 'Score (Highest First)'],
+      ['score', 'Score (Lowest First)']
     ])
     
     +menuLimit('categories')
@@ -25,8 +27,9 @@ block content
     .main-table 
       .main-table__heading-container 
         .main-table__heading Category 
+        .main-table__heading.main-table__heading--status Score
         .main-table__heading.main-table__heading--important Products
-        .main-table__heading.main-table__heading--important Created
+        .main-table__heading.main-table__heading--unimportant Created
       
       each category in documents
         a.main-table__row.reset-anchor(href=`/a/categories/${category.nameNormalized}/${category.id}`)
@@ -38,5 +41,12 @@ block content
               }
             img.main-table__item-img(src=src alt='Product image')
             .main-table__item-first-text= category.name 
+
+          -
+            let color = 'blue';
+            if(category.score <= 3) color = 'red';
+            else if(category.score >= 7) color = 'green';
+          .main-table__item.main-table_item--status(class=`main-table_item--status-${color}`): span #{category.score}
+          
           .main-table__item.main-table__item--important= category.productsCount
           .main-table__item.main-table__item--important= helpers.dateFormator.dateFormatted(category.createdAt)

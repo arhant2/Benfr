@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const brcypt = require('bcryptjs');
 const ms = require('ms');
+const sendEmail = require('../utils/sendEmail');
 
 // const AppError = require('../utils/AppError');
 const otpGenerate = require('../utils/otpGenerate');
@@ -24,13 +25,22 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      minlength: [8, 'Password must be of atleast 8 characters'],
-      maxlength: [50, 'Password must be of 50 characters at maximum'],
       required: [true, 'User must have a password'],
+      validate: {
+        validator: function () {
+          if (this.isModified('password') && !this.passwordConfirm) {
+            return false;
+          }
+          return true;
+        },
+        message: 'User must confirm his/her password',
+      },
     },
     passwordConfirm: {
       type: String,
-      required: [true, 'User must confirm his/her password'],
+      minlength: [8, 'Password must be of atleast 8 characters'],
+      maxlength: [50, 'Password must be of 50 characters at maximum'],
+      // required: [true, 'User must confirm his/her password'],
       validate: {
         validator: function (val) {
           return val === this.password;
@@ -85,6 +95,10 @@ const userSchema = new mongoose.Schema(
         remainingOtpCount: Number,
       },
     },
+    deletedReviewCount: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,
@@ -114,6 +128,30 @@ userSchema.pre(/^save/, async function (next) {
   this.passwordResetToken = undefined;
   this.passwordChangedAt = Date.now() - 1000; // (Hack)
   next();
+});
+
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('deletedReviewCount')) return next();
+  if (
+    this.deletedReviewCount <
+    process.env.MAXIMUM_DELTED_REVIEW_BEFORE_ACCOUNT_SUSPENSION
+  )
+    return next();
+
+  this.active = false;
+  this.inActiveReason = `Auto suspension. Detected as a spammers. Auto deleted ${this.deletedReviewCount} reviews.`;
+
+  try {
+    await sendEmail({
+      email: this.email,
+      subject: `Account suspended`,
+      message: `You have been detected as a spammer on Benfr and hence your account has been suspended. Contact admin at Benfr for more info`,
+    });
+  } catch (err) {
+    // Nothing
+  }
+
+  this.deletedReviewCount = 0;
 });
 
 userSchema.methods.createToken = function () {

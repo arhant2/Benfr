@@ -30,6 +30,21 @@ block content
             +formImage('Brand', [document&&document.images&&document.images[0]&&document.images[0].path || '/assets/admin/img/no-image.jpg'])
         
       .divided-main__right
+
+        // Score
+        .card.u-margin-bottom-main
+          h3.card__heading.heading-secondary Score
+          .form__group
+            select.form__select.u-width-full(name='score')
+              - for(let i=1; i<=10; ++i)
+                if document && document.score && document.score == i 
+                  option(value=i selected)= i
+                else 
+                  option(value=i)= i
+          .form__group
+            p.small-text Score helps in prioritizing a brand. More the score, more the brand will be prioritized while showing to customer. This is important for grabbing the customer interest.
+
+        // Products count
         .card.u-margin-bottom-main
           h3.card__heading.heading-secondary Products
           .form__group

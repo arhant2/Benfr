@@ -12,6 +12,14 @@ const categorySchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    score: {
+      type: Number,
+      set: Math.trunc,
+      min: [1, 'Score can should be atleast 1'],
+      max: [10, 'Score can be 10 at maximum'],
+      default: 1,
+      required: true,
+    },
     nameNormalized: {
       type: String,
       unique: true,

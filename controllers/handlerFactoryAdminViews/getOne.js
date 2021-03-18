@@ -11,6 +11,8 @@ module.exports = (Model, { singularName }) => {
       );
     }
 
+    console.log(document);
+
     res.render(`admin/${singularName.small}-one`, {
       document,
     });

@@ -4,7 +4,11 @@ const express = require('express');
 const productController = require('../controllers/productController');
 const productFilters = require('../filters/productFilters');
 
+const reviewRouter = require('./reviewRoutes');
+
 const router = express.Router();
+
+router.use('/:productId/reviews', reviewRouter);
 
 router
   .route('/')

@@ -15,7 +15,9 @@ block content
       ['-updatedAt', 'Updated (Newest First)'],
       ['updatedAt', 'Updated (Oldest First)'],
       ['-productsCount', 'Items (Highest First)'],
-      ['productsCount', 'Items (Lowest First)']
+      ['productsCount', 'Items (Lowest First)'],
+      ['-score', 'Score (Highest First)'],
+      ['score', 'Score (Lowest First)']
     ])
     
     +menuLimit('brands')
@@ -25,8 +27,9 @@ block content
     .main-table 
       .main-table__heading-container 
         .main-table__heading Brand 
+        .main-table__heading.main-table__heading--status Score
         .main-table__heading.main-table__heading--important Products
-        .main-table__heading.main-table__heading--important Created
+        .main-table__heading.main-table__heading--unimportant Created
       
       each brand in documents
         a.main-table__row.reset-anchor(href=`/a/brands/${brand.nameNormalized}/${brand.id}`)
@@ -38,5 +41,12 @@ block content
               }
             img.main-table__item-img(src=src alt='Product image')
             .main-table__item-first-text= brand.name 
+            
+          -
+            let color = 'blue';
+            if(brand.score <= 3) color = 'red';
+            else if(brand.score >= 7) color = 'green';
+          .main-table__item.main-table_item--status(class=`main-table_item--status-${color}`): span #{brand.score}
+
           .main-table__item.main-table__item--important= brand.productsCount
-          .main-table__item.main-table__item--important= helpers.dateFormator.dateFormatted(brand.createdAt)
+          .main-table__item.main-table__item--unimportant= helpers.dateFormator.dateFormatted(brand.createdAt)

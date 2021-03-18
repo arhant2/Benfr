@@ -1,5 +1,5 @@
 const filterBodyMiddleware = require('../utils/filterBodyMiddleware');
 
-exports.createOne = filterBodyMiddleware(['name']);
+exports.createOne = filterBodyMiddleware(['name', 'score']);
 
-exports.updateOne = filterBodyMiddleware(['name', 'deleteImage0']);
+exports.updateOne = filterBodyMiddleware(['name', 'score', 'deleteImage0']);

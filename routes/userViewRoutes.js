@@ -22,10 +22,11 @@ router.get('/resetPassword/:token', userViewController.getResetPassword);
 router.get('/logout', userViewController.getLogout);
 
 /* =====================================
-All routes below will check if logged so to make changes in navbar  and also setEncodedUrl
+All routes below will check if logged so to make changes in navbar, also setEncodedUrl and sidebarItems
 ===================================== */
 
 router.use(userViewController.setEncodedUrl);
+router.use(userViewController.setSidebarItems);
 router.use(authController.isLoggedIn);
 
 router.get('/', userViewController.getIndex);
