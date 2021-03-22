@@ -31,4 +31,6 @@ router
   )
   .delete(productController.deleteOne);
 
+router.get('/search/:searchBy', productController.productSearch);
+
 module.exports = router;

@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 
 const AppError = require('../utils/AppError');
 const stringNormalize = require('../utils/stringNormalize');
+const gramsGenerator = require('../utils/gramsGenerator');
 // const arrayRemoveReduntantAndUnecessary = require('../utils/arrayRemoveReduntantAndUnecessary');
 
 const productSchema = new mongoose.Schema(
@@ -37,6 +38,10 @@ const productSchema = new mongoose.Schema(
         default: 0,
       },
       average: {
+        type: Number,
+        default: 0,
+      },
+      averageNormalized: {
         type: Number,
         default: 0,
       },
@@ -144,11 +149,62 @@ const productSchema = new mongoose.Schema(
       ],
       default: [],
     },
+    grams: {
+      type: {
+        words: [String],
+        stems: [String],
+        distanceOnes: [String],
+        distanceOneStems: [String],
+        distanceOnesDatabase: [String],
+        distanceOnesQuery: [String],
+        distanceOnesSamePosition: [String],
+        startEdgeGrams: [String],
+        edgeGrams: [String],
+        twoGrams: [String],
+        select: false,
+      },
+      select: false,
+    },
   },
   {
     timestamps: true,
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
+  }
+);
+
+productSchema.index(
+  {
+    'brand.name': 'text',
+    'categories.name': 'text',
+    'grams.words': 'text',
+    'grams.stems': 'text',
+    'grams.distanceOnes': 'text',
+    'grams.distanceOneStems': 'text',
+    'grams.distanceOnesDatabase': 'text',
+    'grams.distanceOnesQuery': 'text',
+    'grams.distanceOnesSamePosition': 'text',
+    'grams.startEdgeGrams': 'text',
+    'grams.edgeGrams': 'text',
+    'grams.twoGrams': 'text',
+  },
+  {
+    name: 'textSearchIndex',
+    weights: {
+      'brand.name': 1000,
+      'categories.name': 500,
+      'grams.words': 500,
+      'grams.stems': 400,
+      'grams.distanceOnes': 10,
+      'grams.distanceOneStems': 10,
+      'grams.distanceOnesDatabase': 200,
+      'grams.distanceOnesQuery': 200,
+      'grams.distanceOnesSamePosition': 300,
+      'grams.startEdgeGrams': 100,
+      'grams.edgeGrams': 12,
+      'grams.twoGrams': 5,
+    },
+    // default_language: 'none',
   }
 );
 
@@ -171,6 +227,13 @@ productSchema.post('init', function () {
   };
 });
 
+productSchema.pre(/^save/, function (next) {
+  if (this.isModified('name')) {
+    this.grams = gramsGenerator.grams(this.name);
+  }
+  next();
+});
+
 // Save normalized name
 productSchema.pre('save', function (next) {
   if (!this.isModified('name')) return next();
@@ -185,8 +248,11 @@ productSchema.pre('save', function (next) {
 
   if (this.review.count === 0) {
     this.review.average = 0;
+    this.review.averageNormalized = 0;
   } else {
     this.review.average = this.review.totalSum / this.review.count;
+    this.review.averageNormalized =
+      0.5 * (this.review.average + (1 - Math.exp(-this.review.count / 10)));
   }
   next();
 });
@@ -283,7 +349,7 @@ productSchema.post('save', async function () {
   await Promise.allSettled(promises);
 });
 
-productSchema.post(/delete/i, async function (doc, next) {
+productSchema.post('deleteOne', async function (doc, next) {
   // console.log('fired');
   if (!doc) {
     return;
@@ -309,7 +375,8 @@ productSchema.post(/delete/i, async function (doc, next) {
   next();
 });
 
-productSchema.post(/delete/i, async function (doc, next) {
+productSchema.post('deleteOne', async function (doc, next) {
+  // eslint-disable-next-line no-use-before-define
   await Review.deleteMany({
     product: doc._id,
   });

@@ -9,11 +9,6 @@ module.exports = (Model, { pluralName }) => {
     // console.log(req.query);
 
     const queryObjParsed = {};
-
-    queryObjParsed.filterStringified = qs.stringify(queryObjParsed.filter, {
-      encode: false,
-    });
-
     const features = new APIFeatures(
       Model.find(),
       req.query,
@@ -25,6 +20,10 @@ module.exports = (Model, { pluralName }) => {
       .paginate();
 
     const documents = await features.mongooseQuery;
+
+    queryObjParsed.filterStringified = qs.stringify(queryObjParsed.filter, {
+      encode: false,
+    });
 
     const addFilter = (str) => {
       if (queryObjParsed.filterStringified) {
@@ -48,8 +47,6 @@ module.exports = (Model, { pluralName }) => {
         }&sort=${queryObjParsed.sort}`
       );
     }
-
-    // console.log(queryObjParsed);
 
     res.render(`admin/${pluralName.small}`, {
       documents,

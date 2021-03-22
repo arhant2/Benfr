@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Benfr - Best Electronics at your doorstep</title>
+
+    <script
+      src="https://kit.fontawesome.com/208182354f.js"
+      crossorigin="anonymous"
+    ></script>
+    <!-- font-family: 'Permanent Marker', cursive; -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap"
+      rel="stylesheet"
+    />
+    <!-- font-family: 'Playfair Display', serif;
+        font-family: 'Poppins', sans-serif; -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="./index.css" />
+  </head>
+  <body class="body scrollbar">
+    <!-- navbar -->
+    <div class="navbar">
+      <nav class="navbar__inner reset-anchor">
+        <div
+          class="navbar__hamburger js--components-function--sidebar__hamburger"
+        >
+          <div class="navbar__hamburger-circle">
+            <!-- <i class="fas fa-bars"></i> -->
+            <div class="navbar__hamburger-line"></div>
+          </div>
+        </div>
+
+        <a href="./index.html">
+          <div class="navbar__logo typography-logo-style">
+            <i class="fas fa-camera-retro"></i> Benfr
+          </div>
+        </a>
+        <ul class="navbar__list">
+          <li class="navbar__item">
+            <a class="navbar__link" href="./all-products.html"
+              ><i class="fas fa-search"></i
+            ></a>
+          </li>
+          <li class="navbar__item user-dropdown-navbar">
+            <a class="navbar__link" href="./account.html"
+              ><i class="far fa-user"></i
+            ></a>
+
+            <div class="user-dropdown-navbar__box">
+              <ul class="user-dropdown-navbar__list">
+                <li class="user-dropdown-navbar__item">
+                  <a href="./account.html" class="user-dropdown-navbar__link">
+                    <span class="user-dropdown-navbar__icon"
+                      ><i class="fas fa-user-circle"></i></span
+                    >My Account
+                  </a>
+                </li>
+                <li class="user-dropdown-navbar__item">
+                  <a href="./my-orders.html" class="user-dropdown-navbar__link">
+                    <span class="user-dropdown-navbar__icon"
+                      ><i class="fas fa-box-open"></i></span
+                    >My Orders
+                  </a>
+                </li>
+                <li class="user-dropdown-navbar__item">
+                  <a
+                    href="./address-book.html"
+                    class="user-dropdown-navbar__link"
+                  >
+                    <span class="user-dropdown-navbar__icon"
+                      ><i class="fas fa-map-marker-alt"></i></span
+                    >Addresses
+                  </a>
+                </li>
+                <li class="user-dropdown-navbar__item">
+                  <a href="# " class="user-dropdown-navbar__link">
+                    <span class="user-dropdown-navbar__icon"
+                      ><i class="fas fa-sign-out-alt"></i></span
+                    >Logout
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </li>
+          <li class="navbar__item">
+            <a class="navbar__link" href="./wishlist.html"
+              ><i class="far fa-heart"></i
+            ></a>
+          </li>
+          <li class="navbar__item">
+            <a class="navbar__link" href="cart.html"
+              ><i class="fas fa-shopping-basket"></i
+            ></a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <div
+      class="sidebar__container js--components-function--sidebar__container"
+      data-toggle-class="sidebar__container--show"
+    >
+      <aside class="sidebar js--components-function--sidebar scrollbar">
+        <div class="sidebar__cross js--components-function--sidebar__cross">
+          &Cross;
+        </div>
+
+        <div class="sidebar__card">
+          <div class="sidebar__brand typography-logo-style">
+            <i class="fas fa-camera-retro"></i> Benfr
+          </div>
+        </div>
+        <div class="sidebar__card">
+          <h4 class="sidebar__heading">By Brand</h4>
+          <ul class="sidebar__list reset-anchor">
+            <li class="sidebar__item">
+              <a href="./products-brands.html" class="sidebar__link">Apple</a>
+            </li>
+            <li class="sidebar__item">
+              <a href="./products-brands.html" class="sidebar__link">Google</a>
+            </li>
+            <li class="sidebar__item">
+              <a href="./products-brands.html" class="sidebar__link">Samsung</a>
+            </li>
+            <li class="sidebar__item">
+              <a href="./products-brands.html" class="sidebar__link">Dell</a>
+            </li>
+            <li class="sidebar__item">
+              <a href="./brands.html" class="sidebar__link">All Brands</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="sidebar__card">
+          <h4 class="sidebar__heading">By Category</h4>
+          <ul class="sidebar__list reset-anchor">
+            <li class="sidebar__item">
+              <a href="./products-categories.html" class="sidebar__link"
+                >Mobile</a
+              >
+            </li>
+            <li class="sidebar__item">
+              <a href="./products-categories.html" class="sidebar__link"
+                >Laptop</a
+              >
+            </li>
+            <li class="sidebar__item">
+              <a href="./products-categories.html" class="sidebar__link"
+                >Camera</a
+              >
+            </li>
+            <li class="sidebar__item">
+              <a href="./products-categories.html" class="sidebar__link"
+                >Speaker</a
+              >
+            </li>
+            <li class="sidebar__item">
+              <a href="./categories.html" class="sidebar__link"
+                >All Categories</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <a href="./account.html" class="reset-anchor sidebar__user">
+          <span class="sidebar__user-icon">
+            <i class="fas fa-user-circle"></i>
+          </span>
+          Arhant Jain
+        </a>
+      </aside>
+    </div>
+
+    <div class="card account">
+      <aside class="account__sidebar">
+        <h2 class="heading-quadinary heading-quadinary--2">Account</h2>
+        <ul class="account__sidebar-list">
+          <li class="account__sidebar-item">
+            <a href="./account.html" class="btn btn--text btn--text-inital-dark"
+              >My Account</a
+            >
+          </li>
+          <li class="account__sidebar-item">
+            <a
+              href="./edit-account.html"
+              class="btn btn--text btn--text-inital-dark"
+              >Edit Account</a
+            >
+          </li>
+          <li class="account__sidebar-item">
+            <a
+              href="./login-information.html"
+              class="btn btn--text btn--text-inital-dark"
+              >Login Information</a
+            >
+          </li>
+          <li class="account__sidebar-item">
+            <a
+              href="./change-password.html"
+              class="btn btn--text btn--text-inital-dark"
+              >Password</a
+            >
+          </li>
+          <li class="account__sidebar-item">
+            <a
+              href="./address-book.html"
+              class="btn btn--text btn--text-inital-dark"
+              >Address Book</a
+            >
+          </li>
+          <li class="account__sidebar-item">
+            <a
+              href="./wishlist.html"
+              class="btn btn--text btn--text-inital-dark"
+              >Wishlist</a
+            >
+          </li>
+          <li class="account__sidebar-item">
+            <a
+              href="./my-orders.html"
+              class="btn btn--text btn--text-inital-dark"
+              >Order history</a
+            >
+          </li>
+          <li class="account__sidebar-item">
+            <a href="#" class="btn btn--text btn--text-inital-dark">Logout</a>
+          </li>
+        </ul>
+      </aside>
+      <div class="account__main">
+        <div class="account__box">
+          <div class="account__box-top">
+            <h2 class="heading-quadinary heading-quadinary--2">Address Book</h2>
+            <ul class="account__path-list">
+              <li class="account__path-item">
+                <a
+                  href="./index.html"
+                  class="btn btn--text btn--text-inital-dark"
+                  ><i class="fas fa-home"></i
+                ></a>
+              </li>
+              <li class="account__path-item">
+                <a
+                  href="./account.html"
+                  class="btn btn--text btn--text-inital-dark"
+                  >Account</a
+                >
+              </li>
+              <li class="account__path-item">
+                <a
+                  href="./address-book.html"
+                  class="btn btn--text btn--text-inital-dark"
+                  >Address Book</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div class="account__box-main">
+            <div class="inner-card address__box">
+              <div class="address__address">
+                <p class="address__each-line para-primary">Arhant Jain</p>
+                <p class="address__each-line para-primary">123 Main Street,</p>
+                <p class="address__each-line para-primary">New York</p>
+                <p class="address__each-line para-primary">NY 10030</p>
+                <p class="address__each-line para-primary">
+                  <i class="fas fa-phone-alt"></i> +91 9999 999 999
+                </p>
+              </div>
+              <div class="address__btns">
+                <button class="btn btn--round btn--main-color">Edit</button>
+                <button class="btn btn--round btn--red">Remove</button>
+              </div>
+            </div>
+
+            <div class="inner-card address__box">
+              <div class="address__address">
+                <p class="address__each-line para-primary">Arhant Jain</p>
+                <p class="address__each-line para-primary">123 Main Street,</p>
+                <p class="address__each-line para-primary">New York</p>
+                <p class="address__each-line para-primary">NY 10030</p>
+                <p class="address__each-line para-primary">
+                  <i class="fas fa-phone-alt"></i> +91 9999 999 999
+                </p>
+              </div>
+              <div class="address__btns">
+                <button class="btn btn--round btn--main-color">Edit</button>
+                <button class="btn btn--round btn--red">Remove</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="address__box address__box--last-btns-right">
+            <a href="./new-address.html" class="btn btn--round btn--main-color"
+              >New Address</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer reset-anchor">
+      <div class="footer__container">
+        <div class="footer__main-container">
+          <div class="footer__box footer__box--first">
+            <div class="footer__logo typography-logo-style">
+              <i class="fas fa-camera-retro"></i> Benfr
+            </div>
+            <div class="footer__tag-line">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            </div>
+            <address class="footer__contact">
+              <a
+                href="mailto:arhantjain2@gmail.com"
+                class="footer__contact-each"
+              >
+                <span class="footer__contact-icon">
+                  <i class="fas fa-envelope"></i>
+                </span>
+                arhantjain2@gmail.com
+              </a>
+              <a href="tel:+919999999999" class="footer__contact-each">
+                <span class="footer__contact-icon">
+                  <i class="fas fa-phone-alt"></i>
+                </span>
+                +91 9999 999 999
+              </a>
+            </address>
+          </div>
+          <div class="footer__box">
+            <h3 class="footer__heading">Information</h3>
+            <ul class="footer__list">
+              <li class="footer__item"><a href="#">About Us</a></li>
+              <li class="footer__item"><a href="#">Delivery Information</a></li>
+              <li class="footer__item"><a href="#">Privacy Policy</a></li>
+              <li class="footer__item"><a href="#">Contact Us</a></li>
+            </ul>
+          </div>
+          <div class="footer__box">
+            <h3 class="footer__heading">Support</h3>
+            <ul class="footer__list">
+              <li class="footer__item"><a href="#">24/7 Support</a></li>
+              <li class="footer__item"><a href="#">FAQs</a></li>
+              <li class="footer__item"><a href="#">Privacy Policy</a></li>
+            </ul>
+          </div>
+          <div class="footer__box">
+            <h3 class="footer__heading">Important Links</h3>
+            <ul class="footer__list">
+              <li class="footer__item"><a href="#">Blog</a></li>
+              <li class="footer__item"><a href="#">Testiomonials</a></li>
+              <li class="footer__item"><a href="#">Feedback</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer__copyright-container">
+          <div class="footer__copyright">
+            Copyright &copy; 2021 Benfr | All Rights Reserved
+          </div>
+          <a href="https://www.linkedin.com/" class="footer__made-by">
+            Made with
+            <span class="footer__made-by-icon"
+              ><i class="fas fa-heart"></i
+            ></span>
+            by Arhant Jain
+          </a>
+        </div>
+      </div>
+    </footer>
+
+    <script src="./index.js"></script>
+  </body>
+</html>

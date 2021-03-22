@@ -4,12 +4,18 @@ class APIFeatures {
     this.queryFrontEnd = queryFrontEnd;
     this.initialQuery = initialQuery;
     this.queryObjParsed = queryObjParsed;
+
+    // console.log(this.queryObjParsed);
+
+    // console.log('queryObjParsed', this.queryObjParsed);
   }
 
   filter() {
     const queryObj = { ...this.queryFrontEnd };
-    const excludedFields = ['page', 'sort', 'limit', 'fields'];
+    const excludedFields = ['page', 'sort', 'limit', 'fields', 'displayName'];
     excludedFields.forEach((el) => delete queryObj[el]);
+
+    this.queryObjParsed.displayName = this.queryFrontEnd.displayName;
 
     // 1b) Advanced Filtering
     let queryStr = JSON.stringify(queryObj);
@@ -78,6 +84,8 @@ class APIFeatures {
     const skip = (page - 1) * limit;
 
     this.mongooseQuery = this.mongooseQuery.skip(skip).limit(limit);
+
+    // console.log(this.queryObjParsed);
 
     return this;
   }

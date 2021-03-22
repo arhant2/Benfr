@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Benfr - Best Electronics at your doorstep</title>
+
+    <script
+      src="https://kit.fontawesome.com/208182354f.js"
+      crossorigin="anonymous"
+    ></script>
+    <!-- font-family: 'Permanent Marker', cursive; -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap"
+      rel="stylesheet"
+    />
+    <!-- font-family: 'Playfair Display', serif;
+        font-family: 'Poppins', sans-serif; -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="./index.css" />
+  </head>
+  <body class="body scrollbar">
+    <!-- navbar -->
+    <div class="navbar">
+      <nav class="navbar__inner reset-anchor">
+        <div
+          class="navbar__hamburger js--components-function--sidebar__hamburger"
+        >
+          <div class="navbar__hamburger-circle">
+            <!-- <i class="fas fa-bars"></i> -->
+            <div class="navbar__hamburger-line"></div>
+          </div>
+        </div>
+
+        <a href="./index.html">
+          <div class="navbar__logo typography-logo-style">
+            <i class="fas fa-camera-retro"></i> Benfr
+          </div>
+        </a>
+        <ul class="navbar__list">
+          <li class="navbar__item">
+            <a class="navbar__link" href="./all-products.html"
+              ><i class="fas fa-search"></i
+            ></a>
+          </li>
+          <li class="navbar__item user-dropdown-navbar">
+            <a class="navbar__link" href="./account.html"
+              ><i class="far fa-user"></i
+            ></a>
+
+            <div class="user-dropdown-navbar__box">
+              <ul class="user-dropdown-navbar__list">
+                <li class="user-dropdown-navbar__item">
+                  <a href="./account.html" class="user-dropdown-navbar__link">
+                    <span class="user-dropdown-navbar__icon"
+                      ><i class="fas fa-user-circle"></i></span
+                    >My Account
+                  </a>
+                </li>
+                <li class="user-dropdown-navbar__item">
+                  <a href="./my-orders.html" class="user-dropdown-navbar__link">
+                    <span class="user-dropdown-navbar__icon"
+                      ><i class="fas fa-box-open"></i></span
+                    >My Orders
+                  </a>
+                </li>
+                <li class="user-dropdown-navbar__item">
+                  <a
+                    href="./address-book.html"
+                    class="user-dropdown-navbar__link"
+                  >
+                    <span class="user-dropdown-navbar__icon"
+                      ><i class="fas fa-map-marker-alt"></i></span
+                    >Addresses
+                  </a>
+                </li>
+                <li class="user-dropdown-navbar__item">
+                  <a href="# " class="user-dropdown-navbar__link">
+                    <span class="user-dropdown-navbar__icon"
+                      ><i class="fas fa-sign-out-alt"></i></span
+                    >Logout
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </li>
+          <li class="navbar__item">
+            <a class="navbar__link" href="./wishlist.html"
+              ><i class="far fa-heart"></i
+            ></a>
+          </li>
+          <li class="navbar__item">
+            <a class="navbar__link" href="cart.html"
+              ><i class="fas fa-shopping-basket"></i
+            ></a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <div
+      class="sidebar__container js--components-function--sidebar__container"
+      data-toggle-class="sidebar__container--show"
+    >
+      <aside class="sidebar js--components-function--sidebar scrollbar">
+        <div class="sidebar__cross js--components-function--sidebar__cross">
+          &Cross;
+        </div>
+
+        <div class="sidebar__card">
+          <div class="sidebar__brand typography-logo-style">
+            <i class="fas fa-camera-retro"></i> Benfr
+          </div>
+        </div>
+        <div class="sidebar__card">
+          <h4 class="sidebar__heading">By Brand</h4>
+          <ul class="sidebar__list reset-anchor">
+            <li class="sidebar__item">
+              <a href="./products-brands.html" class="sidebar__link">Apple</a>
+            </li>
+            <li class="sidebar__item">
+              <a href="./products-brands.html" class="sidebar__link">Google</a>
+            </li>
+            <li class="sidebar__item">
+              <a href="./products-brands.html" class="sidebar__link">Samsung</a>
+            </li>
+            <li class="sidebar__item">
+              <a href="./products-brands.html" class="sidebar__link">Dell</a>
+            </li>
+            <li class="sidebar__item">
+              <a href="./brands.html" class="sidebar__link">All Brands</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="sidebar__card">
+          <h4 class="sidebar__heading">By Category</h4>
+          <ul class="sidebar__list reset-anchor">
+            <li class="sidebar__item">
+              <a href="./products-categories.html" class="sidebar__link"
+                >Mobile</a
+              >
+            </li>
+            <li class="sidebar__item">
+              <a href="./products-categories.html" class="sidebar__link"
+                >Laptop</a
+              >
+            </li>
+            <li class="sidebar__item">
+              <a href="./products-categories.html" class="sidebar__link"
+                >Camera</a
+              >
+            </li>
+            <li class="sidebar__item">
+              <a href="./products-categories.html" class="sidebar__link"
+                >Speaker</a
+              >
+            </li>
+            <li class="sidebar__item">
+              <a href="./categories.html" class="sidebar__link"
+                >All Categories</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <a href="./account.html" class="reset-anchor sidebar__user">
+          <span class="sidebar__user-icon">
+            <i class="fas fa-user-circle"></i>
+          </span>
+          Arhant Jain
+        </a>
+      </aside>
+    </div>
+
+    <!-- Each product main -->
+    <section class="each-product-main">
+      <div class="each-product-main__imgs-box">
+        <div class="each-product-main__big-img-box-outer">
+          <div
+            class="each-product-main__big-img-box js--page-each-product--to-zoom"
+          >
+            <div
+              class="each-product-main__lens js--page-each-product--lens"
+            ></div>
+
+            <img
+              src="img/product-new-arrival-1.jpg"
+              alt=""
+              class="each-product-main__big-img js--page-each-product--big-img"
+            />
+          </div>
+        </div>
+
+        <div class="each-product-main__smaller-imgs-box">
+          <img
+            src="img/product-new-arrival-1.jpg"
+            alt=""
+            class="each-product-main__smaller-img js--page-each-product--imgs"
+          />
+          <img
+            src="img/product-new-arrival-2.jpg"
+            alt=""
+            class="each-product-main__smaller-img js--page-each-product--imgs"
+          />
+          <img
+            src="img/product-new-arrival-3.jpg"
+            alt=""
+            class="each-product-main__smaller-img js--page-each-product--imgs"
+          />
+          <img
+            src="img/product-new-arrival-4.jpg"
+            alt=""
+            class="each-product-main__smaller-img js--page-each-product--imgs"
+          />
+        </div>
+      </div>
+      <div class="each-product-main__content">
+        <div
+          class="each-product-main__zoomed-img js--page-each-product--zoomed-img"
+        ></div>
+        <div class="each-product-main__content-box">
+          <div class="each-product-main__content-each">
+            <div class="each-product-main__brand">Amazon</div>
+            <h1 class="each-product-main__heading">Amazon Echo - 3rd Gen</h1>
+            <div class="each-product-main__ratings">
+              <span class="each-product-main__ratings-star">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+                <i class="far fa-star"></i>
+              </span>
+              <span class="each-product-main__ratings-count">3213 reviews</span>
+            </div>
+          </div>
+
+          <div class="each-product-main__content-each">
+            <div class="each-product-main__price-outer">
+              <span class="each-product-main__price-act">₹5,999</span>
+              <strike class="each-product-main__price-strike">₹7,999</strike>
+            </div>
+
+            <div class="each-product-main__save-outer">
+              You save:
+              <span class="each-product-main__save">₹2,000</span> (43%)
+            </div>
+
+            <ul class="each-product-main__features-list">
+              <li class="each-product-main__features-item">
+                Free Delivery On Orders Above ₹1,999
+              </li>
+              <li class="each-product-main__features-item">
+                Fast and Secure Payment
+              </li>
+              <li class="each-product-main__features-item">
+                Cash on Delivery Available
+              </li>
+            </ul>
+
+            <button
+              class="btn btn--new-blue btn--round btn--full each-product-main__buy-btn"
+            >
+              Add To Cart
+            </button>
+
+            <p class="each-product-main__description">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore
+              iste distinctio alias consequatur placeat veniam aspernatur id,
+              sit dolor recusandae eum voluptates doloribus officia nisi facilis
+              ut, accusantium odio provident dolorem deleniti iure labore quas?
+              Mollitia excepturi eveniet a sunt numquam nulla possimus harum
+              beatae accusantium doloribus tempore at dicta rem recusandae odio,
+              repellendus reprehenderit ab assumenda dolorem, nemo ut.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Each product description -->
+    <div class="card">
+      <h2 class="heading-tertiary card__heading">Product Description</h2>
+      <div class="card__body">
+        <p class="para-primary">
+          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Laborum
+          reprehenderit deleniti unde inventore dolores asperiores laudantium
+          quod hic rerum eveniet doloremque expedita, similique accusamus
+          officia earum? Quisquam consectetur porro explicabo quibusdam iste
+          similique nam esse, eveniet odio hic autem minus odit consequuntur
+          cupiditate harum totam. Quibusdam, deserunt alias. Reprehenderit
+          officiis beatae velit laboriosam? Quas in eaque quaerat delectus
+          soluta possimus optio voluptates similique est omnis officiis
+          cupiditate voluptatibus iusto molestias dolorem corporis ex, dolores
+          tempore expedita aut impedit ab asperiores quam. Veritatis
+          necessitatibus harum temporibus repellendus a eos totam asperiores
+          odit enim reiciendis debitis fuga, quas blanditiis ipsam voluptate cum
+          maxime, officiis impedit commodi itaque exercitationem ratione facere
+          aperiam! Facilis rerum alias quo accusamus, quae similique explicabo
+          iure magnam quibusdam.
+        </p>
+      </div>
+    </div>
+
+    <!-- Each product specifications -->
+    <div class="card">
+      <h2 class="heading-tertiary card__heading">Specifications</h2>
+      <div class="card__body">
+        <table class="each-product-specifications-table">
+          <tr class="each-product-specifications-table__row">
+            <th class="each-product-specifications-table__heading">Size</th>
+            <td class="each-product-specifications-table__data">
+              5.8” x 3.9” x 3.9” (148 x 99 x 99 mm)
+            </td>
+          </tr>
+
+          <tr class="each-product-specifications-table__row">
+            <th class="each-product-specifications-table__heading">Weight</th>
+            <td class="each-product-specifications-table__data">
+              1.3 kg Actual size and weight may vary by manufacturing process
+            </td>
+          </tr>
+          <tr class="each-product-specifications-table__row">
+            <th class="each-product-specifications-table__heading">
+              Wi-Fi Connectivity
+            </th>
+            <td class="each-product-specifications-table__data">
+              Dual-band Wi-Fi supports 802.11a/b/g/n/ac (2.4 and 5 GHz)
+              networks. Does not support connecting to ad-hoc (or peer-to-peer)
+              Wi-Fi networks
+            </td>
+          </tr>
+          <tr class="each-product-specifications-table__row">
+            <th class="each-product-specifications-table__heading">
+              Bluetooth Connectivity
+            </th>
+            <td class="each-product-specifications-table__data">
+              Advanced Audio Distribution Profile (A2DP) support for audio
+              streaming from your mobile device to Echo or from Echo to your
+              Bluetooth speaker. Audio/Video Remote Control Profile (AVRCP) for
+              voice control of connected mobile devices. Hands-free voice
+              control is not supported for Mac OS X devices. Bluetooth speakers
+              requiring PIN codes are not supported.
+            </td>
+          </tr>
+          <tr class="each-product-specifications-table__row">
+            <th class="each-product-specifications-table__heading">
+              Country of origin
+            </th>
+            <td class="each-product-specifications-table__data">China</td>
+          </tr>
+          <tr class="each-product-specifications-table__row">
+            <th class="each-product-specifications-table__heading">
+              Warranty and Service
+            </th>
+            <td class="each-product-specifications-table__data">
+              All-new Amazon Echo (3rd Gen) is sold with a limited warranty of
+              one year. Use of All-new Amazon Echo (3rd Gen) is subject to the
+              terms.
+            </td>
+          </tr>
+          <tr class="each-product-specifications-table__row">
+            <th class="each-product-specifications-table__heading">
+              Included in the Box
+            </th>
+            <td class="each-product-specifications-table__data">
+              All-new Amazon Echo (3rd Gen), power adapter (30W), and Quick
+              Start Guide.
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Reviews -->
+    <div class="card reviews">
+      <h2 class="heading-tertiary card__heading">Reviews</h2>
+      <div class="card__body reviews__body">
+        <div class="inner-card">
+          <div class="reviews__top">
+            <div class="reviews__net-ratings">
+              <div class="reviews__net-ratings-average">
+                4.5 <i class="fas fa-star"></i>
+              </div>
+              <div class="reviews__star reviews__net-ratings-star">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+                <i class="far fa-star"></i>
+              </div>
+              <div class="reviews__net-ratings-based-on">
+                (Based on 123 reviews)
+              </div>
+            </div>
+            <div class="btn btn--round btn--main-color">
+              <i class="fas fa-pen"></i> Write a review
+            </div>
+          </div>
+        </div>
+        <div class="inner-card">
+          <div class="reviews__star">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star-half-alt"></i>
+            <i class="far fa-star"></i>
+          </div>
+          <div class="reviews__title">
+            Worth it!
+            <span class="reviews__verified tooltip">
+              <i class="fas fa-check-circle"></i>
+              <div class="tooltip__element tooltip__element--right">
+                Verified Purchase
+              </div>
+            </span>
+          </div>
+          <div class="reviews__by-on">
+            <span class="reviews__by">Arhant</span>
+            on <span class="reviews__on">Jan 23rd, 2021</span>
+          </div>
+          <p class="reviews__body">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit
+            repudiandae ad atque praesentium distinctio incidunt unde quo
+            eveniet. Doloribus quasi labore magnam sequi voluptatem deleniti
+            accusamus, architecto deserunt aut facere omnis provident
+            repudiandae ullam aperiam voluptatibus dicta maiores. Reprehenderit
+            id culpa commodi aut ullam officiis cupiditate quo minus quibusdam
+            ad.
+          </p>
+          <div class="reviews__like-mark">
+            <button class="reviews__like-btn">
+              <span class="reviews__like-icon">
+                <i class="far fa-thumbs-up"></i>
+              </span>
+              <span class="reviews__like-count">123 Likes</span>
+            </button>
+
+            <button class="reviews__mark">Mark as Inappropriate</button>
+          </div>
+        </div>
+
+        <div class="inner-card">
+          <div class="reviews__star">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star-half-alt"></i>
+            <i class="far fa-star"></i>
+          </div>
+          <div class="reviews__title">Best to buy</div>
+          <div class="reviews__by-on">
+            <span class="reviews__by">John</span>
+            on <span class="reviews__on">Jan 24th, 2021</span>
+          </div>
+          <p class="reviews__body">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae
+            impedit, qui eos quam voluptates placeat voluptatum. Delectus,
+            possimus vel dignissimos odit animi dolor quia ea maiores neque,
+            nostrum omnis sint.
+          </p>
+          <div class="reviews__like-mark">
+            <button class="reviews__like-btn">
+              <span class="reviews__like-icon">
+                <i class="far fa-thumbs-up"></i>
+              </span>
+              <span class="reviews__like-count">15 Likes</span>
+            </button>
+
+            <button class="reviews__mark">Mark as Inappropriate</button>
+          </div>
+        </div>
+
+        <div class="inner-card">
+          <div class="reviews__star">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star-half-alt"></i>
+            <i class="far fa-star"></i>
+          </div>
+          <div class="reviews__title">
+            Budget Friendly and awesome
+            <span class="reviews__verified tooltip">
+              <i class="fas fa-check-circle"></i>
+              <div class="tooltip__element tooltip__element--right">
+                Verified Purchase
+              </div>
+            </span>
+          </div>
+          <div class="reviews__by-on">
+            <span class="reviews__by">Jack</span>
+            on <span class="reviews__on">Jan 27th, 2021</span>
+          </div>
+          <p class="reviews__body">Budget Friendly and awesome</p>
+          <div class="reviews__like-mark">
+            <button class="reviews__like-btn">
+              <span class="reviews__like-icon">
+                <i class="far fa-thumbs-up"></i>
+              </span>
+              <span class="reviews__like-count">123 Likes</span>
+            </button>
+
+            <button class="reviews__mark">Mark as Inappropriate</button>
+          </div>
+        </div>
+      </div>
+      <a href="./reviews.html" class="btn btn--text">See more &gt;</a>
+    </div>
+
+    <!-- Similar Products -->
+    <section class="products">
+      <h2 class="heading-secondary">Similar Products</h2>
+      <div class="products__content">
+        <a href="./each-product.html" class="reset-anchor products__box">
+          <img
+            class="products__img"
+            src="img/product-new-arrival-1.jpg"
+            alt=""
+          />
+          <div class="product-desc">
+            <div class="product-desc__brand">Amazon</div>
+            <div class="product-desc__name products__name">Alexa By Amazon</div>
+            <div class="product-desc__ratings">
+              <span class="product-desc__ratings-star">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+                <i class="far fa-star"></i>
+              </span>
+              <span class="product-desc__ratings-count">3213 reviews</span>
+            </div>
+            <div class="product-desc__price">
+              <span class="product-desc__price-act">₹6,000</span>
+              <strike class="product-desc__price-strike">₹7,000</strike>
+            </div>
+          </div>
+        </a>
+
+        <a href="./each-product.html" class="reset-anchor products__box">
+          <img
+            class="products__img"
+            src="img/product-new-arrival-4.jpg"
+            alt=""
+          />
+          <div class="product-desc">
+            <div class="product-desc__brand">Apple</div>
+            <div class="product-desc__name products__name">Apple Watch 5</div>
+            <div class="product-desc__ratings">
+              <span class="product-desc__ratings-star">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+                <i class="far fa-star"></i>
+              </span>
+              <span class="product-desc__ratings-count">3213 reviews</span>
+            </div>
+            <div class="product-desc__price">
+              <span class="product-desc__price-act">₹29,000</span>
+              <strike class="product-desc__price-strike">₹35,000</strike>
+            </div>
+          </div>
+        </a>
+
+        <a href="./each-product.html" class="reset-anchor products__box">
+          <img
+            class="products__img"
+            src="img/product-new-arrival-5.jpg"
+            alt=""
+          />
+          <div class="product-desc">
+            <div class="product-desc__brand">Google</div>
+            <div class="product-desc__name products__name">
+              Google Home Mini
+            </div>
+            <div class="product-desc__ratings">
+              <span class="product-desc__ratings-star">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+                <i class="far fa-star"></i>
+              </span>
+              <span class="product-desc__ratings-count">3213 reviews</span>
+            </div>
+            <div class="product-desc__price">
+              <span class="product-desc__price-act">₹8,000</span>
+              <strike class="product-desc__price-strike">₹7,599</strike>
+            </div>
+          </div>
+        </a>
+
+        <a href="./each-product.html" class="reset-anchor products__box">
+          <img
+            class="products__img"
+            src="img/product-new-arrival-6.jpg"
+            alt=""
+          />
+          <div class="product-desc">
+            <div class="product-desc__brand">Apple</div>
+            <div class="product-desc__name products__name">
+              Apple iPhone 11 (64 gb)
+            </div>
+            <div class="product-desc__ratings">
+              <span class="product-desc__ratings-star">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+                <i class="far fa-star"></i>
+              </span>
+              <span class="product-desc__ratings-count">3213 reviews</span>
+            </div>
+            <div class="product-desc__price">
+              <span class="product-desc__price-act">₹1,05,273</span>
+              <strike class="product-desc__price-strike">₹1,25,999</strike>
+            </div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <footer class="footer reset-anchor">
+      <div class="footer__container">
+        <div class="footer__main-container">
+          <div class="footer__box footer__box--first">
+            <div class="footer__logo typography-logo-style">
+              <i class="fas fa-camera-retro"></i> Benfr
+            </div>
+            <div class="footer__tag-line">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            </div>
+            <address class="footer__contact">
+              <a
+                href="mailto:arhantjain2@gmail.com"
+                class="footer__contact-each"
+              >
+                <span class="footer__contact-icon">
+                  <i class="fas fa-envelope"></i>
+                </span>
+                arhantjain2@gmail.com
+              </a>
+              <a href="tel:+919999999999" class="footer__contact-each">
+                <span class="footer__contact-icon">
+                  <i class="fas fa-phone-alt"></i>
+                </span>
+                +91 9999 999 999
+              </a>
+            </address>
+          </div>
+          <div class="footer__box">
+            <h3 class="footer__heading">Information</h3>
+            <ul class="footer__list">
+              <li class="footer__item"><a href="#">About Us</a></li>
+              <li class="footer__item"><a href="#">Delivery Information</a></li>
+              <li class="footer__item"><a href="#">Privacy Policy</a></li>
+              <li class="footer__item"><a href="#">Contact Us</a></li>
+            </ul>
+          </div>
+          <div class="footer__box">
+            <h3 class="footer__heading">Support</h3>
+            <ul class="footer__list">
+              <li class="footer__item"><a href="#">24/7 Support</a></li>
+              <li class="footer__item"><a href="#">FAQs</a></li>
+              <li class="footer__item"><a href="#">Privacy Policy</a></li>
+            </ul>
+          </div>
+          <div class="footer__box">
+            <h3 class="footer__heading">Important Links</h3>
+            <ul class="footer__list">
+              <li class="footer__item"><a href="#">Blog</a></li>
+              <li class="footer__item"><a href="#">Testiomonials</a></li>
+              <li class="footer__item"><a href="#">Feedback</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer__copyright-container">
+          <div class="footer__copyright">
+            Copyright &copy; 2021 Benfr | All Rights Reserved
+          </div>
+          <a href="https://www.linkedin.com/" class="footer__made-by">
+            Made with
+            <span class="footer__made-by-icon"
+              ><i class="fas fa-heart"></i
+            ></span>
+            by Arhant Jain
+          </a>
+        </div>
+      </div>
+    </footer>
+
+    <script src="./index.js"></script>
+  </body>
+</html>
