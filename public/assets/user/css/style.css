@@ -247,6 +247,21 @@ Utility class - usable classes
   margin-left: 1rem !important;
 }
 
+.btn-reset {
+  display: inline-block;
+  border: none;
+  text-decoration: none;
+  cursor: pointer;
+  outline: none;
+  font-size: inherit;
+  font-family: inherit;
+  text-align: center;
+  line-height: inherit;
+  font-weight: 300;
+  background: none;
+  transition: all 0.2s;
+}
+
 .btn {
   /* Reset basic properties */
   display: inline-block;
@@ -1018,6 +1033,48 @@ Navbar
 }
 .navbar__item:not(:last-child) {
   padding-right: 1.5rem;
+}
+.navbar__search-form {
+  display: flex;
+  align-items: stretch;
+}
+.navbar__search-input {
+  align-self: stretch;
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 1.6rem;
+  line-height: inherit;
+  display: inline-block;
+  border-radius: 20rem;
+  border: none;
+  outline: none;
+  margin-right: -5rem;
+  box-sizing: content-box;
+  padding: 0;
+  width: 2rem;
+  opacity: 0;
+  border: 1px solid transparent;
+  transition: border-color 0.5s ease-out, opacity 0.2s ease-out 0.2s, width 0.5s ease-out;
+  color: transparent;
+}
+.navbar__search-input::placeholder {
+  color: transparent;
+  opacity: 1;
+}
+.navbar__search-input--expanded {
+  opacity: 1;
+  padding: 0.5rem 6rem 0.5rem 2rem;
+  width: 25ch;
+  transition: opacity 0.2s ease, width 0.5s ease-out;
+  border-color: var(--color-grey-light-4);
+  color: var(--color-grey-dark-1);
+}
+.navbar__search-input--expanded::placeholder {
+  color: var(--color-grey-dark-4);
+}
+.navbar__search-label {
+  cursor: pointer;
+  z-index: 2;
 }
 
 .user-dropdown-navbar:hover .user-dropdown-navbar__box {

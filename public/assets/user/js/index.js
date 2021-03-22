@@ -3602,6 +3602,41 @@ window.addEventListener('click', function (event) {
     });
   }
 });
+},{}],"component-functions/search.js":[function(require,module,exports) {
+var form = document.getElementsByClassName('js--components-function--search__form')[0];
+var input = document.getElementsByClassName('js--components-function--search__input')[0];
+var btn = document.getElementsByClassName('js--components-function--search__btn')[0];
+
+if (form && input && btn) {
+  var showInput = input.dataset.showClass;
+
+  if (showInput) {
+    btn.querySelectorAll('*').forEach(function (el) {
+      el.addEventListener('click', function (e) {
+        if (!input.classList.contains(showInput)) {
+          input.classList.add(showInput);
+          return;
+        } else if (input.value !== '') {
+          // console.log(input.value);
+          form.submit();
+        }
+      });
+    });
+    form.addEventListener('submit', function () {
+      if (input.value !== '') {
+        // console.log(input.value);
+        form.submit();
+      }
+    });
+    window.addEventListener('click', function (e) {
+      // console.log(e.target);
+      if (!e.target.matches('.js--components-function--search__form *')) {
+        console.log('ahbah');
+        input.classList.remove(showInput);
+      }
+    });
+  }
+}
 },{}],"component-functions/sidebar.js":[function(require,module,exports) {
 var sidebarContainer = document.querySelector('.js--components-function--sidebar__container');
 var sidebar = document.querySelector('.js--components-function--sidebar');
@@ -3847,6 +3882,8 @@ require("./component-functions/dropdown");
 
 require("./component-functions/flash-messages");
 
+require("./component-functions/search");
+
 require("./component-functions/sidebar");
 
 require("./component-functions/sliders");
@@ -3854,7 +3891,7 @@ require("./component-functions/sliders");
 require("./component-functions/increment-decrement-input-number");
 
 require("./pages/each-product");
-},{"./ajax/change-my-email":"ajax/change-my-email.js","./ajax/forgot-password":"ajax/forgot-password.js","./ajax/login":"ajax/login.js","./ajax/reset-password":"ajax/reset-password.js","./ajax/signup":"ajax/signup.js","./ajax/signup-complete":"ajax/signup-complete.js","./ajax/update-me":"ajax/update-me.js","./ajax/update-my-password":"ajax/update-my-password.js","./component-functions/dropdown":"component-functions/dropdown.js","./component-functions/flash-messages":"component-functions/flash-messages.js","./component-functions/sidebar":"component-functions/sidebar.js","./component-functions/sliders":"component-functions/sliders.js","./component-functions/increment-decrement-input-number":"component-functions/increment-decrement-input-number.js","./pages/each-product":"pages/each-product.js"}],"../../../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./ajax/change-my-email":"ajax/change-my-email.js","./ajax/forgot-password":"ajax/forgot-password.js","./ajax/login":"ajax/login.js","./ajax/reset-password":"ajax/reset-password.js","./ajax/signup":"ajax/signup.js","./ajax/signup-complete":"ajax/signup-complete.js","./ajax/update-me":"ajax/update-me.js","./ajax/update-my-password":"ajax/update-my-password.js","./component-functions/dropdown":"component-functions/dropdown.js","./component-functions/flash-messages":"component-functions/flash-messages.js","./component-functions/search":"component-functions/search.js","./component-functions/sidebar":"component-functions/sidebar.js","./component-functions/sliders":"component-functions/sliders.js","./component-functions/increment-decrement-input-number":"component-functions/increment-decrement-input-number.js","./pages/each-product":"pages/each-product.js"}],"../../../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -3882,7 +3919,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65133" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54332" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -25,8 +25,17 @@ nav.navbar: .navbar__inner.reset-anchor
   
   // Navbar features(list)
   ul.navbar__list
-    +navbarItem('#', 'fas fa-search')
-    +navbarItem('/myAccount', 'far fa-user', true)
+
+    // Search
+    li.navbar__item.navbar__search.js--components-function--search
+      form(action='/products/search' method='GET').navbar__search-form.js--components-function--search__form
+        input#search-box.navbar__search-input.js--components-function--search__input(type='text' placeholder='Search for a product...' name='searchBy' data-show-class='navbar__search-input--expanded')
+        button.js--components-function--search__btn.btn-reset.navbar__search-label(type='button') 
+          i.fas.fa-search
+
+    // User dropdown
+    li.navbar__item.user-dropdown-navbar
+      a.navbar__link(href='/myAccount'): i.far.fa-user
       .user-dropdown-navbar__box: ul.user-dropdown-navbar__list
         if user
           +userDropdownList('/myAccount', 'fas fa-user-circle', `Hello, ${user.name.split(' ')[0]}`)
@@ -37,5 +46,11 @@ nav.navbar: .navbar__inner.reset-anchor
         +userDropdownList('#', 'fas fa-map-marker-alt', 'Addresses')
         if user
           +userDropdownList(`/logout?redirect=${encodedUrl}`, 'fas fa-sign-out-alt', 'Logout')
-    +navbarItem('#', 'far fa-heart')
-      +navbarItem('#', 'fas fa-shopping-basket')
+
+    // Wishlist
+    li.navbar__item
+      a.navbar__link(href='#'): i.far.fa-heart
+
+    // Shoping cart
+    li.navbar__item
+      a.navbar__link(href='#'): i.fas.fa-shopping-basket

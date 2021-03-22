@@ -11,6 +11,7 @@ import './ajax/update-my-password';
 
 import './component-functions/dropdown';
 import './component-functions/flash-messages';
+import './component-functions/search';
 import './component-functions/sidebar';
 import './component-functions/sliders';
 import './component-functions/increment-decrement-input-number';

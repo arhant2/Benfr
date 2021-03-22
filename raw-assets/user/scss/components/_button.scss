@@ -1,3 +1,7 @@
+.btn-reset {
+  @include resetBtn;
+}
+
 .btn {
   /* Reset basic properties */
   // display: inline-block;
