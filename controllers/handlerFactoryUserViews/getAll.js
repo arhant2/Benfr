@@ -3,21 +3,24 @@ const qs = require('qs');
 const catchAsync = require('../../utils/catchAsync');
 const APIFeatures = require('../../utils/APIFeatures');
 
+// res.locals = {displayName, encodedUrl}
+// req.customs.getAll = {queryRestrict, sortDefault, limitDefault}
 // queryObjParsed = {page, sort, filter, filterStringified, prevLink, nextLink}
 module.exports = (Model, { pluralName }) => {
   return catchAsync(async (req, res, next) => {
     // console.log(req.query);
 
     const queryObjParsed = {};
+
     const features = new APIFeatures(
       Model.find(),
       req.query,
-      undefined,
+      req.customs.getAll && req.customs.getAll.queryRestrict,
       queryObjParsed
     )
       .filter()
-      .sort()
-      .paginate();
+      .sort(req.customs.getAll && req.customs.getAll.sortDefault)
+      .paginate(req.customs.getAll && req.customs.getAll.limitDefault);
 
     const documents = await features.mongooseQuery;
 
@@ -34,21 +37,25 @@ module.exports = (Model, { pluralName }) => {
 
     if (queryObjParsed.page > 1) {
       queryObjParsed.prevLink = addFilter(
-        `/a/${pluralName.small}?page=${queryObjParsed.page * 1 - 1}&limit=${
-          queryObjParsed.limit
-        }&sort=${queryObjParsed.sort}`
+        // eslint-disable-next-line prefer-template
+        `${req.customs.path}?page=${queryObjParsed.page * 1 - 1}` +
+          (queryObjParsed.limit ? `&limit=${queryObjParsed.limit}` : '') +
+          (queryObjParsed.sort ? `&sort=${queryObjParsed.sort}` : '')
       );
     }
 
     if (documents.length >= queryObjParsed.limit) {
       queryObjParsed.nextLink = addFilter(
-        `/a/${pluralName.small}?page=${queryObjParsed.page * 1 + 1}&limit=${
-          queryObjParsed.limit
-        }&sort=${queryObjParsed.sort}`
+        // eslint-disable-next-line prefer-template
+        `${req.customs.path}?page=${queryObjParsed.page * 1 + 1}` +
+          (queryObjParsed.limit ? `&limit=${queryObjParsed.limit}` : '') +
+          (queryObjParsed.sort ? `&sort=${queryObjParsed.sort}` : '')
       );
     }
 
-    res.render(`admin/${pluralName.small}`, {
+    // console.log(queryObjParsed);
+
+    res.render(`user/${pluralName.small}`, {
       documents,
       queryObjParsed,
     });

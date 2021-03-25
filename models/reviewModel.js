@@ -88,6 +88,8 @@ reviewSchema.pre('save', function (next) {
 });
 
 reviewSchema.pre('save', function (next) {
+  // console.log('Yaha aaya: ', this.isModified('star'));
+
   this.wasNew = this.isNew;
   this.wasModifiedStar = this.isModified('star');
   this.wasModifiedMarked = this.isModified('marked');
@@ -95,13 +97,17 @@ reviewSchema.pre('save', function (next) {
 });
 
 reviewSchema.post('save', async function (doc, next) {
-  if (!doc.wasModifiedStar) return;
+  // console.log(this.wasModifiedStar);
+
+  if (!this.wasModifiedStar) return;
 
   // eslint-disable-next-line no-use-before-define
   const product = await Product.findById(doc.product);
   product.review.count += doc.wasNew ? 1 : 0;
   product.review.totalSum +=
     doc.star - (!doc.wasNew ? this.originalFields.star : 0);
+
+  console.log(product.review.totalSum);
 
   await product.save();
   next();

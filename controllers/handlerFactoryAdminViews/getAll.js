@@ -10,10 +10,6 @@ module.exports = (Model, { pluralName }) => {
 
     const queryObjParsed = {};
 
-    queryObjParsed.filterStringified = qs.stringify(queryObjParsed.filter, {
-      encode: false,
-    });
-
     const features = new APIFeatures(
       Model.find(),
       req.query,
@@ -26,6 +22,10 @@ module.exports = (Model, { pluralName }) => {
 
     const documents = await features.mongooseQuery;
 
+    queryObjParsed.filterStringified = qs.stringify(queryObjParsed.filter, {
+      encode: false,
+    });
+
     const addFilter = (str) => {
       if (queryObjParsed.filterStringified) {
         str += `&${queryObjParsed.filterStringified}`;
@@ -35,17 +35,19 @@ module.exports = (Model, { pluralName }) => {
 
     if (queryObjParsed.page > 1) {
       queryObjParsed.prevLink = addFilter(
-        `/a/${pluralName.small}?page=${queryObjParsed.page * 1 - 1}&limit=${
-          queryObjParsed.limit
-        }&sort=${queryObjParsed.sort}`
+        // eslint-disable-next-line prefer-template
+        `/a/${pluralName.small}?page=${queryObjParsed.page * 1 - 1}` +
+          (queryObjParsed.limit ? `&limit=${queryObjParsed.limit}` : '') +
+          (queryObjParsed.sort ? `&sort=${queryObjParsed.sort}` : '')
       );
     }
 
     if (documents.length >= queryObjParsed.limit) {
       queryObjParsed.nextLink = addFilter(
-        `/a/${pluralName.small}?page=${queryObjParsed.page * 1 + 1}&limit=${
-          queryObjParsed.limit
-        }&sort=${queryObjParsed.sort}`
+        // eslint-disable-next-line prefer-template
+        `/a/${pluralName.small}?page=${queryObjParsed.page * 1 + 1}` +
+          (queryObjParsed.limit ? `&limit=${queryObjParsed.limit}` : '') +
+          (queryObjParsed.sort ? `&sort=${queryObjParsed.sort}` : '')
       );
     }
 

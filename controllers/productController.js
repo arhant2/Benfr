@@ -30,7 +30,7 @@ exports.productSearch = catchAsync(async (req, res, next) => {
   const page = req.query.page * 1 || 1;
   const skip = limit * (page - 1);
 
-  console.log(limit, skip);
+  // console.log(limit, skip);
 
   const products = await Product.aggregate([
     { $match: { $text: { $search: query } } },

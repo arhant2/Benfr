@@ -45,6 +45,12 @@
     background-color: var(--color-primary);
     color: white;
   }
+
+  &__item--disabled:hover,
+  &__item--disabled:active {
+    cursor: no-drop;
+    // background-color: var(--color-red);
+  }
 }
 
 .menu-dropdown {
@@ -92,6 +98,10 @@
 
     &--show {
       display: block;
+    }
+
+    &--no-min {
+      min-width: 0;
     }
   }
 

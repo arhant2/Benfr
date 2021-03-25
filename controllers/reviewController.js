@@ -26,7 +26,7 @@ exports.attachProductAndUserIdForCreateOne = (req, res, next) => {
 exports.checkIfReviewBelongsToUser = catchAsync(async (req, res, next) => {
   const review = await Review.findOne({
     _id: req.params.id,
-    user: req.user.id,
+    user: req.customs.user.id,
   });
 
   if (!review) {
@@ -45,7 +45,7 @@ exports.checkIfReviewBelongsToUser = catchAsync(async (req, res, next) => {
 
 exports.getAll = handlerFactory.getAll;
 exports.createOne = handlerFactory.createOne;
-exports.updateOne = handlerFactory.updateOne;
+exports.updateOne = handlerFactory.updateOneUsingSave;
 exports.deleteOne = handlerFactory.deleteOne;
 
 const likeMarkReview = (like = true, undo = false) =>

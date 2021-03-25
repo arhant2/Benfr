@@ -1,0 +1,27 @@
+extends base/_base
+
+include mixins/_menu
+
+block content 
+  section.card.types 
+    .card__top
+      .heading-tertiary.card__heading Brands
+      .card__top-content
+        +menuSort([
+          ['-score', 'Relevance'],
+          ['name', 'Name [A-Z]'],
+          ['-name', 'Name [Z-A]'],
+          ['-createdAt', 'Created (Newest First)'],
+          ['createdAt', 'Created (Oldest First)'],
+          ['-productsCount', 'Items (Highest First)'],
+          ['productsCount', 'Items (Lowest First)'],
+        ], 0)
+        +menuLimit([5, 10, 15, 20])
+        +menuPagination
+    
+    .card__body.types__body
+      each brand in documents || []
+        a.reset-anchor.types__card(href=`/products/brands/${brand.name}/${brand.id}`)
+          .types__img-outer: .types__img-box
+            img.types__img(src=brand.images && brand.images[0] && brand.images[0].path || '/assets/user/img/no-image.jpg' alt=brand.name)
+          .types__card-body= brand.name

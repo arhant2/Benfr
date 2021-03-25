@@ -1,0 +1,73 @@
+extends base/_base
+
+include mixins/_product-content
+include mixins/_menu
+
+block content
+  section.products.products--top-margin-smaller
+
+    .products__top
+      -
+        let heading = 'Products';
+        if(queryType && queryType.toLowerCase() === 'brand') {
+          let brandName = '<Invalid brand>';
+          if(documents && documents.length > 0){
+            brandName = documents[0].brand.name;
+          }else if(displayName){
+            brandName = displayName;
+          }
+          heading = `Brand: ${brandName}`;
+        }else if(queryType && queryType.toLowerCase() === 'category'){
+          let categoryName = '<Invalid category>';
+          if(documents && documents.length > 0){
+            categoryName = documents[0]
+                          .categories
+                          .find(category => category.id === categoryIdParam)
+                          .name;
+            //- categoryName  = documents[0].categories[idx].name;
+          }else if(displayName){
+            categoryName = displayName;
+          }
+          heading = `Category: ${categoryName}`;
+        }else if(queryType && queryType.toLowerCase() === 'search'){
+          heading = `Search: ${displayName}`;
+        }
+
+      h2.heading-tertiary.heading-tertiary--bigger= heading
+
+      .products__top-content
+      
+        - 
+          const linkCreator = (query) => `${path}` +
+                  (queryObjParsed.limit ? `?limit=${queryObjParsed.limit}` : '?') +
+                  (queryObjParsed.sort ? `&sort=${queryObjParsed.sort}`: '') + 
+                  `${query?'&':''}${query}`;
+
+          const types = [
+            [linkCreator(''), 'All'],
+            [linkCreator('currentStock[gt]=0'), 'In Stock']
+          ];
+
+          let currentActive = 0;
+
+          if(queryObjParsed.filter && queryObjParsed.filter.currentStock && queryObjParsed.filter.currentStock.gt !== undefined && queryObjParsed.filter.currentStock.gt == 0){
+            currentActive = 1;
+          }
+
+        +menuBtnCollection(types, currentActive)
+
+        if !(queryType && queryType.toLowerCase() === 'search')
+          +menuSort([
+            ['name', 'Name [A-Z]'],
+            ['-name', 'Name [Z-A]'],
+            ['-createdAt', 'Created (Newest First)'],
+            ['createdAt', 'Created (Oldest First)'],
+            ['-review.averageNormalized', 'Ratings (Highest First)'],
+            ['review.averageNormalized', 'Ratings (Lowest First)'],
+            ['-quantitySold', 'Most Popular First'],
+            ['quantitySold', 'Least Popular First'],
+          ], 4)
+        +menuLimit([8, 12, 16, 20, 24])
+        +menuPagination
+
+    +productContent(documents)

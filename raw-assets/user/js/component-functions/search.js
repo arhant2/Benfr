@@ -8,6 +8,8 @@ const btn = document.getElementsByClassName(
   'js--components-function--search__btn'
 )[0];
 
+// alert('Connected');
+
 if (form && input && btn) {
   const showInput = input.dataset.showClass;
 
@@ -19,22 +21,24 @@ if (form && input && btn) {
           return;
         } else if (input.value !== '') {
           // console.log(input.value);
-          form.submit();
+          window.location.href = `/products/search/${input.value}`;
+          // form.submit();
         }
       });
     });
 
-    form.addEventListener('submit', function () {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
       if (input.value !== '') {
         // console.log(input.value);
-        form.submit();
+        window.location.href = `/products/search/${input.value}`;
+        // form.submit();
       }
     });
 
     window.addEventListener('click', function (e) {
       // console.log(e.target);
       if (!e.target.matches('.js--components-function--search__form *')) {
-        console.log('ahbah');
         input.classList.remove(showInput);
       }
     });

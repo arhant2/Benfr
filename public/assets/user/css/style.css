@@ -877,6 +877,9 @@ Featured Categories
   background-color: var(--color-primary);
   color: white;
 }
+.menu-btn-collection__item--disabled:hover, .menu-btn-collection__item--disabled:active {
+  cursor: no-drop;
+}
 
 .menu-dropdown {
   background: var(--color-white);
@@ -916,6 +919,9 @@ Featured Categories
 }
 .menu-dropdown__list--show {
   display: block;
+}
+.menu-dropdown__list--no-min {
+  min-width: 0;
 }
 .menu-dropdown__item {
   padding: 0.35rem 0;
@@ -1048,13 +1054,12 @@ Navbar
   border-radius: 20rem;
   border: none;
   outline: none;
-  margin-right: -5rem;
   box-sizing: content-box;
   padding: 0;
-  width: 2rem;
+  width: 0rem;
   opacity: 0;
   border: 1px solid transparent;
-  transition: border-color 0.5s ease-out, opacity 0.2s ease-out 0.2s, width 0.5s ease-out;
+  transition: margin-right 0s ease 0.3s, border-color 0.5s ease-out, opacity 0.2s ease-out 0.2s, width 0.5s ease-out;
   color: transparent;
 }
 .navbar__search-input::placeholder {
@@ -1062,6 +1067,7 @@ Navbar
   opacity: 1;
 }
 .navbar__search-input--expanded {
+  margin-right: -5rem;
   opacity: 1;
   padding: 0.5rem 6rem 0.5rem 2rem;
   width: 25ch;
@@ -1151,9 +1157,77 @@ Navbar
   display: inline-block;
 }
 .product-desc__price-act {
+  --current-color-lighter: var(--color-primary-lighter);
+  --current-color-light: var(--color-primary-light);
+  --current-color: var(--color-primary);
+  --current-color-dark: var(--color-primary-dark);
+  --current-color-darker: var(--color-primary-darker);
   font-size: 1.8rem;
   font-weight: 600;
-  color: var(--color-blue-dark);
+  color: var(--current-color);
+}
+.product-desc__price-act--purple {
+  --current-color-lighter: var(--color-purple-lighter);
+  --current-color-light: var(--color-purple-light);
+  --current-color: var(--color-purple);
+  --current-color-dark: var(--color-purple-dark);
+  --current-color-darker: var(--color-purple-darker);
+}
+.product-desc__price-act--green {
+  --current-color-lighter: var(--color-green-lighter);
+  --current-color-light: var(--color-green-light);
+  --current-color: var(--color-green);
+  --current-color-dark: var(--color-green-dark);
+  --current-color-darker: var(--color-green-darker);
+}
+.product-desc__price-act--blue {
+  --current-color-lighter: var(--color-blue-lighter);
+  --current-color-light: var(--color-blue-light);
+  --current-color: var(--color-blue);
+  --current-color-dark: var(--color-blue-dark);
+  --current-color-darker: var(--color-blue-darker);
+}
+.product-desc__price-act--yellow {
+  --current-color-lighter: var(--color-yellow-lighter);
+  --current-color-light: var(--color-yellow-light);
+  --current-color: var(--color-yellow);
+  --current-color-dark: var(--color-yellow-dark);
+  --current-color-darker: var(--color-yellow-darker);
+}
+.product-desc__price-act--red {
+  --current-color-lighter: var(--color-red-lighter);
+  --current-color-light: var(--color-red-light);
+  --current-color: var(--color-red);
+  --current-color-dark: var(--color-red-dark);
+  --current-color-darker: var(--color-red-darker);
+}
+.product-desc__price-act--pink {
+  --current-color-lighter: var(--color-pink-lighter);
+  --current-color-light: var(--color-pink-light);
+  --current-color: var(--color-pink);
+  --current-color-dark: var(--color-pink-dark);
+  --current-color-darker: var(--color-pink-darker);
+}
+.product-desc__price-act--primary {
+  --current-color-lighter: var(--color-primary-lighter);
+  --current-color-light: var(--color-primary-light);
+  --current-color: var(--color-primary);
+  --current-color-dark: var(--color-primary-dark);
+  --current-color-darker: var(--color-primary-darker);
+}
+.product-desc__price-act--secondary {
+  --current-color-lighter: var(--color-secondary-lighter);
+  --current-color-light: var(--color-secondary-light);
+  --current-color: var(--color-secondary);
+  --current-color-dark: var(--color-secondary-dark);
+  --current-color-darker: var(--color-secondary-darker);
+}
+.product-desc__price-act--new-blue {
+  --current-color-lighter: var(--color-new-blue-lighter);
+  --current-color-light: var(--color-new-blue-light);
+  --current-color: var(--color-new-blue);
+  --current-color-dark: var(--color-new-blue-dark);
+  --current-color-darker: var(--color-new-blue-darker);
 }
 .product-desc__price-strike {
   font-size: 1.4rem;
@@ -1199,6 +1273,29 @@ Navbar
   margin-top: 4rem;
   column-gap: 2rem;
   row-gap: 2rem;
+}
+.products__content-no-box {
+  grid-column: 1/-1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.products__content-no-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  width: 13rem;
+  height: 13rem;
+  border: 1rem solid var(--color-red-lighter);
+  color: var(--color-red-lighter);
+  font-weight: 700;
+  font-size: 5rem;
+}
+.products__content-no-text {
+  padding-top: 1rem;
+  font-size: 2.2rem;
+  color: var(--color-grey-dark-2);
 }
 .products__box {
   padding: 2.5rem 1.5rem;

@@ -7,7 +7,7 @@ block append variables
 
 block content
   +header('Categories', [['/a/categories', 'Categories']])
-    +menuSort('categories', [
+    +menuSort([
       ['name', 'Name [A-Z]'],
       ['-name', 'Name [Z-A]'],
       ['-createdAt', 'Created (Newest First)'],
@@ -20,7 +20,7 @@ block content
       ['score', 'Score (Lowest First)']
     ])
     
-    +menuLimit('categories')
+    +menuLimit
     +menuPagination
 
     p abcd #{queryObjParsed.page}

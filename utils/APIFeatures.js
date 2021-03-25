@@ -12,10 +12,10 @@ class APIFeatures {
 
   filter() {
     const queryObj = { ...this.queryFrontEnd };
-    const excludedFields = ['page', 'sort', 'limit', 'fields', 'displayName'];
+    const excludedFields = ['page', 'sort', 'limit', 'fields'];
     excludedFields.forEach((el) => delete queryObj[el]);
 
-    this.queryObjParsed.displayName = this.queryFrontEnd.displayName;
+    this.queryObjParsed.filter = queryObj;
 
     // 1b) Advanced Filtering
     let queryStr = JSON.stringify(queryObj);
@@ -36,21 +36,29 @@ class APIFeatures {
       this.mongooseQuery = this.mongooseQuery.find(filterQuery);
     }
 
-    this.queryObjParsed.filter = filterQuery;
-
     return this;
   }
 
-  sort() {
-    let sort = this.queryFrontEnd.sort || '-updatedAt';
+  sort(defaultSort = undefined) {
+    const sortIfNotProvided =
+      (defaultSort && defaultSort.split(',')[0]) || '-updatedAt';
+
+    let sort = this.queryFrontEnd.sort || sortIfNotProvided;
+
     this.queryObjParsed.sort = sort;
 
-    if (sort !== '-updatedAt') {
-      sort = `${sort},-updatedAt`;
+    // if (sort !== sortIfNotProvided) {
+    //   sort = `${sort},${sortIfNotProvided}`;
+    // }
+
+    if (defaultSort) {
+      sort = `${sort},${defaultSort}`;
     }
 
-    const sortBy = sort.replace(',', ' ');
+    const sortBy = sort.replace(/,/g, ' ');
     this.mongooseQuery = this.mongooseQuery.sort(sortBy);
+
+    // console.log(sortBy);
 
     return this;
   }
@@ -66,9 +74,9 @@ class APIFeatures {
     return this;
   }
 
-  paginate() {
+  paginate(defaultLimit = undefined) {
     let page = this.queryFrontEnd.page * 1 || 1;
-    let limit = this.queryFrontEnd.limit * 1 || 10;
+    let limit = this.queryFrontEnd.limit * 1 || defaultLimit * 1 || 10;
 
     if (!Number.isInteger(page) || page <= 0) {
       page = 1;
@@ -78,8 +86,10 @@ class APIFeatures {
       limit = 10;
     }
 
-    this.queryObjParsed.page = page;
     this.queryObjParsed.limit = limit;
+
+    this.queryObjParsed.page = page;
+    // this.queryObjParsed.limit = limit;
 
     const skip = (page - 1) * limit;
 

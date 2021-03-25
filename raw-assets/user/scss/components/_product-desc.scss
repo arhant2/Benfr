@@ -30,9 +30,11 @@
   }
 
   &__price-act {
+    @include currentColorOptions;
+
     font-size: 1.8rem;
     font-weight: 600;
-    color: var(--color-blue-dark);
+    color: var(--current-color);
   }
 
   &__price-strike {

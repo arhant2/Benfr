@@ -16,15 +16,15 @@ if sidebarDocuments
       .sidebar__card
         h4.sidebar__heading By Brand
         +sidebarList([
-          ...sidebarDocuments.brands.map(brand => linkToItem('brands', brand)),
+          ...sidebarDocuments.brands.map(brand => [`/products/brands/${brand.name}/${brand.id}`, brand.name]),
           ['/brands', 'All Brands']
         ])
 
       .sidebar__card
         h4.sidebar__heading By Category
         +sidebarList([
-          ...sidebarDocuments.categories.map(category => linkToItem('categories', category)),
-          ['/brands', 'All Categories']
+          ...sidebarDocuments.categories.map(category => [`/products/categories/${category.name}/${category.id}`, category.name]),
+          ['/categories', 'All Categories']
         ])
 
       a.reset-anchor.sidebar__user(href=user?'/myAccount': `/login?redirect=${encodedUrl}`)

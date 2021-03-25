@@ -9,7 +9,7 @@ block content
   +header('Products', [['/a/products', 'Products']])
 
     - 
-      const linkCreator = (query) => `/a/products?limit=${queryObjParsed.limit}&sort=${queryObjParsed.sort}${query?'&':''}${query}`;
+      const linkCreator = (query) => `/a/products` + (queryObjParsed.limit ? `?limit=${queryObjParsed.limit}&` : '?') + (queryObjParsed.sort ? `&sort=${queryObjParsed.sort}`: '') + `${query}`;
 
       const types = [
         [linkCreator(''), 'All'],
@@ -31,7 +31,7 @@ block content
     +menuBtnCollection(types, currentActive)
 
 
-    +menuSort('products', [
+    +menuSort([
       ['name', 'Name [A-Z]'],
       ['-name', 'Name [Z-A]'],
       ['-createdAt', 'Created (Newest First)'],
@@ -44,7 +44,7 @@ block content
       ['price', 'Price (Lowest First)']
     ])
 
-    +menuLimit('products')
+    +menuLimit
     +menuPagination
 
   main.main

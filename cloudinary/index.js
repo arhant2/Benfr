@@ -70,7 +70,7 @@ const uploadFilesCloudinaryMiddlware = (folder = 'benfr') =>
             entry[1].path,
             {
               folder,
-              format: 'jpeg',
+              format: 'png',
             }
           );
 

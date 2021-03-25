@@ -49,7 +49,7 @@ mixin menuLimit(options = [5, 10, 15, 20, 50])
   - let arr = [], active;
   each option, i in options
     -
-      let link = `${path}?limit=${option}` +(queryObjParsed.sort ? `&sort=${queryObjParsed.sort}`: '');
+      let link = `${path}?limit=${option}` + (queryObjParsed.sort ? `&sort=${queryObjParsed.sort}`: '');
       if(queryObjParsed.filterStringified){
         link += `&${queryObjParsed.filterStringified}`;
       }
@@ -64,7 +64,7 @@ mixin menuLimit(options = [5, 10, 15, 20, 50])
 //-             Sort By
 //- ==============================================
 //- sortArr = [param, name]
-mixin menuSort(sortArr, defaultIndex)
+mixin menuSort(sortArr, defaultIndex=-1)
   -
     let index = defaultIndex;
     let arr = sortArr.map((entry, i) => {

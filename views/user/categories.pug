@@ -1,0 +1,27 @@
+extends base/_base
+
+include mixins/_menu
+
+block content 
+  section.card.types 
+    .card__top
+      .heading-tertiary.card__heading Categories
+      .card__top-content
+        +menuSort([
+          ['-score', 'Relevance'],
+          ['name', 'Name [A-Z]'],
+          ['-name', 'Name [Z-A]'],
+          ['-createdAt', 'Created (Newest First)'],
+          ['createdAt', 'Created (Oldest First)'],
+          ['-productsCount', 'Items (Highest First)'],
+          ['productsCount', 'Items (Lowest First)'],
+        ], 0)
+        +menuLimit([5, 10, 15, 20])
+        +menuPagination
+    
+    .card__body.types__body
+      each category in documents || []
+        a.reset-anchor.types__card(href=`/products/categories/${category.name}/${category.id}`)
+          .types__img-outer: .types__img-box
+            img.types__img(src=category.images && category.images[0] && category.images[0].path || '/assets/user/img/no-image.jpg' alt=category.name)
+          .types__card-body= category.name

@@ -22,37 +22,90 @@ router.get('/resetPassword/:token', userViewController.getResetPassword);
 router.get('/logout', userViewController.getLogout);
 
 /* =====================================
-All routes below will check if logged so to make changes in navbar, also setEncodedUrl and sidebarItems
+All routes below will check if logged so to make changes in navbar, also setsidebarItems
 ===================================== */
 
-router.use(userViewController.setEncodedUrl);
-router.use(userViewController.setSidebarItems);
-router.use(authController.isLoggedIn);
-
-router.get('/', userViewController.getIndex);
+router.get(
+  '/',
+  userViewController.setSidebarItems,
+  authController.isLoggedIn,
+  userViewController.getIndex
+);
 
 router.get(
   '/myAccount',
+  userViewController.setSidebarItems,
+  authController.isLoggedIn,
   authController.protectView,
   userViewController.getMyAccount
 );
 
 router.get(
   '/updateMe',
+  userViewController.setSidebarItems,
+  authController.isLoggedIn,
   authController.protectView,
   userViewController.getUpdateMe
 );
 
 router.get(
   '/updateMyPassword',
+  userViewController.setSidebarItems,
+  authController.isLoggedIn,
   authController.protectView,
   userViewController.getUpdateMyPassword
 );
 
 router.get(
   '/changeMyEmail',
+  userViewController.setSidebarItems,
+  authController.isLoggedIn,
   authController.protectView,
   userViewController.getChangeMyEmail
+);
+
+///////////////////////////////////////////////
+
+//// Brands
+router.get(
+  '/brands',
+  userViewController.setSidebarItems,
+  authController.isLoggedIn,
+  userViewController.getAllBrandsPreMiddleware,
+  userViewController.getAllBrands
+);
+
+//// Categories
+router.get(
+  '/categories',
+  userViewController.setSidebarItems,
+  authController.isLoggedIn,
+  userViewController.getAllCategoriesPreMiddleware,
+  userViewController.getAllCategories
+);
+
+//// Products
+router.get(
+  '/products/brands/:displayName?/:id',
+  userViewController.setSidebarItems,
+  authController.isLoggedIn,
+  userViewController.getProductsByBrandMiddleware,
+  userViewController.getAllProducts
+);
+
+router.get(
+  '/products/categories/:displayName?/:id',
+  userViewController.setSidebarItems,
+  authController.isLoggedIn,
+  userViewController.getProductsByCategoryMiddleware,
+  userViewController.getAllProducts
+);
+
+router.get(
+  '/products/search/:searchBy',
+  userViewController.setSidebarItems,
+  authController.isLoggedIn,
+  userViewController.getAllProductsBySearch
 );
 
 module.exports = router;

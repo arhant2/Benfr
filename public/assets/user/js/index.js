@@ -3577,27 +3577,31 @@ if (form) {
 },{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../component-functions/flash-messages":"component-functions/flash-messages.js"}],"component-functions/dropdown.js":[function(require,module,exports) {
 Array.from(document.getElementsByClassName('js--components-function--dropdown__btn')).forEach(function (btn) {
   btn.addEventListener('click', function () {
-    var parent = btn.closest('.js--components-function--dropdown');
+    var dropdown = this.closest('.js--components-function--dropdown');
 
-    if (!parent) {
+    if (!dropdown) {
       return;
     }
 
-    var dropdownList = parent.querySelector('.js--components-function--dropdown__list');
+    var list = dropdown.getElementsByClassName('js--components-function--dropdown__list')[0];
 
-    if (!dropdownList || !dropdownList.dataset.toggleClass) {
+    if (!list) {
       return;
-    }
+    } // console.log(this.dataset.showClass);
 
-    dropdownList.classList.toggle(dropdownList.dataset.toggleClass);
+
+    if (list.dataset.showClass) {
+      list.classList.toggle(list.dataset.showClass);
+    }
   });
 });
-var lists = Array.from(document.getElementsByClassName('menu-dropdown__list'));
+var lists = Array.from(document.getElementsByClassName('js--components-function--dropdown__list'));
 window.addEventListener('click', function (event) {
   if (!event.target.matches('.js--components-function--dropdown') && !event.target.matches('.js--components-function--dropdown *')) {
     lists.forEach(function (list) {
-      if (list.dataset.toggleClass) {
-        list.classList.remove(list.dataset.toggleClass);
+      // 'menu-dropdown__list--show'
+      if (list.dataset.showClass) {
+        list.classList.remove(list.dataset.showClass);
       }
     });
   }
@@ -3605,7 +3609,7 @@ window.addEventListener('click', function (event) {
 },{}],"component-functions/search.js":[function(require,module,exports) {
 var form = document.getElementsByClassName('js--components-function--search__form')[0];
 var input = document.getElementsByClassName('js--components-function--search__input')[0];
-var btn = document.getElementsByClassName('js--components-function--search__btn')[0];
+var btn = document.getElementsByClassName('js--components-function--search__btn')[0]; // alert('Connected');
 
 if (form && input && btn) {
   var showInput = input.dataset.showClass;
@@ -3618,20 +3622,21 @@ if (form && input && btn) {
           return;
         } else if (input.value !== '') {
           // console.log(input.value);
-          form.submit();
+          window.location.href = "/products/search/".concat(input.value); // form.submit();
         }
       });
     });
-    form.addEventListener('submit', function () {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
       if (input.value !== '') {
         // console.log(input.value);
-        form.submit();
+        window.location.href = "/products/search/".concat(input.value); // form.submit();
       }
     });
     window.addEventListener('click', function (e) {
       // console.log(e.target);
       if (!e.target.matches('.js--components-function--search__form *')) {
-        console.log('ahbah');
         input.classList.remove(showInput);
       }
     });
@@ -3919,7 +3924,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54332" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64247" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
