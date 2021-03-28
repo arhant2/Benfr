@@ -2854,7 +2854,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.categoriesTemplate = exports.specificationsTemplate = void 0;
-var specificationsTemplate = "\n<div\n  class=\"form__group-outer-remove js--page-each-product--specifications__each\"\n>\n  <div class=\"form__group form__group--partition-1-2\">\n    <div>\n      <input\n        type=\"text\"\n        name=\"specifications[{%NUM%}][field]\"\n        class=\"form-group-input form__input--single-line u-width-full\"\n        placeholder=\"Title\"\n        minlength=2 \n        maxlength=25\n        required\n      />\n    </div>\n    <div>\n      <textarea\n        name=\"specifications[{%NUM%}][value]\"\n        class=\"form-group-input form__input--textarea u-width-full\"\n        placeholder=\"Write a description here...\"\n        rows=\"2\"\n        minlength=2\n        maxlength=75\n        required\n      ></textarea>\n    </div>\n  </div>\n  <button\n    type=\"button\"\n    class=\"btn btn--text btn--red tooltip js--page-each-product--specifications__each-remove-btn\"\n    data-tooltip-direction=\"right\"\n  >\n    <i class=\"far fa-trash-alt\"></i>\n    <div class=\"tooltip__element tooltip__element--right\">Delete</div>\n  </button>\n</div>\n";
+var specificationsTemplate = "\n<div\n  class=\"form__group-outer-remove js--page-each-product--specifications__each\"\n>\n  <div class=\"form__group form__group--partition-1-2\">\n    <div>\n      <input\n        type=\"text\"\n        name=\"specifications[{%NUM%}][field]\"\n        class=\"form-group-input form__input--single-line u-width-full\"\n        placeholder=\"Title\"\n        minlength=2 \n        maxlength=25\n        required\n      />\n    </div>\n    <div>\n      <textarea\n        name=\"specifications[{%NUM%}][value]\"\n        class=\"form-group-input form__input--textarea u-width-full\"\n        placeholder=\"Write a description here...\"\n        rows=\"2\"\n        minlength=2\n        maxlength=500\n        required\n      ></textarea>\n    </div>\n  </div>\n  <button\n    type=\"button\"\n    class=\"btn btn--text btn--red tooltip js--page-each-product--specifications__each-remove-btn\"\n    data-tooltip-direction=\"right\"\n  >\n    <i class=\"far fa-trash-alt\"></i>\n    <div class=\"tooltip__element tooltip__element--right\">Delete</div>\n  </button>\n</div>\n";
 exports.specificationsTemplate = specificationsTemplate;
 var categoriesTemplate = "\n<div\nclass=\"form-tags__inputs-each-outer js--page-each-product--category__input\"\n>\n<input\n  type=\"text\"\n  class=\"form-tags__inputs-input\"\n  value=\"{%VALUE%}\"\n  name=\"categoriesIdString[]\"\n  readonly\n/>\n<span class=\"form-tags__inputs-text\">{%NAME%}</span>\n<button\n  type=\"button\"\n  class=\"form-tags__inputs-remove-btn js--page-each-product--category__input-remove-btn\"\n>\n  &Cross;\n</button>\n</div>\n";
 exports.categoriesTemplate = categoriesTemplate;
@@ -3145,13 +3145,22 @@ var _confirmDialog = _interopRequireDefault(require("./confirm-dialog"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 Array.from(document.getElementsByClassName('js--components-function--btn-confirm-redirect')).forEach(function (btn) {
-  if (!btn.dataset.redirectTo || !btn.dataset.confirmMessage) {
+  console.log(btn.dataset);
+
+  if (!btn.dataset.redirectTo) {
     return;
   }
 
   btn.addEventListener('click', function () {
-    (0, _confirmDialog.default)('Confirm redirect', btn.dataset.confirmMessage, undefined, function () {
-      window.location.href = btn.dataset.redirectTo;
+    var _this = this;
+
+    if (!this.dataset.confirmMessage) {
+      window.location.href = this.dataset.redirectTo;
+      return;
+    }
+
+    (0, _confirmDialog.default)('Confirm redirect', this.dataset.confirmMessage, undefined, function () {
+      window.location.href = _this.dataset.redirectTo;
     });
   });
 });
@@ -25723,7 +25732,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58377" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58446" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

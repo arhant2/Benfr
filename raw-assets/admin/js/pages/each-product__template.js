@@ -21,7 +21,7 @@ export const specificationsTemplate = `
         placeholder="Write a description here..."
         rows="2"
         minlength=2
-        maxlength=75
+        maxlength=500
         required
       ></textarea>
     </div>

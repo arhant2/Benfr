@@ -9,7 +9,7 @@ module.exports = (inp, obj) => {
     }
   }
   arr.forEach((el) => {
-    if (obj[el]) {
+    if (obj[el] !== undefined) {
       filteredObj[el] = obj[el];
     }
   });

@@ -1,19 +1,11 @@
 const express = require('express');
-const qs = require('qs');
+// const qs = require('qs');
 
-const dateFormator = require('../utils/dateFormator');
+// const dateFormator = require('../utils/dateFormator');
 
 const adminViewController = require('../controllers/adminViewController');
 
 const router = express.Router();
-
-router.use((req, res, next) => {
-  res.locals.helpers = {
-    dateFormator,
-    qs,
-  };
-  next();
-});
 
 router.get('/', adminViewController.redirectDashboard);
 router.get('/dashboard', adminViewController.getDashboard);

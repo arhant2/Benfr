@@ -5,3 +5,6 @@ exports.dateTimeDayFormatted = (date) =>
 
 exports.dateFormatted = (date) =>
   moment(date).tz('Asia/Kolkata').format('Do MMMM, YYYY');
+
+exports.generalDateTimeFormatted = (date, format) =>
+  moment(date).tz('Asia/Kolkata').format(format);

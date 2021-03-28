@@ -13,7 +13,7 @@ module.exports = (Model, { singularName }) => {
 
     // console.log(document);
 
-    res.render(`admin/${singularName.small}-one`, {
+    res.render(`user/${singularName.small}-one`, {
       document,
     });
   });

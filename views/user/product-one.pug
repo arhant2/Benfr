@@ -1,0 +1,86 @@
+extends base/_base
+
+include mixins/_rating-helpers
+include mixins/_review-section
+
+block content
+  section.each-product-main
+    .each-product-main__imgs-box
+      if document && document.images && document.images.length === 0
+        .each-product-main__big-img-box-outer: .each-product-main__big-img-box 
+          img.each-product-main__big-img.js--page-each-product--big-img(src='/assets/user/img/no-image-2.jpg' alt=document.name)
+
+      else 
+        // Images outer
+        .each-product-main__big-img-box-outer: .each-product-main__big-img-box.js--page-each-product--to-zoom
+
+          // Lens
+          .each-product-main__lens.js--page-each-product--lens
+
+          // Image big
+          img.each-product-main__big-img.js--page-each-product--big-img(src=document.images[0].path|| '/assets/user/img/no-image.jpg' alt=document.name)
+
+        // Small images
+        .each-product-main__smaller-imgs-box
+          each imageObj, i in document.images
+            img.each-product-main__smaller-img.js--page-each-product--imgs(src=imageObj.path alt=`Product image - ${i+1}`)
+
+
+    .each-product-main__content
+      // Zoomed image box
+      .each-product-main__zoomed-img.js--page-each-product--zoomed-img
+
+      .each-product-main__content-box
+
+        .each-product-main__content-each
+          .each-product-main__brand= document.brand.name 
+          h1.each-product-main__heading= document.name
+          .each-product-main__ratings
+            span.each-product-main__ratings-star
+              +ratingStar(document.review.average)
+            span.each-product-main__ratings-count
+              +ratingNumber(document.review.count)
+
+        .each-product-main__content-each
+          .each-product-main__price-outer
+            span.each-product-main__price-act ₹#{Number(document.discountedPrice).toLocaleString('en-IN', {maximumFractionDigits: 2})}
+            strike.each-product-main__price-strike ₹#{Number(document.price).toLocaleString('en-IN', {maximumFractionDigits: 2})}
+          .each-product-main__save-outer
+            | You save:&nbsp;
+            span.each-product-main__save ₹#{Number(document.price - document.discountedPrice).toLocaleString('en-IN', {maximumFractionDigits: 2})} 
+            | &nbsp;(#{parseInt(Math.round( (document.price - document.discountedPrice) / document.price * 100 ))}%)
+          ul.each-product-main__features-list
+            li.each-product-main__features-item Free Delivery On Orders Above ₹1,999
+            li.each-product-main__features-item Fast and secure checkout
+            li.each-product-main__features-item Cash on Delivery Available
+          button.btn.btn--new-blue.btn--round.btn--full.each-product-main__buy-btn Add To Cart
+
+          if document.description
+            if document.description.length <= 399
+              p.each-product-main__description= document.description
+            else 
+              p.each-product-main__description= document.description.substr(0, 399) + '...'
+
+
+  // Each product description
+  .card
+    h2.heading-tertiary.card__heading Product Description
+    .card__body
+    p.para-primary= document.description
+
+
+  // Each product specifications
+  if document.specifications && document.specifications.length > 0
+    .card
+      .heading-tertiary.card__heading Specifications
+      .card__body 
+        table.each-product-specifications-table
+          each spec in document.specifications
+            tr.each-product-specifications-table__row
+              th.each-product-specifications-table__heading= spec.field
+              td.each-product-specifications-table__data= spec.value
+
+
+  // Reviews
+  +reviewsSection(document, reviewCurrent, reviews)
+

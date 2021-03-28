@@ -1,0 +1,15 @@
+include _rating-helpers
+include _product-desc
+
+mixin productsBoxContent(products)
+  - products = products || []
+  .products__content
+    if products.length === 0
+      .products__content-no-box
+        span.products__content-no-icon &excl;
+        p.products__content-no-text No Product Found
+    else
+      each product in products || []
+        a.reset-anchor.products__box(href=`/products/${product.nameNormalized}/${product.id}`)
+          img.products__img(src=product.images && product.images[0] && product.images[0].path || '/assets/user/img/no-image.jpg')
+          +productDesc(product, true, false)

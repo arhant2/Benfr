@@ -81,7 +81,7 @@ block content
                   div 
                     input.form-group-input.form__input--single-line.u-width-full(type='text' name='specifications[{%NUM%}][field]' placeholder='Title' required minlength=2 maxlength=25 value=specification.field)
                   div 
-                    textarea.form-group-input.form__input--textarea.u-width-full(name='specifications[{%NUM%}][value]' placeholder='Write a description here...' rows='2' minlength=2 maxlength=75 required)= specification.value
+                    textarea.form-group-input.form__input--textarea.u-width-full(name='specifications[{%NUM%}][value]' placeholder='Write a description here...' rows='2' minlength=2 maxlength=500 required)= specification.value
                 button(type='button').btn.btn--text.btn--red.tooltip.js--page-each-product--specifications__each-remove-btn()
                   i.far.fa-trash-alt
                   .tooltip__element.tooltip__element--right Delete 

@@ -66,6 +66,7 @@
   /* Customized properties */
   --color-featured-categories-1: #dff9fb;
   --color-featured-categories-2: #ffcccc;
+  --color-main-btn-light: #f6d85f;
   --color-main-btn: #f1c40f;
   --color-main-btn-dark: #c9b975;
   --color-dark-btn: var(--color-grey-dark-1);
@@ -436,7 +437,10 @@ Utility class - usable classes
   --current-color-darker: var(--color-dark-btn-dark);
 }
 .btn--main-color {
+  --current-color-lighter: var(--color-main-btn-light);
+  --current-color-light: var(--color-main-btn-light);
   --current-color: var(--color-main-btn);
+  --current-color-dark: var(--color-main-btn-dark);
   --current-color-darker: var(--color-main-btn-dark);
 }
 
@@ -457,6 +461,51 @@ Utility class - usable classes
 }
 .brands-ad__item:hover {
   filter: grayscale(0);
+}
+
+.confirm-dialog {
+  letter-spacing: 0.3px;
+  background-color: var(--color-white);
+  border-radius: 0.4rem;
+  width: 90%;
+  max-width: 40rem;
+}
+.confirm-dialog__container {
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.65);
+  min-height: 100vh;
+  width: 100vw;
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.35rem;
+}
+.confirm-dialog .confirm-dialog__top-bar {
+  padding: 0.8rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--color-grey-light-2);
+  border-bottom: 1px solid var(--color-grey-light-4);
+  border-radius: 0.4rem 0.4rem 0 0;
+}
+.confirm-dialog .confirm-dialog__body {
+  padding: 1.8rem 1rem;
+}
+.confirm-dialog .confirm-dialog__btns {
+  padding: 0.6rem 1rem;
+  background-color: var(--color-grey-light-2);
+  border-top: 1px solid var(--color-grey-light-4);
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  border-radius: 0 0 0.4rem 0.4rem;
+}
+.confirm-dialog .confirm-dialog__btns > * {
+  margin-left: 0.8rem;
 }
 
 /* ----------------------------------
@@ -715,7 +764,7 @@ Featured Categories
   display: inline-block;
   margin-right: 2px;
 }
-.form__input[type=text], .form__input[type=tel], .form__input[type=email], .form__input[type=password], .form__select {
+.form__input[type=text], .form__input[type=tel], .form__input[type=email], .form__input[type=password], .form__select, .form__textarea {
   width: 100%;
   max-width: 60rem;
   border: 1px solid var(--color-grey-light-4);
@@ -724,15 +773,118 @@ Featured Categories
   border-radius: 0.3rem;
   background: var(--color-white);
 }
-.form__input[type=text]:focus, .form__input[type=tel]:focus, .form__input[type=email]:focus, .form__input[type=password]:focus, .form__select:focus {
+.form__input[type=text]:focus, .form__input[type=tel]:focus, .form__input[type=email]:focus, .form__input[type=password]:focus, .form__select:focus, .form__textarea:focus {
   border-color: var(--color-grey-dark-3);
   border-left: 2px solid var(--color-green);
 }
-.form__input[type=text]:focus:invalid, .form__input[type=tel]:focus:invalid, .form__input[type=email]:focus:invalid, .form__input[type=password]:focus:invalid, .form__select:focus:invalid {
+.form__input[type=text]:focus:invalid, .form__input[type=tel]:focus:invalid, .form__input[type=email]:focus:invalid, .form__input[type=password]:focus:invalid, .form__select:focus:invalid, .form__textarea:focus:invalid {
   border-left: 3px solid var(--color-red);
+}
+.form__input[type=text]:disabled, .form__input[type=tel]:disabled, .form__input[type=email]:disabled, .form__input[type=password]:disabled, .form__select:disabled, .form__textarea:disabled {
+  background: var(--color-grey-light-2);
+}
+.form__textarea {
+  resize: none;
+}
+.form__input--no-min[type=text], .form__input--no-min[type=tel], .form__input--no-min[type=email], .form__input--no-min[type=password], .form__select--no-min, .form__textarea--no-min {
+  max-width: initial;
 }
 .form__text {
   font-size: 0.82em;
+}
+.form .form__rating {
+  --current-color-lighter: var(--color-primary-lighter);
+  --current-color-light: var(--color-primary-light);
+  --current-color: var(--color-primary);
+  --current-color-dark: var(--color-primary-dark);
+  --current-color-darker: var(--color-primary-darker);
+  color: var(--current-color);
+}
+.form .form__rating--purple {
+  --current-color-lighter: var(--color-purple-lighter);
+  --current-color-light: var(--color-purple-light);
+  --current-color: var(--color-purple);
+  --current-color-dark: var(--color-purple-dark);
+  --current-color-darker: var(--color-purple-darker);
+}
+.form .form__rating--green {
+  --current-color-lighter: var(--color-green-lighter);
+  --current-color-light: var(--color-green-light);
+  --current-color: var(--color-green);
+  --current-color-dark: var(--color-green-dark);
+  --current-color-darker: var(--color-green-darker);
+}
+.form .form__rating--blue {
+  --current-color-lighter: var(--color-blue-lighter);
+  --current-color-light: var(--color-blue-light);
+  --current-color: var(--color-blue);
+  --current-color-dark: var(--color-blue-dark);
+  --current-color-darker: var(--color-blue-darker);
+}
+.form .form__rating--yellow {
+  --current-color-lighter: var(--color-yellow-lighter);
+  --current-color-light: var(--color-yellow-light);
+  --current-color: var(--color-yellow);
+  --current-color-dark: var(--color-yellow-dark);
+  --current-color-darker: var(--color-yellow-darker);
+}
+.form .form__rating--red {
+  --current-color-lighter: var(--color-red-lighter);
+  --current-color-light: var(--color-red-light);
+  --current-color: var(--color-red);
+  --current-color-dark: var(--color-red-dark);
+  --current-color-darker: var(--color-red-darker);
+}
+.form .form__rating--pink {
+  --current-color-lighter: var(--color-pink-lighter);
+  --current-color-light: var(--color-pink-light);
+  --current-color: var(--color-pink);
+  --current-color-dark: var(--color-pink-dark);
+  --current-color-darker: var(--color-pink-darker);
+}
+.form .form__rating--primary {
+  --current-color-lighter: var(--color-primary-lighter);
+  --current-color-light: var(--color-primary-light);
+  --current-color: var(--color-primary);
+  --current-color-dark: var(--color-primary-dark);
+  --current-color-darker: var(--color-primary-darker);
+}
+.form .form__rating--secondary {
+  --current-color-lighter: var(--color-secondary-lighter);
+  --current-color-light: var(--color-secondary-light);
+  --current-color: var(--color-secondary);
+  --current-color-dark: var(--color-secondary-dark);
+  --current-color-darker: var(--color-secondary-darker);
+}
+.form .form__rating--new-blue {
+  --current-color-lighter: var(--color-new-blue-lighter);
+  --current-color-light: var(--color-new-blue-light);
+  --current-color: var(--color-new-blue);
+  --current-color-dark: var(--color-new-blue-dark);
+  --current-color-darker: var(--color-new-blue-darker);
+}
+.form .form__rating_each-label {
+  position: relative;
+  cursor: pointer;
+  padding: 0 1px;
+  z-index: 5;
+}
+.form .form__rating_each-label__selected-star {
+  display: none;
+}
+.form .form__rating_each-label--selected .form__rating_each-label__unselected-star {
+  display: none;
+}
+.form .form__rating_each-label--selected .form__rating_each-label__selected-star {
+  display: inline-block;
+}
+.form .form__rating-each-radio {
+  width: 1px;
+  position: absolute;
+  z-index: -2;
+  bottom: 0;
+  left: 50%;
+  opacity: 0;
 }
 
 .reviews__product {
@@ -2004,6 +2156,7 @@ Home
 
 /* ----- Specifications table ----- */
 .each-product-specifications-table {
+  width: 100%;
   border: 1px solid var(--color-grey-light-4);
   font-size: 1.4rem;
   letter-spacing: 0.4px;

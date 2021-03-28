@@ -135,7 +135,10 @@
   }
 
   &--main-color {
+    --current-color-lighter: var(--color-main-btn-light);
+    --current-color-light: var(--color-main-btn-light);
     --current-color: var(--color-main-btn);
+    --current-color-dark: var(--color-main-btn-dark);
     --current-color-darker: var(--color-main-btn-dark);
   }
 }

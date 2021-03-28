@@ -2674,7 +2674,7 @@ module.exports = require('./lib/axios');
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.clearFlashMessages = exports.addFlashMessage = void 0;
+exports.scrollToFlashMessages = exports.clearFlashMessages = exports.addFlashMessage = void 0;
 var flashMessages = document.querySelector('.js--components-function--flash-messages');
 
 if (flashMessages) {
@@ -2685,6 +2685,22 @@ if (flashMessages) {
     }
   });
 }
+
+var clearFlashMessages = function clearFlashMessages() {
+  if (flashMessages) {
+    flashMessages.textContent = '';
+  }
+};
+
+exports.clearFlashMessages = clearFlashMessages;
+
+var scrollToFlashMessages = function scrollToFlashMessages() {
+  if (flashMessages) {
+    flashMessages.scrollIntoView();
+  }
+};
+
+exports.scrollToFlashMessages = scrollToFlashMessages;
 
 var addFlashMessage = function addFlashMessage(type, message) {
   if (!flashMessages) {
@@ -2710,17 +2726,55 @@ var addFlashMessage = function addFlashMessage(type, message) {
 
   var markup = "<div class=\"flash-messages__message flash-messages__message--".concat(color, " js--components-function--flash-messages__message\"><div class=\"flash-messages__icon\">").concat(icon, "</div><div class=\"flash-messages__content\"><h4 class=\"flash-messages__heading\">").concat(heading, "</h4><div class=\"flash-messages__body\">").concat(message, "</div></div><button class=\"flash-messages__close-btn js--components-function--flash-close-btn\">&Cross;</button></div>");
   flashMessages.insertAdjacentHTML('afterbegin', markup);
-};
+  scrollToFlashMessages();
+}; // export { addFlashMessage, clearFlashMessages };
+
 
 exports.addFlashMessage = addFlashMessage;
+},{}],"component-functions/alert-dialog.js":[function(require,module,exports) {
+"use strict";
 
-var clearFlashMessages = function clearFlashMessages() {
-  if (flashMessages) {
-    flashMessages.textContent = '';
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var container = document.getElementsByClassName('js--components-function--alert-dialog')[0];
+var heading = document.getElementsByClassName('js--components-function--alert-dialog__heading')[0];
+var body = document.getElementsByClassName('js--components-function--alert-dialog__body')[0];
+var confirmBtn = document.getElementsByClassName('js--components-function--alert-dialog__confirm-btn')[0];
+
+var alertFunction = function alertFunction(title, message, fn) {
+  // Call the default one if the custom one cannot be called
+  if (!container || !heading || !body || !confirmBtn || !container.dataset.noneClass) {
+    alert(message);
+    fn();
+    return;
   }
+
+  var fnToCall; // Remove listeners and hide the dialog when work is done
+
+  var removeEventListener = function removeEventListener() {
+    container.classList.add(container.dataset.noneClass);
+    confirmBtn.removeEventListener('click', fnToCall);
+  };
+
+  fnToCall = function fnToCall() {
+    removeEventListener();
+
+    if (fn) {
+      fn();
+    }
+  };
+
+  confirmBtn.addEventListener('click', fnToCall); // Add message
+
+  heading.textContent = title;
+  body.textContent = message;
+  container.classList.remove(container.dataset.noneClass);
 };
 
-exports.clearFlashMessages = clearFlashMessages;
+var _default = alertFunction;
+exports.default = _default;
 },{}],"utils/handleError.js":[function(require,module,exports) {
 "use strict";
 
@@ -2731,7 +2785,12 @@ exports.default = _default;
 
 var _flashMessages = require("../component-functions/flash-messages");
 
+var _alertDialog = _interopRequireDefault(require("../component-functions/alert-dialog"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _default(err) {
+  var alert = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
   (0, _flashMessages.clearFlashMessages)();
   var message = 'Something went wrong!',
       type = 'error';
@@ -2747,9 +2806,14 @@ function _default(err) {
 
   }
 
+  if (alert) {
+    (0, _alertDialog.default)('Error', message);
+    return;
+  }
+
   (0, _flashMessages.addFlashMessage)(type, message);
 }
-},{"../component-functions/flash-messages":"component-functions/flash-messages.js"}],"ajax/change-my-email.js":[function(require,module,exports) {
+},{"../component-functions/flash-messages":"component-functions/flash-messages.js","../component-functions/alert-dialog":"component-functions/alert-dialog.js"}],"ajax/change-my-email.js":[function(require,module,exports) {
 "use strict";
 
 require("regenerator-runtime/runtime");
@@ -3221,7 +3285,98 @@ if (form) {
     };
   }());
 }
-},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../component-functions/flash-messages":"component-functions/flash-messages.js"}],"ajax/signup.js":[function(require,module,exports) {
+},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../component-functions/flash-messages":"component-functions/flash-messages.js"}],"ajax/review.js":[function(require,module,exports) {
+"use strict";
+
+require("regenerator-runtime/runtime");
+
+var _axios = _interopRequireDefault(require("axios"));
+
+var _handleError = _interopRequireDefault(require("../utils/handleError"));
+
+var _flashMessages = require("../component-functions/flash-messages");
+
+var _alertDialog = _interopRequireDefault(require("../component-functions/alert-dialog"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+var form = document.getElementById('review-form');
+var btn = document.getElementById('review-form-btn');
+
+if (form) {
+  form.addEventListener('submit', /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(event) {
+      var formData, data, productId, reviewId, res;
+      return regeneratorRuntime.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              event.preventDefault();
+              formData = new FormData(this);
+              data = {
+                star: formData.get('star'),
+                title: formData.get('title'),
+                description: formData.get('description') || ''
+              };
+              productId = formData.get('productId');
+              reviewId = formData.get('reviewId');
+
+              if (productId) {
+                _context.next = 8;
+                break;
+              }
+
+              (0, _handleError.default)('Cannot post/update comment, please try again later!');
+              return _context.abrupt("return");
+
+            case 8:
+              if (btn) {
+                btn.setAttribute('disabled', 'disabled');
+              }
+
+              _context.prev = 9;
+              _context.next = 12;
+              return (0, _axios.default)({
+                method: reviewId ? 'PATCH' : 'POST',
+                url: "/api/v1/products/".concat(productId, "/reviews/").concat(reviewId || ''),
+                data: data
+              });
+
+            case 12:
+              res = _context.sent;
+              (0, _alertDialog.default)('Success', "".concat(reviewId ? 'Updated your' : 'Posted your', " comment successfully! Relod the page to see changes..."), function () {
+                window.location.reload();
+              });
+              _context.next = 20;
+              break;
+
+            case 16:
+              _context.prev = 16;
+              _context.t0 = _context["catch"](9);
+              (0, _handleError.default)(_context.t0, true);
+
+              if (btn) {
+                btn.removeAttribute('disabled');
+              }
+
+            case 20:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee, this, [[9, 16]]);
+    }));
+
+    return function (_x) {
+      return _ref.apply(this, arguments);
+    };
+  }());
+}
+},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../component-functions/flash-messages":"component-functions/flash-messages.js","../component-functions/alert-dialog":"component-functions/alert-dialog.js"}],"ajax/signup.js":[function(require,module,exports) {
 "use strict";
 
 require("regenerator-runtime/runtime");
@@ -3574,7 +3729,108 @@ if (form) {
     };
   }());
 }
-},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../component-functions/flash-messages":"component-functions/flash-messages.js"}],"component-functions/dropdown.js":[function(require,module,exports) {
+},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../component-functions/flash-messages":"component-functions/flash-messages.js"}],"component-functions/confirm-dialog.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var container = document.getElementsByClassName('js--components-function--confirm-dialog')[0];
+var heading = document.getElementsByClassName('js--components-function--confirm-dialog__heading')[0];
+var body = document.getElementsByClassName('js--components-function--confirm-dialog__body')[0];
+var closeBtn1 = document.getElementsByClassName('js--components-function--confirm-dialog__close-btn-1')[0];
+var closeBtn2 = document.getElementsByClassName('js--components-function--confirm-dialog__close-btn-2')[0];
+var confirmBtn = document.getElementsByClassName('js--components-function--confirm-dialog__confirm-btn')[0];
+
+var confirmFunction = function confirmFunction(title, message, noFn, yesFn) {
+  // Call the default one if the custom one cannot be called
+  if (!container || !heading || !body || !(closeBtn1 || closeBtn2) || !confirmBtn || !container.dataset.noneClass) {
+    if (window.confirm(message)) {
+      yesFn();
+    } else {
+      if (noFn) {
+        noFn();
+      }
+    }
+
+    return;
+  }
+
+  var noFnToCall, yesFnToCall; // Remove listeners and hide the dialog when work is done
+
+  var removeEventListener = function removeEventListener() {
+    container.classList.add(container.dataset.noneClass);
+    confirmBtn.removeEventListener('click', yesFnToCall);
+
+    if (closeBtn1) {
+      closeBtn1.removeEventListener('click', noFnToCall);
+    }
+
+    if (closeBtn2) {
+      closeBtn2.removeEventListener('click', noFnToCall);
+    }
+  };
+
+  yesFnToCall = function yesFnToCall() {
+    removeEventListener();
+    yesFn();
+  };
+
+  noFnToCall = function noFnToCall() {
+    removeEventListener();
+
+    if (noFn) {
+      noFn();
+    }
+  };
+
+  confirmBtn.addEventListener('click', yesFnToCall);
+
+  if (closeBtn1) {
+    closeBtn1.addEventListener('click', noFnToCall);
+  }
+
+  if (closeBtn2) {
+    closeBtn2.addEventListener('click', noFnToCall);
+  } // Add message
+
+
+  heading.textContent = title;
+  body.textContent = message;
+  container.classList.remove(container.dataset.noneClass);
+};
+
+var _default = confirmFunction;
+exports.default = _default;
+},{}],"component-functions/btn-confirm-redirect.js":[function(require,module,exports) {
+"use strict";
+
+var _confirmDialog = _interopRequireDefault(require("./confirm-dialog"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+Array.from(document.getElementsByClassName('js--components-function--btn-confirm-redirect')).forEach(function (btn) {
+  console.log(btn.dataset);
+
+  if (!btn.dataset.redirectTo) {
+    return;
+  }
+
+  btn.addEventListener('click', function () {
+    var _this = this;
+
+    if (!this.dataset.confirmMessage) {
+      window.location.href = this.dataset.redirectTo;
+      return;
+    }
+
+    (0, _confirmDialog.default)('Confirm redirect', this.dataset.confirmMessage, undefined, function () {
+      window.location.href = _this.dataset.redirectTo;
+    });
+  });
+});
+},{"./confirm-dialog":"component-functions/confirm-dialog.js"}],"component-functions/dropdown.js":[function(require,module,exports) {
 Array.from(document.getElementsByClassName('js--components-function--dropdown__btn')).forEach(function (btn) {
   btn.addEventListener('click', function () {
     var dropdown = this.closest('.js--components-function--dropdown');
@@ -3605,6 +3861,55 @@ window.addEventListener('click', function (event) {
       }
     });
   }
+});
+},{}],"component-functions/form-rating.js":[function(require,module,exports) {
+var getValue = function getValue(anyElement) {
+  var rating = anyElement.closest('.js--components-function--form-rating');
+  var ans = 0;
+  Array.from(rating.querySelectorAll('.js--components-function--form-rating__label input')).forEach(function (el, i) {
+    if (el.checked) {
+      ans = i + 1;
+    }
+  });
+  return ans;
+};
+
+var setValue = function setValue(anyElement, value) {
+  var rating = anyElement.closest('.js--components-function--form-rating');
+  var selectedLabelClass = rating.dataset.selectedLabelClass;
+
+  if (!selectedLabelClass) {
+    return;
+  } // console.log(selectedLabelClass);
+
+
+  Array.from(rating.querySelectorAll('.js--components-function--form-rating__label')).forEach(function (label, i) {
+    // console.log('ha: ', label);
+    // console.log(i, value, i < value);
+    if (i < value) {
+      label.classList.add(selectedLabelClass);
+    } else {
+      label.classList.remove(selectedLabelClass);
+    }
+  });
+};
+
+Array.from(document.getElementsByClassName('js--components-function--form-rating')).forEach(function (rating) {
+  var labels = rating.getElementsByClassName('js--components-function--form-rating__label');
+
+  if (!rating.dataset.selectedLabelClass || labels.length !== 5) {
+    return;
+  }
+
+  Array.from(labels).forEach(function (label, i) {
+    label.dataset.radioNumberJavascript = i + 1;
+    label.addEventListener('mouseover', function (e) {
+      setValue(this, this.dataset.radioNumberJavascript);
+    });
+    label.addEventListener('mouseout', function (e) {
+      setValue(this, getValue(this));
+    });
+  });
 });
 },{}],"component-functions/search.js":[function(require,module,exports) {
 var form = document.getElementsByClassName('js--components-function--search__form')[0];
@@ -3738,6 +4043,26 @@ Array.from(document.getElementsByClassName('js--components-function--sliders')).
       slide(this.parentElement, 'right');
     });
   }
+});
+},{}],"component-functions/toggle-on-click.js":[function(require,module,exports) {
+Array.from(document.getElementsByClassName('js--components-function--toggle-on-click')).forEach(function (el) {
+  el.addEventListener('click', function (e) {
+    var _this$dataset = this.dataset,
+        toggleClass = _this$dataset.toggleClass,
+        toggleElementId = _this$dataset.toggleElementId;
+
+    if (!toggleClass) {
+      return;
+    }
+
+    var element = document.getElementById(toggleElementId);
+
+    if (!element) {
+      return;
+    }
+
+    element.classList.toggle(toggleClass);
+  });
 });
 },{}],"component-functions/increment-decrement-input-number.js":[function(require,module,exports) {
 // Get input field here
@@ -3875,6 +4200,8 @@ require("./ajax/login");
 
 require("./ajax/reset-password");
 
+require("./ajax/review");
+
 require("./ajax/signup");
 
 require("./ajax/signup-complete");
@@ -3883,9 +4210,15 @@ require("./ajax/update-me");
 
 require("./ajax/update-my-password");
 
+require("./component-functions/confirm-dialog");
+
+require("./component-functions/btn-confirm-redirect");
+
 require("./component-functions/dropdown");
 
 require("./component-functions/flash-messages");
+
+require("./component-functions/form-rating");
 
 require("./component-functions/search");
 
@@ -3893,10 +4226,12 @@ require("./component-functions/sidebar");
 
 require("./component-functions/sliders");
 
+require("./component-functions/toggle-on-click");
+
 require("./component-functions/increment-decrement-input-number");
 
 require("./pages/each-product");
-},{"./ajax/change-my-email":"ajax/change-my-email.js","./ajax/forgot-password":"ajax/forgot-password.js","./ajax/login":"ajax/login.js","./ajax/reset-password":"ajax/reset-password.js","./ajax/signup":"ajax/signup.js","./ajax/signup-complete":"ajax/signup-complete.js","./ajax/update-me":"ajax/update-me.js","./ajax/update-my-password":"ajax/update-my-password.js","./component-functions/dropdown":"component-functions/dropdown.js","./component-functions/flash-messages":"component-functions/flash-messages.js","./component-functions/search":"component-functions/search.js","./component-functions/sidebar":"component-functions/sidebar.js","./component-functions/sliders":"component-functions/sliders.js","./component-functions/increment-decrement-input-number":"component-functions/increment-decrement-input-number.js","./pages/each-product":"pages/each-product.js"}],"../../../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./ajax/change-my-email":"ajax/change-my-email.js","./ajax/forgot-password":"ajax/forgot-password.js","./ajax/login":"ajax/login.js","./ajax/reset-password":"ajax/reset-password.js","./ajax/review":"ajax/review.js","./ajax/signup":"ajax/signup.js","./ajax/signup-complete":"ajax/signup-complete.js","./ajax/update-me":"ajax/update-me.js","./ajax/update-my-password":"ajax/update-my-password.js","./component-functions/confirm-dialog":"component-functions/confirm-dialog.js","./component-functions/btn-confirm-redirect":"component-functions/btn-confirm-redirect.js","./component-functions/dropdown":"component-functions/dropdown.js","./component-functions/flash-messages":"component-functions/flash-messages.js","./component-functions/form-rating":"component-functions/form-rating.js","./component-functions/search":"component-functions/search.js","./component-functions/sidebar":"component-functions/sidebar.js","./component-functions/sliders":"component-functions/sliders.js","./component-functions/toggle-on-click":"component-functions/toggle-on-click.js","./component-functions/increment-decrement-input-number":"component-functions/increment-decrement-input-number.js","./pages/each-product":"pages/each-product.js"}],"../../../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -3924,7 +4259,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64247" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58445" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

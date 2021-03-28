@@ -28,7 +28,8 @@
   &__input[type='tel'],
   &__input[type='email'],
   &__input[type='password'],
-  &__select {
+  &__select,
+  &__textarea {
     width: 100%;
     max-width: 60rem;
     border: 1px solid var(--color-grey-light-4);
@@ -46,9 +47,67 @@
         border-left: 3px solid var(--color-red);
       }
     }
+
+    &:disabled {
+      background: var(--color-grey-light-2);
+    }
+  }
+
+  &__textarea {
+    resize: none;
+  }
+
+  &__input--no-min[type='text'],
+  &__input--no-min[type='tel'],
+  &__input--no-min[type='email'],
+  &__input--no-min[type='password'],
+  &__select--no-min,
+  &__textarea--no-min {
+    max-width: initial;
   }
 
   &__text {
     font-size: 0.82em;
+  }
+
+  // Rating
+  .form__rating {
+    @include currentColorOptions;
+
+    color: var(--current-color);
+  }
+
+  .form__rating_each-label {
+    position: relative;
+    cursor: pointer;
+
+    padding: 0 1px;
+
+    // background-color: red;
+    z-index: 5;
+  }
+
+  .form__rating_each-label__selected-star {
+    display: none;
+  }
+
+  .form__rating_each-label--selected {
+    .form__rating_each-label__unselected-star {
+      display: none;
+    }
+
+    .form__rating_each-label__selected-star {
+      display: inline-block;
+    }
+  }
+
+  .form__rating-each-radio {
+    width: 1px;
+    position: absolute;
+    z-index: -2;
+    bottom: 0;
+    left: 50%;
+
+    opacity: 0;
   }
 }

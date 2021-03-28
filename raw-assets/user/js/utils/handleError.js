@@ -3,7 +3,9 @@ import {
   clearFlashMessages,
 } from '../component-functions/flash-messages';
 
-export default function (err) {
+import alertDialog from '../component-functions/alert-dialog';
+
+export default function (err, alert = false) {
   clearFlashMessages();
   let message = 'Something went wrong!',
     type = 'error';
@@ -17,6 +19,11 @@ export default function (err) {
     // if (err.response.data.status) {
     //   type = err.response.data.status;
     // }
+  }
+
+  if (alert) {
+    alertDialog('Error', message);
+    return;
   }
 
   addFlashMessage(type, message);

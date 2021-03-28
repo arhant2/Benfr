@@ -63,6 +63,8 @@ module.exports = (Model, { singularName }) => {
 
       await handleImagesAndData(req, doc);
 
+      console.log(req.body);
+
       // console.log(doc);
 
       await doc.save();

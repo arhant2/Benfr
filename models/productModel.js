@@ -84,7 +84,7 @@ const productSchema = new mongoose.Schema(
       trim: true,
       required: true,
       minlength: [3, 'Description should of atleast 3 characters'],
-      maxlength: [100, 'Description can be of 100 characters at maximum'],
+      maxlength: [1000, 'Description can be of 1000 characters at maximum'],
     },
     specifications: {
       type: [
@@ -105,8 +105,8 @@ const productSchema = new mongoose.Schema(
             required: [true, 'Each specification must have a value'],
             min: [2, 'Each specification value must of at least 2 characters'],
             max: [
-              75,
-              'Each specification value must have 150 characters at maximum',
+              500,
+              'Each specification value must have 500 characters at maximum',
             ],
           },
         },

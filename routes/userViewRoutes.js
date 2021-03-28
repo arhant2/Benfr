@@ -108,4 +108,11 @@ router.get(
   userViewController.getAllProductsBySearch
 );
 
+router.get(
+  '/products/:name?/:id',
+  userViewController.setSidebarItems,
+  authController.isLoggedIn,
+  userViewController.getOneProduct
+);
+
 module.exports = router;

@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 
 const AppError = require('./utils/AppError');
+const dateFormator = require('./utils/dateFormator');
 const errorContoller = require('./controllers/errorController');
 const productRouter = require('./routes/productRoutes');
 const userRouter = require('./routes/userRoutes');
@@ -33,6 +34,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Middleware to add an empty object so that customs can be added later
 app.use((req, res, next) => {
   req.customs = {};
+  next();
+});
+
+app.use((req, res, next) => {
+  res.locals.helpers = {
+    dateFormator,
+    // qs,
+  };
   next();
 });
 

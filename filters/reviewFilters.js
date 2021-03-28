@@ -1,7 +1,7 @@
 const filterBodyMiddleware = require('../utils/filterBodyMiddleware');
 
-exports.createOne = filterBodyMiddleware(['star', 'description']);
-exports.updateOne = filterBodyMiddleware(['star', 'description']);
+exports.createOne = filterBodyMiddleware(['star', 'title', 'description']);
+exports.updateOne = filterBodyMiddleware(['star', 'title', 'description']);
 exports.likeReview = filterBodyMiddleware([]);
 exports.unlikeReview = filterBodyMiddleware([]);
 exports.markReview = filterBodyMiddleware([]);

@@ -11,6 +11,7 @@ const Product = require('../models/productModel');
 const handlerFactoryUserViews = require('./handlerFactoryUserViews');
 
 const gramsGenerator = require('../utils/gramsGenerator');
+const Review = require('../models/reviewModel');
 
 const handlerFactoryBrand = handlerFactoryUserViews(Brand, 'brand', 'brands');
 const handlerFactoryCategory = handlerFactoryUserViews(
@@ -288,5 +289,42 @@ exports.getAllProductsBySearch = catchAsync(async (req, res, next) => {
   res.render('user/products', {
     documents,
     queryObjParsed,
+  });
+});
+
+// exports.getOneProduct = handlerFactoryProduct.getOne;
+exports.getOneProduct = catchAsync(async (req, res, next) => {
+  const document = await Product.findById(req.params.id);
+
+  if (!document) {
+    return next(new AppError('No product found with with that ID', 404));
+  }
+
+  let reviewCurrent;
+  let reviews;
+
+  // console.log(req.customs);
+
+  if (req.customs.user) {
+    [reviewCurrent, reviews] = await Promise.all([
+      Review.findOne({ user: req.customs.user.id, product: document.id }),
+      Review.find({ user: { $ne: req.customs.user.id }, product: document.id })
+        .sort('-likesCount -createdAt')
+        .limit(3),
+    ]);
+  } else {
+    reviews = await Review.find({
+      product: document.id,
+    })
+      .sort('-likesCount -createdAt')
+      .limit(3);
+  }
+
+  // console.log(reviews);
+
+  res.render('user/product-one', {
+    document,
+    reviewCurrent,
+    reviews,
   });
 });

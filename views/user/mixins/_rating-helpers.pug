@@ -1,0 +1,14 @@
+mixin ratingStar(value)
+  - let i=1, rating = value;
+  while i<=5
+    if i < rating + 0.25
+      i.fas.fa-star
+    else if rating >= i - 0.75
+      i.fas.fa-star-half-alt
+    else 
+      i.far.fa-star
+    - ++i;
+    | &nbsp;
+
+mixin ratingNumber(count)
+  | #{count ? `${count} review${count > 1 ? 's': ''}`: 'Unrated'}

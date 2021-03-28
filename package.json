@@ -15,7 +15,13 @@
     "watch:admin:scss": "parcel ./raw-assets/admin/scss/style.scss --out-dir ./public/assets/admin/css --out-file style.css --no-autoinstall",
     "build:admin:scss": "parcel build ./raw-assets/admin/scss/style.scss --out-dir ./public/assets/admin/css --out-file style.css --no-autoinstall --no-source-maps",
     "watch:admin:js": "parcel ./raw-assets/admin/js/index.js --out-dir ./public/assets/admin/js --out-file index.js --no-autoinstall",
-    "build:admin:js": "parcel build ./raw-assets/admin/js/index.js --out-dir ./public/assets/admin/js --out-file index.js --no-autoinstall --no-source-maps"
+    "build:admin:js": "parcel build ./raw-assets/admin/js/index.js --out-dir ./public/assets/admin/js --out-file index.js --no-autoinstall --no-source-maps",
+    "watch:user": "npm-run-all -p watch:user:scss watch:user:js",
+    "build:user": "npm-run-all build:user:scss build:user:js",
+    "watch:admin": "npm-run-all -p watch:admin:scss watch:admin:js",
+    "build:admin": "npm-run-all build:admin:scss build:admin:js",
+    "watch": "npm-run-all -p watch:user watch:admin",
+    "build": "npm-run-all build:user build:admin"
   },
   "author": "Arhant Jain",
   "license": "ISC",
@@ -51,6 +57,7 @@
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-react": "^7.21.5",
     "nodemon": "^2.0.6",
+    "npm-run-all": "^4.1.5",
     "parcel": "^1.12.4",
     "prettier": "^2.1.2",
     "sass": "^1.32.8"

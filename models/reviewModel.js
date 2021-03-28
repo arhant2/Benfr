@@ -22,13 +22,20 @@ const reviewSchema = new mongoose.Schema(
       required: true,
       set: Math.trunc,
     },
+    title: {
+      type: String,
+      trim: true,
+      maxlength: [50, 'Title of rating can be at maximum of 50 characters'],
+      required: true,
+    },
     description: {
       type: String,
       trim: true,
       maxlength: [
-        100,
-        'Description of rating can be at maxium of 100 characters',
+        300,
+        'Description of rating can be at maximum of 300 characters',
       ],
+      default: '',
     },
     likes: {
       type: [mongoose.Schema.Types.ObjectId],
