@@ -82,5 +82,8 @@ block content
 
 
   // Reviews
-  +reviewsSection(document, reviewCurrent, reviews)
+  section.card.reviews
+    h2.heading-tertiary.card__heading Reviews
+    +reviewsSectionBody(document, reviewCurrent, reviews)
+    a.btn.btn--text(href=`/products/${document.nameNormalized}/${document.id}/reviews`) See more &gt;
 

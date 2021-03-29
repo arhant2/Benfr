@@ -956,6 +956,25 @@ Featured Categories
 }
 .reviews__like-icon {
   font-size: 1.8rem;
+  position: relative;
+  margin-right: 0.2rem;
+  display: inline-block;
+}
+.reviews__like-icon::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+.reviews__like-icon--not-liked {
+  transition: opacity ease 1s 0s;
+}
+.reviews__like-icon--liked {
+  color: var(--color-blue);
+  opacity: 0;
+  position: absolute;
+  left: 0;
+  top: 0;
+  transition: opacity ease 1s, transform ease 1s;
 }
 .reviews__like-btn {
   display: inline-block;
@@ -971,6 +990,17 @@ Featured Categories
   background: none;
   transition: all 0.2s;
   margin-right: auto;
+}
+.reviews__like-btn:hover .reviews__like-icon--not-liked, .reviews__like-btn--liked .reviews__like-icon--not-liked {
+  opacity: 0;
+  transition: opacity ease 0s;
+}
+.reviews__like-btn:hover .reviews__like-icon--liked, .reviews__like-btn--liked .reviews__like-icon--liked {
+  opacity: 1;
+  transition: opacity ease 0s, transform ease 1s;
+}
+.reviews__like-btn:hover .reviews__like-icon--liked {
+  transform: scale(1.35);
 }
 .reviews__mark {
   display: inline-block;

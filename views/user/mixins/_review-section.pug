@@ -1,7 +1,9 @@
 include _rating-helpers
+include _product-desc
 
-mixin reviewSectionEach(review, current=false)
-  .inner-card
+//- Each review card
+mixin reviewSectionEach(review, product, current=false)
+  .inner-card.js--ajax--review-each
     .reviews__star
       +ratingStar(review.star)
     .reviews__title= review.title
@@ -11,21 +13,46 @@ mixin reviewSectionEach(review, current=false)
       span.reviews__on= helpers.dateFormator.dateFormatted(review.createdAt)
     .reviews__body= review.description || 'No review body'
     .reviews__like-mark
-      button.reviews__like-btn
-        span.reviews__like-icon: i.far.fa-thumbs-up
-        span.reviews__like-count &nbsp;#{review.likesCount} like#{review.likesCount > 1 ? 's': ''}
-      .reviews__mark Mark as Inappropriate
+    
+      if !user
+        button.reviews__like-btn.reviews__like-btn--like.js--components-function--btn-confirm-redirect(data-redirect-to=`/login?continue=true&redirect=${encodedUrl}` data-confirm-message='Liking a review needs you to be logged in! Do you want to login now?')
+          span.reviews__like-icon 
+            span.reviews__like-icon--not-liked
+              i.far.fa-thumbs-up
+            span.reviews__like-icon--liked
+              i.fas.fa-thumbs-up
+          span.reviews__like-count &nbsp;#{review.likesCount} like#{review.likesCount > 1 ? 's': ''}
+        button.reviews__mark.js--components-function--btn-confirm-redirect(data-redirect-to=`/login?continue=true&redirect=${encodedUrl}` data-confirm-message='Marking a review as inappropriate needs you to be logged in! Do you want to login now?') Mark as Inappropriate
+
+      else
+        button.reviews__like-btn.reviews__like-btn--like.js--ajax--review-each__like-btn(class=user && review.likes.includes(user.id) ? 'reviews__like-btn--liked': '' data-review-id=review.id data-product-id=product.id data-liked-class='reviews__like-btn--liked')
+          span.reviews__like-icon 
+            span.reviews__like-icon--not-liked
+              i.far.fa-thumbs-up
+            span.reviews__like-icon--liked
+              i.fas.fa-thumbs-up
+          span.reviews__like-count
+            | &nbsp;
+            span.js--ajax--review-each__like-btn--count(data-like-count=review.likesCount) #{review.likesCount} like#{review.likesCount > 1 ? 's': ''}
+        button.reviews__mark.js--ajax--review-each--mark-btn(data-review-id=review.id data-product-id=product.id) Mark as Inappropriate
       
+  
 
 
-mixin reviewsSection(product, reviewCurrent, reviews, reviewPage=false)
-  section.card.reviews
-    h2.heading-tertiary.card__heading Reviews
+//- Review Body
+mixin reviewsSectionBody(product, reviewCurrent, reviews, reviewPage=false)
+  .card__body.reviews__body
 
-    .card__body.reviews__body
-
-      // Overall, average
-      .inner-card: .reviews__top
+    // Overall, average
+    .inner-card
+      
+      // On review page, display product also
+      if reviewPage
+        a.reset-anchor.reviews__product(href=`/products/${product.nameNormalized}/${product.id}`)
+          img.reviews__product-img(src=product.images && product.images[0] && product.images[0].path || '/assets/user/img/no-image.jpg')
+          +productDesc(product, false, true) 
+          
+      .reviews__top
         .reviews__net-ratings
           .reviews__net-ratings-average
             | #{Number(product.review.average).toFixed(1)} 
@@ -37,80 +64,90 @@ mixin reviewsSection(product, reviewCurrent, reviews, reviewPage=false)
             | (Based on&nbsp;
             +ratingNumber(product.review.count)
             | )
-        
-        if !user
-          button.btn.btn--round.btn--main-color.js--components-function--btn-confirm-redirect(data-redirect-to=`/login?continue=true&redirect=${encodedUrl}` data-confirm-message='Writing a review needs you to be logged in! Do you want to login now?')
-            i.fas.fa-pen
-            | &nbsp;Write a review
-        else
-          button.btn.btn--round.btn--main-color.js--components-function--toggle-on-click(data-toggle-class='u-display-none' data-toggle-element-id='review-form-card')
-            i.fas.fa-pen
-            | &nbsp;#{reviewCurrent ? 'Edit your': 'Write a'} review
 
-    
-      if user
-        // Form
-        .inner-card.u-display-none#review-form-card
-          h2.heading-quadinary.heading-quadinary--2 #{reviewCurrent ? 'Edit your': 'Write a'} Review
-
-          form#review-form.form(action='#')
-            .form__group
-              label.form__label(for='name')
-                span.form__star *
-                | Name
-              input.form__input.form__input--no-min#name(type='text' name='name' value=user.name disabled)
-
-
-            .form__group 
-              label.form__label
-                span.form__star *
-                | Review Star
-              .form__rating.form__rating--yellow.js--components-function--form-rating( data-selected-label-class='form__rating_each-label--selected')
-
-                each i in [1, 2, 3, 4, 5]
-                  label.form__rating_each-label.js--components-function--form-rating__label(for=`star${i}` class=(reviewCurrent && i<=reviewCurrent.star) ? 'form__rating_each-label--selected': '')
-                    span.form__rating_each-label__unselected-star
-                      i.far.fa-star
-                    span.form__rating_each-label__selected-star
-                      i.fas.fa-star
-                    if reviewCurrent && reviewCurrent.star == i
-                      input.form__rating-each-radio(name='star' id=`star${i}` value=i type='radio' required checked)
-                    else 
-                      input.form__rating-each-radio(name='star' id=`star${i}` value=i type='radio' required)
-
-            .form__group
-              label.form__label(for='title')
-                span.form__star *
-                | Review Title
-              input.form__input.form__input--no-min#name(type='text' name='title' placeholder='Review Title' minlength=3 required value=reviewCurrent && reviewCurrent.title)
-
-
-            .form__group
-              label.form__label(for='description')
-                //- span.form__star *
-                | Body of Review
-              textarea.form__textarea.form__textarea--no-min#name(type='text' name='description' placeholder='Write a review description here...' rows='5')= reviewCurrent && reviewCurrent.description
-
-            .u-display-none
-              input(type='text' name='productId' value=document.id readonly)
-
-              if reviewCurrent 
-                input(type='text' name='reviewId' value=reviewCurrent.id readonly)
-
-            .form__group
-              button#review-form-btn.btn.btn--round.btn--main-color.btn--load
+        div
+          if !user
+            button.u-margin-left-small.btn.btn--round.btn--main-color.js--components-function--btn-confirm-redirect(data-redirect-to=`/login?continue=true&redirect=${encodedUrl}` data-confirm-message='Writing a review needs you to be logged in! Do you want to login now?')
+              i.fas.fa-pen
+              | &nbsp;Write a review
+          else
+            if reviewCurrent 
+              button.btn.btn--round.btn--red.btn--load.js--ajax--review-delete-btn(data-product-id=product.id data-review-id=reviewCurrent.id)
                 span.btn--load__content
-                  i.fas.fa-check
-                  | &nbsp;Submit review
+                  i.fas.fa-trash
+                  | &nbsp;&nbsp;Delete review
                 span.btn--load__load-content
                   i.fa.fa-circle-o-notch.fa-spin
                   | &nbsp;Loading
 
+            button.u-margin-left-small.btn.btn--round.btn--main-color.js--components-function--toggle-on-click(data-toggle-class='u-display-none' data-toggle-element-id='review-form-card')
+              i.fas.fa-pen
+              | &nbsp;#{reviewCurrent ? 'Edit your': 'Write a'} review
 
-      // Review by current user
-      if reviewCurrent 
-        +reviewSectionEach(reviewCurrent, true)
-      
-      // Other reviews
-      each review in reviews 
-        +reviewSectionEach(review)
+  
+    if user
+      // Form
+      .inner-card.u-display-none#review-form-card
+        h2.heading-quadinary.heading-quadinary--2 #{reviewCurrent ? 'Edit your': 'Write a'} Review
+
+        form#review-form.form(action='#')
+          .form__group
+            label.form__label(for='name')
+              span.form__star *
+              | Name
+            input.form__input.form__input--no-min#name(type='text' name='name' value=user.name disabled)
+
+
+          .form__group 
+            label.form__label
+              span.form__star *
+              | Review Star
+            .form__rating.form__rating--yellow.js--components-function--form-rating( data-selected-label-class='form__rating_each-label--selected')
+
+              each i in [1, 2, 3, 4, 5]
+                label.form__rating_each-label.js--components-function--form-rating__label(for=`star${i}` class=(reviewCurrent && i<=reviewCurrent.star) ? 'form__rating_each-label--selected': '')
+                  span.form__rating_each-label__unselected-star
+                    i.far.fa-star
+                  span.form__rating_each-label__selected-star
+                    i.fas.fa-star
+                  if reviewCurrent && reviewCurrent.star == i
+                    input.form__rating-each-radio(name='star' id=`star${i}` value=i type='radio' required checked)
+                  else 
+                    input.form__rating-each-radio(name='star' id=`star${i}` value=i type='radio' required)
+
+          .form__group
+            label.form__label(for='title')
+              span.form__star *
+              | Review Title
+            input.form__input.form__input--no-min#name(type='text' name='title' placeholder='Review Title' minlength=3 required value=reviewCurrent && reviewCurrent.title)
+
+
+          .form__group
+            label.form__label(for='description')
+              //- span.form__star *
+              | Body of Review
+            textarea.form__textarea.form__textarea--no-min#name(type='text' name='description' placeholder='Write a review description here...' rows='5')= reviewCurrent && reviewCurrent.description
+
+          .u-display-none
+            input(type='text' name='productId' value=product.id readonly)
+
+            if reviewCurrent 
+              input(type='text' name='reviewId' value=reviewCurrent.id readonly)
+
+          .form__group
+            button#review-form-btn.btn.btn--round.btn--main-color.btn--load
+              span.btn--load__content
+                i.fas.fa-check
+                | &nbsp;Submit review
+              span.btn--load__load-content
+                i.fa.fa-circle-o-notch.fa-spin
+                | &nbsp;Loading
+
+
+    // Review by current user
+    if reviewCurrent 
+      +reviewSectionEach(reviewCurrent, product, true)
+    
+    // Other reviews
+    each review in reviews 
+      +reviewSectionEach(review, product)

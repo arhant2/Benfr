@@ -85,11 +85,54 @@
 
   &__like-icon {
     font-size: 1.8rem;
+    position: relative;
+    margin-right: 0.2rem;
+
+    display: inline-block;
+    // width: 2rem;
+
+    @include clearfix;
+  }
+
+  &__like-icon--not-liked {
+    transition: opacity ease 1s 0s;
+  }
+
+  &__like-icon--liked {
+    color: var(--color-blue);
+
+    opacity: 0;
+
+    position: absolute;
+    // display: none;
+    left: 0;
+    top: 0;
+
+    transition: opacity ease 1s, transform ease 1s;
   }
 
   &__like-btn {
     @include resetBtn;
     margin-right: auto;
+  }
+
+  // Like btn is liked
+
+  &__like-btn:hover &__like-icon--not-liked,
+  &__like-btn--liked &__like-icon--not-liked {
+    opacity: 0;
+    transition: opacity ease 0s;
+  }
+
+  &__like-btn:hover &__like-icon--liked,
+  &__like-btn--liked &__like-icon--liked {
+    opacity: 1;
+    // transform: scale(1.35);
+    transition: opacity ease 0s, transform ease 1s;
+  }
+
+  &__like-btn:hover &__like-icon--liked {
+    transform: scale(1.35);
   }
 
   &__mark {

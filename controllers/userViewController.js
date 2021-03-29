@@ -24,6 +24,11 @@ const handlerFactoryProduct = handlerFactoryUserViews(
   'product',
   'products'
 );
+const handlerFactoryReview = handlerFactoryUserViews(
+  Review,
+  'review',
+  'reviews'
+);
 
 // ===== Generic things ======
 
@@ -308,7 +313,11 @@ exports.getOneProduct = catchAsync(async (req, res, next) => {
   if (req.customs.user) {
     [reviewCurrent, reviews] = await Promise.all([
       Review.findOne({ user: req.customs.user.id, product: document.id }),
-      Review.find({ user: { $ne: req.customs.user.id }, product: document.id })
+      Review.find({
+        user: { $ne: req.customs.user.id },
+        marked: { $ne: req.customs.user.id },
+        product: document.id,
+      })
         .sort('-likesCount -createdAt')
         .limit(3),
     ]);
@@ -328,3 +337,39 @@ exports.getOneProduct = catchAsync(async (req, res, next) => {
     reviews,
   });
 });
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Reviews
+exports.getAllReviewsMiddleware = catchAsync(async (req, res, next) => {
+  const product = await Product.findById(req.params.productId);
+
+  if (!product) {
+    return next(new AppError('No page found', 404));
+  }
+
+  res.locals.product = product;
+
+  const queryRestrict = {
+    product: req.params.productId,
+  };
+
+  if (req.customs.user) {
+    res.locals.reviewCurrent = await Review.findOne({
+      product: req.params.productId,
+      user: req.customs.user.id,
+    });
+
+    queryRestrict.user = { $ne: req.customs.user.id };
+    queryRestrict.marked = { $ne: req.customs.user.id };
+  }
+
+  req.customs.getAll = {
+    queryRestrict,
+    sortDefault: '-likesCount,-createdAt',
+    limitDefault: 5,
+  };
+
+  next();
+});
+
+exports.getAllReviews = handlerFactoryReview.getAll;

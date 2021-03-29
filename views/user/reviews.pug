@@ -1,0 +1,23 @@
+extends base/_base
+
+include mixins/_rating-helpers
+include mixins/_review-section
+include mixins/_menu
+
+block content
+
+  // Reviews
+  section.card.reviews
+    .card__top
+      h2.heading-tertiary.card__heading Reviews
+      .card__top-content
+        +menuSort([
+          ['-likesCount', 'Most liked first'],
+          ['likesCount', 'Least liked first'],
+          ['-createdAt', 'Created (Newest First)'],
+          ['createdAt', 'Created (Oldest First)'],
+        ], 0)
+        +menuLimit([5, 10, 15, 20])
+        +menuPagination
+
+    +reviewsSectionBody(product, reviewCurrent, documents, true)

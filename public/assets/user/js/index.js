@@ -3285,7 +3285,81 @@ if (form) {
     };
   }());
 }
-},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../component-functions/flash-messages":"component-functions/flash-messages.js"}],"ajax/review.js":[function(require,module,exports) {
+},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../component-functions/flash-messages":"component-functions/flash-messages.js"}],"component-functions/confirm-dialog.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var container = document.getElementsByClassName('js--components-function--confirm-dialog')[0];
+var heading = document.getElementsByClassName('js--components-function--confirm-dialog__heading')[0];
+var body = document.getElementsByClassName('js--components-function--confirm-dialog__body')[0];
+var closeBtn1 = document.getElementsByClassName('js--components-function--confirm-dialog__close-btn-1')[0];
+var closeBtn2 = document.getElementsByClassName('js--components-function--confirm-dialog__close-btn-2')[0];
+var confirmBtn = document.getElementsByClassName('js--components-function--confirm-dialog__confirm-btn')[0];
+
+var confirmFunction = function confirmFunction(title, message, noFn, yesFn) {
+  // Call the default one if the custom one cannot be called
+  if (!container || !heading || !body || !(closeBtn1 || closeBtn2) || !confirmBtn || !container.dataset.noneClass) {
+    if (window.confirm(message)) {
+      yesFn();
+    } else {
+      if (noFn) {
+        noFn();
+      }
+    }
+
+    return;
+  }
+
+  var noFnToCall, yesFnToCall; // Remove listeners and hide the dialog when work is done
+
+  var removeEventListener = function removeEventListener() {
+    container.classList.add(container.dataset.noneClass);
+    confirmBtn.removeEventListener('click', yesFnToCall);
+
+    if (closeBtn1) {
+      closeBtn1.removeEventListener('click', noFnToCall);
+    }
+
+    if (closeBtn2) {
+      closeBtn2.removeEventListener('click', noFnToCall);
+    }
+  };
+
+  yesFnToCall = function yesFnToCall() {
+    removeEventListener();
+    yesFn();
+  };
+
+  noFnToCall = function noFnToCall() {
+    removeEventListener();
+
+    if (noFn) {
+      noFn();
+    }
+  };
+
+  confirmBtn.addEventListener('click', yesFnToCall);
+
+  if (closeBtn1) {
+    closeBtn1.addEventListener('click', noFnToCall);
+  }
+
+  if (closeBtn2) {
+    closeBtn2.addEventListener('click', noFnToCall);
+  } // Add message
+
+
+  heading.textContent = title;
+  body.textContent = message;
+  container.classList.remove(container.dataset.noneClass);
+};
+
+var _default = confirmFunction;
+exports.default = _default;
+},{}],"ajax/review.js":[function(require,module,exports) {
 "use strict";
 
 require("regenerator-runtime/runtime");
@@ -3294,9 +3368,9 @@ var _axios = _interopRequireDefault(require("axios"));
 
 var _handleError = _interopRequireDefault(require("../utils/handleError"));
 
-var _flashMessages = require("../component-functions/flash-messages");
-
 var _alertDialog = _interopRequireDefault(require("../component-functions/alert-dialog"));
+
+var _confirmDialog = _interopRequireDefault(require("../component-functions/confirm-dialog"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3304,79 +3378,268 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-var form = document.getElementById('review-form');
-var btn = document.getElementById('review-form-btn');
+////////////////////////////////
+// Posting/updating of review
+////////////////////////////////
+// Wraped inside iffe so that the variables donot conflict
+(function () {
+  var form = document.getElementById('review-form');
+  var btn = document.getElementById('review-form-btn');
 
-if (form) {
-  form.addEventListener('submit', /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(event) {
-      var formData, data, productId, reviewId, res;
-      return regeneratorRuntime.wrap(function _callee$(_context) {
+  if (form) {
+    form.addEventListener('submit', /*#__PURE__*/function () {
+      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(event) {
+        var formData, data, productId, reviewId, res;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                event.preventDefault();
+                formData = new FormData(this);
+                data = {
+                  star: formData.get('star'),
+                  title: formData.get('title'),
+                  description: formData.get('description') || ''
+                };
+                productId = formData.get('productId');
+                reviewId = formData.get('reviewId');
+
+                if (productId) {
+                  _context.next = 8;
+                  break;
+                }
+
+                (0, _handleError.default)('Cannot post/update comment, please try again later!');
+                return _context.abrupt("return");
+
+              case 8:
+                if (btn) {
+                  btn.setAttribute('disabled', 'disabled');
+                }
+
+                _context.prev = 9;
+                _context.next = 12;
+                return (0, _axios.default)({
+                  method: reviewId ? 'PATCH' : 'POST',
+                  url: "/api/v1/products/".concat(productId, "/reviews/").concat(reviewId || ''),
+                  data: data
+                });
+
+              case 12:
+                res = _context.sent;
+                (0, _alertDialog.default)('Success', "".concat(reviewId ? 'Updated your' : 'Posted your', " review successfully! Reload the page to see changes..."), function () {
+                  window.location.reload();
+                });
+                _context.next = 20;
+                break;
+
+              case 16:
+                _context.prev = 16;
+                _context.t0 = _context["catch"](9);
+                (0, _handleError.default)(_context.t0, true);
+
+                if (btn) {
+                  btn.removeAttribute('disabled');
+                }
+
+              case 20:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this, [[9, 16]]);
+      }));
+
+      return function (_x) {
+        return _ref.apply(this, arguments);
+      };
+    }());
+  }
+})(); ////////////////////////////////
+// Liking/undo-liking of review
+////////////////////////////////
+
+
+Array.from(document.getElementsByClassName('js--ajax--review-each__like-btn')).forEach(function (likeBtn) {
+  likeBtn.addEventListener('click', function (e) {
+    var _this$dataset = this.dataset,
+        reviewId = _this$dataset.reviewId,
+        productId = _this$dataset.productId,
+        likedClass = _this$dataset.likedClass;
+    var likeCountElement = this.getElementsByClassName('js--ajax--review-each__like-btn--count')[0];
+
+    if (!reviewId || !productId || !likeCountElement || !likedClass || likeCountElement.dataset.likeCount === undefined) {
+      (0, _alertDialog.default)('Error', 'Cannot like/unlike the post now, please retry later!');
+      return;
+    }
+
+    var currentLikeCount = likeCountElement.dataset.likeCount * 1;
+    var undo = this.classList.contains(likedClass);
+
+    if (undo) {
+      currentLikeCount -= 1;
+    } else {
+      currentLikeCount += 1;
+    }
+
+    likeCountElement.dataset.likeCount = currentLikeCount;
+    likeCountElement.textContent = "".concat(currentLikeCount, " like").concat(currentLikeCount > 1 ? 's' : '');
+    this.classList.toggle(likedClass);
+
+    _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+      return regeneratorRuntime.wrap(function _callee2$(_context2) {
         while (1) {
-          switch (_context.prev = _context.next) {
+          switch (_context2.prev = _context2.next) {
             case 0:
-              event.preventDefault();
-              formData = new FormData(this);
-              data = {
-                star: formData.get('star'),
-                title: formData.get('title'),
-                description: formData.get('description') || ''
-              };
-              productId = formData.get('productId');
-              reviewId = formData.get('reviewId');
+              _context2.prev = 0;
+              _context2.next = 3;
+              return (0, _axios.default)({
+                method: undo ? 'DELETE' : 'POST',
+                url: "/api/v1/products/".concat(productId, "/reviews/").concat(reviewId, "/like/").concat(undo ? 'undo' : '')
+              });
 
-              if (productId) {
-                _context.next = 8;
+            case 3:
+              _context2.next = 7;
+              break;
+
+            case 5:
+              _context2.prev = 5;
+              _context2.t0 = _context2["catch"](0);
+
+            case 7:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2, null, [[0, 5]]);
+    }))();
+  });
+}); ////////////////////////////////
+// Marking of review
+////////////////////////////////
+
+Array.from(document.getElementsByClassName('js--ajax--review-each--mark-btn')).forEach(function (markBtn) {
+  markBtn.addEventListener('click', function (e) {
+    var _this$dataset2 = this.dataset,
+        reviewId = _this$dataset2.reviewId,
+        productId = _this$dataset2.productId;
+    var card = this.closest('.js--ajax--review-each');
+
+    if (!reviewId || !productId || !card) {
+      (0, _alertDialog.default)('Error', 'Cannot mark review as inappropriate now, please try again later!');
+      return;
+    }
+
+    (0, _confirmDialog.default)('Confirm marking', 'Are you sure you want mark the review as inappropriate? This action cannot be undone and doing so will hide this review for you', undefined, function () {
+      card.remove();
+
+      _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.prev = 0;
+                _context3.next = 3;
+                return (0, _axios.default)({
+                  method: 'POST',
+                  url: "/api/v1/products/".concat(productId, "/reviews/").concat(reviewId, "/mark")
+                });
+
+              case 3:
+                _context3.next = 7;
+                break;
+
+              case 5:
+                _context3.prev = 5;
+                _context3.t0 = _context3["catch"](0);
+
+              case 7:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, null, [[0, 5]]);
+      }))();
+    });
+  });
+}); ////////////////////////////////
+// Deleting of review
+////////////////////////////////
+
+Array.from(document.getElementsByClassName('js--ajax--review-delete-btn')).forEach(function (deleteBtn) {
+  deleteBtn.addEventListener('click', /*#__PURE__*/function () {
+    var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(e) {
+      var _this = this;
+
+      var _this$dataset3, reviewId, productId;
+
+      return regeneratorRuntime.wrap(function _callee5$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              _this$dataset3 = this.dataset, reviewId = _this$dataset3.reviewId, productId = _this$dataset3.productId;
+
+              if (!(!reviewId || !productId)) {
+                _context5.next = 4;
                 break;
               }
 
-              (0, _handleError.default)('Cannot post/update comment, please try again later!');
-              return _context.abrupt("return");
+              (0, _alertDialog.default)('Error', 'Cannot delete review now, please try again later!');
+              return _context5.abrupt("return");
 
-            case 8:
-              if (btn) {
-                btn.setAttribute('disabled', 'disabled');
-              }
+            case 4:
+              (0, _confirmDialog.default)('Confirm delete', 'Are you sure, you want to delete this review? This cannot be undone.', undefined, /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
+                return regeneratorRuntime.wrap(function _callee4$(_context4) {
+                  while (1) {
+                    switch (_context4.prev = _context4.next) {
+                      case 0:
+                        _this.setAttribute('disabled', 'disabled');
 
-              _context.prev = 9;
-              _context.next = 12;
-              return (0, _axios.default)({
-                method: reviewId ? 'PATCH' : 'POST',
-                url: "/api/v1/products/".concat(productId, "/reviews/").concat(reviewId || ''),
-                data: data
-              });
+                        _context4.prev = 1;
+                        _context4.next = 4;
+                        return (0, _axios.default)({
+                          method: 'DELETE',
+                          url: "/api/v1/products/".concat(productId, "/reviews/").concat(reviewId)
+                        });
 
-            case 12:
-              res = _context.sent;
-              (0, _alertDialog.default)('Success', "".concat(reviewId ? 'Updated your' : 'Posted your', " comment successfully! Relod the page to see changes..."), function () {
-                window.location.reload();
-              });
-              _context.next = 20;
-              break;
+                      case 4:
+                        (0, _alertDialog.default)('Success', 'Deleted your review successfully! Reload the page to see changes...', function () {
+                          window.location.reload();
+                        });
+                        _context4.next = 11;
+                        break;
 
-            case 16:
-              _context.prev = 16;
-              _context.t0 = _context["catch"](9);
-              (0, _handleError.default)(_context.t0, true);
+                      case 7:
+                        _context4.prev = 7;
+                        _context4.t0 = _context4["catch"](1);
+                        (0, _handleError.default)(_context4.t0, true);
 
-              if (btn) {
-                btn.removeAttribute('disabled');
-              }
+                        if (_this) {
+                          _this.removeAttribute('disabled');
+                        }
 
-            case 20:
+                      case 11:
+                      case "end":
+                        return _context4.stop();
+                    }
+                  }
+                }, _callee4, null, [[1, 7]]);
+              })));
+
+            case 5:
             case "end":
-              return _context.stop();
+              return _context5.stop();
           }
         }
-      }, _callee, this, [[9, 16]]);
+      }, _callee5, this);
     }));
 
-    return function (_x) {
-      return _ref.apply(this, arguments);
+    return function (_x2) {
+      return _ref4.apply(this, arguments);
     };
   }());
-}
-},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../component-functions/flash-messages":"component-functions/flash-messages.js","../component-functions/alert-dialog":"component-functions/alert-dialog.js"}],"ajax/signup.js":[function(require,module,exports) {
+});
+},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../component-functions/alert-dialog":"component-functions/alert-dialog.js","../component-functions/confirm-dialog":"component-functions/confirm-dialog.js"}],"ajax/signup.js":[function(require,module,exports) {
 "use strict";
 
 require("regenerator-runtime/runtime");
@@ -3729,81 +3992,7 @@ if (form) {
     };
   }());
 }
-},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../component-functions/flash-messages":"component-functions/flash-messages.js"}],"component-functions/confirm-dialog.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-var container = document.getElementsByClassName('js--components-function--confirm-dialog')[0];
-var heading = document.getElementsByClassName('js--components-function--confirm-dialog__heading')[0];
-var body = document.getElementsByClassName('js--components-function--confirm-dialog__body')[0];
-var closeBtn1 = document.getElementsByClassName('js--components-function--confirm-dialog__close-btn-1')[0];
-var closeBtn2 = document.getElementsByClassName('js--components-function--confirm-dialog__close-btn-2')[0];
-var confirmBtn = document.getElementsByClassName('js--components-function--confirm-dialog__confirm-btn')[0];
-
-var confirmFunction = function confirmFunction(title, message, noFn, yesFn) {
-  // Call the default one if the custom one cannot be called
-  if (!container || !heading || !body || !(closeBtn1 || closeBtn2) || !confirmBtn || !container.dataset.noneClass) {
-    if (window.confirm(message)) {
-      yesFn();
-    } else {
-      if (noFn) {
-        noFn();
-      }
-    }
-
-    return;
-  }
-
-  var noFnToCall, yesFnToCall; // Remove listeners and hide the dialog when work is done
-
-  var removeEventListener = function removeEventListener() {
-    container.classList.add(container.dataset.noneClass);
-    confirmBtn.removeEventListener('click', yesFnToCall);
-
-    if (closeBtn1) {
-      closeBtn1.removeEventListener('click', noFnToCall);
-    }
-
-    if (closeBtn2) {
-      closeBtn2.removeEventListener('click', noFnToCall);
-    }
-  };
-
-  yesFnToCall = function yesFnToCall() {
-    removeEventListener();
-    yesFn();
-  };
-
-  noFnToCall = function noFnToCall() {
-    removeEventListener();
-
-    if (noFn) {
-      noFn();
-    }
-  };
-
-  confirmBtn.addEventListener('click', yesFnToCall);
-
-  if (closeBtn1) {
-    closeBtn1.addEventListener('click', noFnToCall);
-  }
-
-  if (closeBtn2) {
-    closeBtn2.addEventListener('click', noFnToCall);
-  } // Add message
-
-
-  heading.textContent = title;
-  body.textContent = message;
-  container.classList.remove(container.dataset.noneClass);
-};
-
-var _default = confirmFunction;
-exports.default = _default;
-},{}],"component-functions/btn-confirm-redirect.js":[function(require,module,exports) {
+},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../component-functions/flash-messages":"component-functions/flash-messages.js"}],"component-functions/btn-confirm-redirect.js":[function(require,module,exports) {
 "use strict";
 
 var _confirmDialog = _interopRequireDefault(require("./confirm-dialog"));
@@ -4259,7 +4448,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58445" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61164" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

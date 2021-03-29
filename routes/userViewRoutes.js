@@ -115,4 +115,17 @@ router.get(
   userViewController.getOneProduct
 );
 
+// router.get(
+//   '/products/:name?/:productId/reviews'
+// );
+
+//// Reviews
+router.get(
+  '/products/:name?/:productId/reviews',
+  userViewController.setSidebarItems,
+  authController.isLoggedIn,
+  userViewController.getAllReviewsMiddleware,
+  userViewController.getAllReviews
+);
+
 module.exports = router;

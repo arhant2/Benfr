@@ -55,7 +55,29 @@ class APIFeatures {
       sort = `${sort},${defaultSort}`;
     }
 
-    const sortBy = sort.replace(/,/g, ' ');
+    // const sortBy = sort.replace(/,/g, ' ');
+
+    const sortArr = sort.split(',');
+
+    const taken = {};
+
+    const sortBy = sortArr
+      .filter((by) => {
+        if (by.startsWith('-')) {
+          by = by.slice(1);
+        }
+        if (taken[by]) {
+          return false;
+        }
+
+        taken[by] = true;
+
+        return true;
+      })
+      .join(' ');
+
+    // console.log(sortBy);
+
     this.mongooseQuery = this.mongooseQuery.sort(sortBy);
 
     // console.log(sortBy);

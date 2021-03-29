@@ -1,4 +1,4 @@
-mixin productDesc(product, selectReview, selectOff)
+mixin productDesc(product, selectReview=false, selectOff=false, displayExtras=false)
   .product-desc
     //- Brand name
     .product-desc__brand= product.brand.name
@@ -28,7 +28,7 @@ mixin productDesc(product, selectReview, selectOff)
           | &nbsp;
           span.product-desc__price-off #{parseInt(Math.round( (product.price - product.discountedPrice) / product.price * 100 ))}% off
 
-    if block 
+    if block && displayExtras
       //- Block (extras)
       .product-desc__extras
         block
