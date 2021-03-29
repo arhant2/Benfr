@@ -149,11 +149,11 @@ reviewSchema.post('save', async function (doc, next) {
   next();
 });
 
-reviewSchema.post('deleteOne', async function (doc, next) {
+reviewSchema.post('findOneAndDelete', async function (doc, next) {
   // eslint-disable-next-line no-use-before-define
   const product = await Product.findById(doc.product);
 
-  // console.log('Yaha aaya');
+  console.log('Yaha aaya');
 
   product.review.count -= 1;
   product.review.totalSum -= doc.star;

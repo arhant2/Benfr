@@ -4000,8 +4000,7 @@ var _confirmDialog = _interopRequireDefault(require("./confirm-dialog"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 Array.from(document.getElementsByClassName('js--components-function--btn-confirm-redirect')).forEach(function (btn) {
-  console.log(btn.dataset);
-
+  // console.log(btn.dataset);
   if (!btn.dataset.redirectTo) {
     return;
   }
