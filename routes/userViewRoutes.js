@@ -129,6 +129,7 @@ router.get(
   '/cart',
   userViewController.setSidebarItems,
   authController.isLoggedIn,
+  authController.protectView,
   userViewController.getCart
 );
 
