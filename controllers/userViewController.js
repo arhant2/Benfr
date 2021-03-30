@@ -8,6 +8,7 @@ const UnverifiedUser = require('../models/unverifiedUserModel');
 const Brand = require('../models/brandModel');
 const Category = require('../models/categoryModel');
 const Product = require('../models/productModel');
+const Cart = require('../models/cartModel');
 const handlerFactoryUserViews = require('./handlerFactoryUserViews');
 
 const gramsGenerator = require('../utils/gramsGenerator');
@@ -373,3 +374,20 @@ exports.getAllReviewsMiddleware = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllReviews = handlerFactoryReview.getAll;
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Cart
+exports.getCart = catchAsync(async (req, res, next) => {
+  let cart = await Cart.findOne({ user: req.customs.user.id });
+
+  if (!cart) {
+    cart = new Cart({ user: req.customs.user.id });
+  }
+
+  await cart.verifyCart();
+  await cart.save();
+
+  res.render('user/cart', {
+    document: cart,
+  });
+});

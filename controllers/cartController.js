@@ -41,7 +41,7 @@ exports.deleteCart = catchAsync(async (req, res, next) => {
 ///// Add an item
 exports.addToCart = catchAsync(async (req, res, next) => {
   if (!req.body.product || !mongoose.isValidObjectId(req.body.product)) {
-    return next(new AppError('Invalid valid product', 400));
+    return next(new AppError('Invalid product', 400));
   }
 
   let cart = await Cart.findOne({ user: req.customs.user.id });
@@ -58,7 +58,7 @@ exports.addToCart = catchAsync(async (req, res, next) => {
 
   await cart.save();
 
-  console.log(cart.products[0].product);
+  // console.log(cart.products[0].product);
 
   res.status(200).json({
     status: 'success',

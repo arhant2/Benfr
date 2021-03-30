@@ -115,10 +115,6 @@ router.get(
   userViewController.getOneProduct
 );
 
-// router.get(
-//   '/products/:name?/:productId/reviews'
-// );
-
 //// Reviews
 router.get(
   '/products/:name?/:productId/reviews',
@@ -126,6 +122,14 @@ router.get(
   authController.isLoggedIn,
   userViewController.getAllReviewsMiddleware,
   userViewController.getAllReviews
+);
+
+//// Cart
+router.get(
+  '/cart',
+  userViewController.setSidebarItems,
+  authController.isLoggedIn,
+  userViewController.getCart
 );
 
 module.exports = router;

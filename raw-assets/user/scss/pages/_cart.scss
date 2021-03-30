@@ -6,6 +6,16 @@
 
   font-size: 1.4rem;
 
+  &__btns {
+    display: flex;
+    padding-top: 2rem;
+    justify-content: flex-end;
+
+    & > * {
+      margin-left: 0.5rem;
+    }
+  }
+
   &__quantity {
     /* hiding spinners */
     input::-webkit-outer-spin-button,

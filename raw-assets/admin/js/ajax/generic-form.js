@@ -91,7 +91,7 @@ const submitForm = () => {
               `Successfully created ${singularName.small}. Reloading...`
             );
 
-            console.log(res);
+            // console.log(res);
 
             setTimeout(() => {
               window.location.replace(

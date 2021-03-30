@@ -1,1 +1,81 @@
 extends base/_base
+include mixins/_product-desc
+
+mixin eachCartProductCard(product, idx)
+  .inner-card.reset-anchor.js--components-function--remove-onclick: .product-inner-card
+    a.product-inner-card__img-box(href=`/products/${product.product.name}/${product.product.id}`)
+      img.product-inner-card__img(src=(product.product.images && product.product.images[0] && product.product.images[0].path) || '/assets/user/img/no-image.jpg')
+
+    .product-inner-card__main
+      +productDesc(product.product, false, true, true)
+
+        .u-display-none
+          input(type='text' value=product.product.id readonly name=`products[${idx}][product]`)
+
+        .cart__quantity.js--components-function--increment-decrement-input-number
+          button.cart__quantity-btn.cart__quantity-btn--decrease.js--components-function--increment-decrement-input-number__decrease(type='button') -
+          input.cart__quantity-input.js--components-function--increment-decrement-input-number__input(type='number' min='1' max=product.product.maxQuantityAllowedNow value=product.quantity name=`products[${idx}][quantity]`)
+          button.cart__quantity-btn.cart__quantity-btn--increase.js--components-function--increment-decrement-input-number__increase(type='button') +
+
+        button.btn.btn--text.btn--text-inital-dark.btn--primary.js--components-function--remove-onclick__btn(type='button') Remove
+        
+
+block content
+
+  section.card.cart
+
+      // Main
+      form#cart-form.cart__main
+        h2.heading-tertiary.heading-tertiary--2 My Cart
+
+        each product, idx in document.products 
+            +eachCartProductCard(product, idx)
+
+        if document.products && document.products.length > 0
+          .cart__btns 
+            button#cart-discard-btn.btn.btn--yellow.btn--round.js--components-function--btn-confirm-redirect(type='button' data-confirm-message='Are you sure, you want to discard changes? Please note that this cannot be undone.' data-redirect-to='/cart') &Cross;&nbsp;Discard Changes
+
+            button#cart-delete-btn.btn.btn--red.btn--round(type='button' data-load-class='btn--load')
+              span.btn--load__content
+                i.fas.fa-check
+                | &nbsp;&nbsp;Clear Cart
+              span.btn--load__load-content
+                i.fa.fa-circle-o-notch.fa-spin
+                | &nbsp;Loading
+
+            button#cart-save-btn.btn.btn--blue.btn--round(data-load-class='btn--load')
+              span.btn--load__content
+                i.fas.fa-save
+                | &nbsp;&nbsp;Save Changes
+              span.btn--load__load-content
+                i.fa.fa-circle-o-notch.fa-spin
+                | &nbsp;Loading
+
+        else 
+          .inner-card
+            p Cart is empty
+
+      -
+        const amount = (cost) => {
+          if (document.products && document.products.length > 0) {
+            return `₹${Number(cost).toLocaleString('en-IN', {maximumFractionDigits: 2})}`;
+          }
+          return 'N/A';
+        }
+
+      // Summary
+      .cart__summary 
+        h2.heading-tertiary.heading-tertiary--2 Summary 
+        
+        table.cart__summary-table
+          tr.cart__summary-table-row
+            th.cart__summary-table-head Subtotal
+            td.cart__summary-table-data= amount(document.subTotal)
+          tr.cart__summary-table-row
+            th.cart__summary-table-head Delivery charges
+            td.cart__summary-table-data= amount(document.deliveryCharge)
+          tr.cart__summary-table-row.cart__summary-table-row--net
+            th.cart__summary-table-head Total
+            td.cart__summary-table-data= amount(document.grandTotal)
+
+        button.btn.btn--new-blue.btn--round.btn--full Checkout

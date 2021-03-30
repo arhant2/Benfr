@@ -3,6 +3,27 @@ const mongoose = require('mongoose');
 const AppError = require('../utils/AppError');
 const Product = require('./productModel');
 
+const cartProductSchema = new mongoose.Schema(
+  {
+    product: {
+      type: mongoose.Types.ObjectId,
+      ref: 'Product',
+    },
+    quantity: {
+      type: Number,
+      min: [1, 'Quantity of each product must be greater than 1'],
+    },
+  },
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
+);
+
+cartProductSchema.virtual('totalEach').get(function () {
+  return this.product.discountedPrice * this.quantity;
+});
+
 const cartSchema = new mongoose.Schema(
   {
     user: {
@@ -11,18 +32,7 @@ const cartSchema = new mongoose.Schema(
       ref: 'User',
     },
     products: {
-      type: [
-        {
-          product: {
-            type: mongoose.Types.ObjectId,
-            ref: 'Product',
-          },
-          quantity: {
-            type: Number,
-            min: [1, 'Quantity of each product must be greater than 1'],
-          },
-        },
-      ],
+      type: [cartProductSchema],
       default: [],
     },
   },
@@ -32,6 +42,18 @@ const cartSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
+
+cartSchema.virtual('subTotal').get(function () {
+  return this.products.reduce((total, product) => total + product.totalEach, 0);
+});
+
+cartSchema.virtual('deliveryCharge').get(function () {
+  return this.subTotal < 1000 ? 50 : 0;
+});
+
+cartSchema.virtual('grandTotal').get(function () {
+  return this.subTotal + this.deliveryCharge;
+});
 
 cartSchema.pre(/^find/, function (next) {
   // console.log(this);

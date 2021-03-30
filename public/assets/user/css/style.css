@@ -1983,6 +1983,14 @@ Home
   font-size: 1.4rem;
   /* Summary */
 }
+.cart__btns {
+  display: flex;
+  padding-top: 2rem;
+  justify-content: flex-end;
+}
+.cart__btns > * {
+  margin-left: 0.5rem;
+}
 .cart__quantity {
   /* hiding spinners */
   display: inline-flex;

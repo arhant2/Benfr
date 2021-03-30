@@ -53,7 +53,15 @@ block content
             li.each-product-main__features-item Free Delivery On Orders Above ₹1,999
             li.each-product-main__features-item Fast and secure checkout
             li.each-product-main__features-item Cash on Delivery Available
-          button.btn.btn--new-blue.btn--round.btn--full.each-product-main__buy-btn Add To Cart
+
+          if document.currentStock <= 0
+            button.btn.btn--new-blue.btn--round.btn--full.each-product-main__buy-btn(disabled) Out of Stock 
+          else
+            button.btn.btn--new-blue.btn--round.btn--full.each-product-main__buy-btn.btn--load.js--ajax--add-cart-btn(data-product=document.id)
+              span.btn--load__content Add To Cart
+              span.btn--load__load-content
+                i.fa.fa-circle-o-notch.fa-spin
+                | &nbsp;Loading
 
           if document.description
             if document.description.length <= 399

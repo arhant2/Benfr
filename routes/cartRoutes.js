@@ -1,15 +1,22 @@
 const express = require('express');
+const multer = require('multer');
 
 const cartController = require('../controllers/cartController');
 const authController = require('../controllers/authController');
 const cartFilters = require('../filters/cartFilters');
 
+const upload = multer();
 const router = express.Router();
 
 router
   .route('/')
   .get(authController.protect, cartController.getCart)
-  .put(authController.protect, cartFilters.putCart, cartController.putCart)
+  .put(
+    authController.protect,
+    upload.none(),
+    cartFilters.putCart,
+    cartController.putCart
+  )
   .delete(authController.protect, cartController.deleteCart);
 
 router
