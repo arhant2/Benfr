@@ -251,7 +251,7 @@ exports.getAllProductsBySearch = catchAsync(async (req, res, next) => {
 
   const searchGrams = gramsGenerator.gramsQuery(req.params.searchBy);
 
-  const documents = await Product.aggregate([
+  let documents = await Product.aggregate([
     { $match: { $text: { $search: searchGrams } } },
     { $match: { $and: [{ published: true }, filterQuery] } },
     { $sort: { score: { $meta: 'textScore' } } },
@@ -265,7 +265,7 @@ exports.getAllProductsBySearch = catchAsync(async (req, res, next) => {
     { $match: { score: { $gte: 120 } } },
   ]);
 
-  // console.log(documents);
+  documents = documents.map((document) => Product.hydrate(document));
 
   const addFilter = (str) => {
     if (queryObjParsed.filterStringified) {
