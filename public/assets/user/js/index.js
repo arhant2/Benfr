@@ -2962,7 +2962,179 @@ Array.from(document.getElementsByClassName('js--ajax--add-cart-btn')).forEach(fu
     };
   }());
 });
-},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../component-functions/alert-dialog":"component-functions/alert-dialog.js","../component-functions/confirm-dialog":"component-functions/confirm-dialog.js","../utils/handleError":"utils/handleError.js"}],"ajax/cart.js":[function(require,module,exports) {
+},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../component-functions/alert-dialog":"component-functions/alert-dialog.js","../component-functions/confirm-dialog":"component-functions/confirm-dialog.js","../utils/handleError":"utils/handleError.js"}],"ajax/address.js":[function(require,module,exports) {
+"use strict";
+
+require("regenerator-runtime/runtime");
+
+var _axios = _interopRequireDefault(require("axios"));
+
+var _handleError = _interopRequireDefault(require("../utils/handleError"));
+
+var _flashMessages = require("../component-functions/flash-messages");
+
+var _alertDialog = _interopRequireDefault(require("../component-functions/alert-dialog"));
+
+var _confirmDialog = _interopRequireDefault(require("../component-functions/confirm-dialog"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+// Update/create address
+(function () {
+  var form = document.getElementById('address-form');
+  var btn = document.getElementById('address-form-btn');
+
+  if (form) {
+    form.addEventListener('submit', /*#__PURE__*/function () {
+      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(event) {
+        var _this = this;
+
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                event.preventDefault();
+                (0, _confirmDialog.default)('Confirm changes', 'Are you sure you want to save the changes?', undefined, /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+                  var data, addressId, isNew, res;
+                  return regeneratorRuntime.wrap(function _callee$(_context) {
+                    while (1) {
+                      switch (_context.prev = _context.next) {
+                        case 0:
+                          data = new FormData(_this);
+                          addressId = data.get('addressId');
+                          isNew = !addressId;
+
+                          if (addressId) {
+                            data.delete(addressId);
+                          }
+
+                          if (btn) {
+                            btn.setAttribute('disabled', 'disabled');
+                          }
+
+                          _context.prev = 5;
+                          _context.next = 8;
+                          return (0, _axios.default)({
+                            method: isNew ? 'POST' : 'PATCH',
+                            url: "/api/v1/addresses/".concat(isNew ? '' : addressId),
+                            data: data
+                          });
+
+                        case 8:
+                          res = _context.sent;
+                          (0, _flashMessages.clearFlashMessages)();
+
+                          if (!isNew) {
+                            _context.next = 14;
+                            break;
+                          }
+
+                          (0, _flashMessages.addFlashMessage)('success', "Successfully added new adddress. Reloading...");
+                          setTimeout(function () {
+                            window.location.replace("/addresses/".concat(res.data.data.address.id));
+                          }, 2000);
+                          return _context.abrupt("return");
+
+                        case 14:
+                          (0, _flashMessages.addFlashMessage)('success', 'Updated information sucessfully!');
+
+                          if (btn) {
+                            btn.removeAttribute('disabled');
+                          }
+
+                          _context.next = 22;
+                          break;
+
+                        case 18:
+                          _context.prev = 18;
+                          _context.t0 = _context["catch"](5);
+                          (0, _handleError.default)(_context.t0);
+
+                          if (btn) {
+                            btn.removeAttribute('disabled');
+                          }
+
+                        case 22:
+                        case "end":
+                          return _context.stop();
+                      }
+                    }
+                  }, _callee, null, [[5, 18]]);
+                })));
+
+              case 2:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }));
+
+      return function (_x) {
+        return _ref.apply(this, arguments);
+      };
+    }());
+  }
+})(); // Delete address
+
+
+Array.from(document.getElementsByClassName('js--ajax--delete-address__btn')).forEach(function (btn) {
+  btn.addEventListener('click', function (e) {
+    var _this2 = this;
+
+    e.preventDefault();
+    var addressId = this.dataset.addressId;
+    var element = this.closest('.js--ajax--delete-address');
+
+    if (!addressId || !element) {
+      (0, _flashMessages.clearFlashMessages)();
+      (0, _handleError.default)('Cannot delete address, please try again later', true);
+      return;
+    }
+
+    (0, _confirmDialog.default)('Confirm Delete', 'Are you sure, you want to delete this address?', undefined, /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+      return regeneratorRuntime.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _this2.setAttribute('disabled', 'disabled');
+
+              _context3.prev = 1;
+              _context3.next = 4;
+              return (0, _axios.default)({
+                method: 'DELETE',
+                url: "/api/v1/addresses/".concat(addressId)
+              });
+
+            case 4:
+              element.remove();
+              (0, _flashMessages.addFlashMessage)('success', 'Deleted address sucessfully!');
+              _context3.next = 13;
+              break;
+
+            case 8:
+              _context3.prev = 8;
+              _context3.t0 = _context3["catch"](1);
+
+              _this2.removeAttribute('disabled');
+
+              (0, _flashMessages.clearFlashMessages)();
+              (0, _handleError.default)(_context3.t0, true);
+
+            case 13:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3, null, [[1, 8]]);
+    })));
+  });
+});
+},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../component-functions/flash-messages":"component-functions/flash-messages.js","../component-functions/alert-dialog":"component-functions/alert-dialog.js","../component-functions/confirm-dialog":"component-functions/confirm-dialog.js"}],"ajax/cart.js":[function(require,module,exports) {
 "use strict";
 
 require("regenerator-runtime/runtime");
@@ -4464,7 +4636,981 @@ Array.from(document.getElementsByClassName('js--components-function--sliders')).
     });
   }
 });
-},{}],"component-functions/toggle-on-click.js":[function(require,module,exports) {
+},{}],"../../../staticData/locationDetailsParsed.json":[function(require,module,exports) {
+module.exports = {
+  "Andaman and Nicobar Islands": {
+    "state": "Andaman and Nicobar Islands",
+    "pincodeStartsWith": ["744"],
+    "districts": {
+      "Nicobar": 1,
+      "North and Middle Andaman": 1,
+      "South Andaman": 1
+    }
+  },
+  "Andhra Pradesh": {
+    "state": "Andhra Pradesh",
+    "pincodeStartsWith": ["51", "52", "53"],
+    "districts": {
+      "Anantapur": 1,
+      "Chittoor": 1,
+      "East Godavari": 1,
+      "Guntur": 1,
+      "Krishna": 1,
+      "Kurnool": 1,
+      "Nellore": 1,
+      "Prakasam": 1,
+      "Srikakulam": 1,
+      "Visakhapatnam": 1,
+      "Vizianagaram": 1,
+      "West Godavari": 1,
+      "YSR Kadapa": 1
+    }
+  },
+  "Arunachal Pradesh": {
+    "state": "Arunachal Pradesh",
+    "pincodeStartsWith": ["790", "791", "792"],
+    "districts": {
+      "Tawang": 1,
+      "West Kameng": 1,
+      "East Kameng": 1,
+      "Papum Pare": 1,
+      "Kurung Kumey": 1,
+      "Kra Daadi": 1,
+      "Lower Subansiri": 1,
+      "Upper Subansiri": 1,
+      "West Siang": 1,
+      "East Siang": 1,
+      "Siang": 1,
+      "Upper Siang": 1,
+      "Lower Siang": 1,
+      "Lower Dibang Valley": 1,
+      "Dibang Valley": 1,
+      "Anjaw": 1,
+      "Lohit": 1,
+      "Namsai": 1,
+      "Changlang": 1,
+      "Tirap": 1,
+      "Longding": 1
+    }
+  },
+  "Assam": {
+    "state": "Assam",
+    "pincodeStartsWith": ["78"],
+    "districts": {
+      "Baksa": 1,
+      "Barpeta": 1,
+      "Biswanath": 1,
+      "Bongaigaon": 1,
+      "Cachar": 1,
+      "Charaideo": 1,
+      "Chirang": 1,
+      "Darrang": 1,
+      "Dhemaji": 1,
+      "Dhubri": 1,
+      "Dibrugarh": 1,
+      "Goalpara": 1,
+      "Golaghat": 1,
+      "Hailakandi": 1,
+      "Hojai": 1,
+      "Jorhat": 1,
+      "Kamrup Metropolitan": 1,
+      "Kamrup": 1,
+      "Karbi Anglong": 1,
+      "Karimganj": 1,
+      "Kokrajhar": 1,
+      "Lakhimpur": 1,
+      "Majuli": 1,
+      "Morigaon": 1,
+      "Nagaon": 1,
+      "Nalbari": 1,
+      "Dima Hasao": 1,
+      "Sivasagar": 1,
+      "Sonitpur": 1,
+      "South Salmara-Mankachar": 1,
+      "Tinsukia": 1,
+      "Udalguri": 1,
+      "West Karbi Anglong": 1
+    }
+  },
+  "Bihar": {
+    "state": "Bihar",
+    "pincodeStartsWith": ["80", "81", "82", "83", "84", "85"],
+    "districts": {
+      "Araria": 1,
+      "Arwal": 1,
+      "Aurangabad": 1,
+      "Banka": 1,
+      "Begusarai": 1,
+      "Bhagalpur": 1,
+      "Bhojpur": 1,
+      "Buxar": 1,
+      "Darbhanga": 1,
+      "East Champaran (Motihari)": 1,
+      "Gaya": 1,
+      "Gopalganj": 1,
+      "Jamui": 1,
+      "Jehanabad": 1,
+      "Kaimur (Bhabua)": 1,
+      "Katihar": 1,
+      "Khagaria": 1,
+      "Kishanganj": 1,
+      "Lakhisarai": 1,
+      "Madhepura": 1,
+      "Madhubani": 1,
+      "Munger (Monghyr)": 1,
+      "Muzaffarpur": 1,
+      "Nalanda": 1,
+      "Nawada": 1,
+      "Patna": 1,
+      "Purnia (Purnea)": 1,
+      "Rohtas": 1,
+      "Saharsa": 1,
+      "Samastipur": 1,
+      "Saran": 1,
+      "Sheikhpura": 1,
+      "Sheohar": 1,
+      "Sitamarhi": 1,
+      "Siwan": 1,
+      "Supaul": 1,
+      "Vaishali": 1,
+      "West Champaran": 1
+    }
+  },
+  "Chandigarh": {
+    "state": "Chandigarh",
+    "pincodeStartsWith": ["16"],
+    "districts": {
+      "Chandigarh": 1
+    }
+  },
+  "Chhattisgarh": {
+    "state": "Chhattisgarh",
+    "pincodeStartsWith": ["16"],
+    "districts": {
+      "Balod": 1,
+      "Baloda Bazar": 1,
+      "Balrampur": 1,
+      "Bastar": 1,
+      "Bemetara": 1,
+      "Bijapur": 1,
+      "Bilaspur": 1,
+      "Dantewada (South Bastar)": 1,
+      "Dhamtari": 1,
+      "Durg": 1,
+      "Gariyaband": 1,
+      "Janjgir-Champa": 1,
+      "Jashpur": 1,
+      "Kabirdham (Kawardha)": 1,
+      "Kanker (North Bastar)": 1,
+      "Kondagaon": 1,
+      "Korba": 1,
+      "Korea (Koriya)": 1,
+      "Mahasamund": 1,
+      "Mungeli": 1,
+      "Narayanpur": 1,
+      "Raigarh": 1,
+      "Raipur": 1,
+      "Rajnandgaon": 1,
+      "Sukma": 1,
+      "Surajpur  ": 1,
+      "Surguja": 1
+    }
+  },
+  "Dadra and Nagar Haveli": {
+    "state": "Dadra and Nagar Haveli",
+    "pincodeStartsWith": ["396"],
+    "districts": {
+      "Dadra & Nagar Haveli": 1
+    }
+  },
+  "Daman and Diu": {
+    "state": "Daman and Diu",
+    "pincodeStartsWith": ["396210"],
+    "districts": {
+      "Daman": 1,
+      "Diu": 1
+    }
+  },
+  "Delhi": {
+    "state": "Delhi",
+    "pincodeStartsWith": ["11"],
+    "districts": {
+      "Central Delhi": 1,
+      "East Delhi": 1,
+      "New Delhi": 1,
+      "North Delhi": 1,
+      "North East Delhi": 1,
+      "North West  Delhi": 1,
+      "Shahdara": 1,
+      "South Delhi": 1,
+      "South East Delhi": 1,
+      "South West Delhi": 1,
+      "West Delhi": 1
+    }
+  },
+  "Goa": {
+    "state": "Goa",
+    "pincodeStartsWith": ["403"],
+    "districts": {
+      "North Goa": 1,
+      "South Goa": 1
+    }
+  },
+  "Gujarat": {
+    "state": "Gujarat",
+    "pincodeStartsWith": ["36", "37", "38", "39"],
+    "districts": {
+      "Ahmedabad": 1,
+      "Amreli": 1,
+      "Anand": 1,
+      "Aravalli": 1,
+      "Banaskantha (Palanpur)": 1,
+      "Bharuch": 1,
+      "Bhavnagar": 1,
+      "Botad": 1,
+      "Chhota Udepur": 1,
+      "Dahod": 1,
+      "Dangs (Ahwa)": 1,
+      "Devbhoomi Dwarka": 1,
+      "Gandhinagar": 1,
+      "Gir Somnath": 1,
+      "Jamnagar": 1,
+      "Junagadh": 1,
+      "Kachchh": 1,
+      "Kheda (Nadiad)": 1,
+      "Mahisagar": 1,
+      "Mehsana": 1,
+      "Morbi": 1,
+      "Narmada (Rajpipla)": 1,
+      "Navsari": 1,
+      "Panchmahal (Godhra)": 1,
+      "Patan": 1,
+      "Porbandar": 1,
+      "Rajkot": 1,
+      "Sabarkantha (Himmatnagar)": 1,
+      "Surat": 1,
+      "Surendranagar": 1,
+      "Tapi (Vyara)": 1,
+      "Vadodara": 1,
+      "Valsad": 1
+    }
+  },
+  "Haryana": {
+    "state": "Haryana",
+    "pincodeStartsWith": ["12", "13"],
+    "districts": {
+      "Ambala": 1,
+      "Bhiwani": 1,
+      "Charkhi Dadri": 1,
+      "Faridabad": 1,
+      "Fatehabad": 1,
+      "Gurgaon": 1,
+      "Hisar": 1,
+      "Jhajjar": 1,
+      "Jind": 1,
+      "Kaithal": 1,
+      "Karnal": 1,
+      "Kurukshetra": 1,
+      "Mahendragarh": 1,
+      "Mewat": 1,
+      "Palwal": 1,
+      "Panchkula": 1,
+      "Panipat": 1,
+      "Rewari": 1,
+      "Rohtak": 1,
+      "Sirsa": 1,
+      "Sonipat": 1,
+      "Yamunanagar": 1
+    }
+  },
+  "Himachal Pradesh": {
+    "state": "Himachal Pradesh",
+    "pincodeStartsWith": ["17"],
+    "districts": {
+      "Bilaspur": 1,
+      "Chamba": 1,
+      "Hamirpur": 1,
+      "Kangra": 1,
+      "Kinnaur": 1,
+      "Kullu": 1,
+      "Lahaul &amp; Spiti": 1,
+      "Mandi": 1,
+      "Shimla": 1,
+      "Sirmaur (Sirmour)": 1,
+      "Solan": 1,
+      "Una": 1
+    }
+  },
+  "Jammu and Kashmir": {
+    "state": "Jammu and Kashmir",
+    "pincodeStartsWith": ["18", "19"],
+    "districts": {
+      "Anantnag": 1,
+      "Bandipore": 1,
+      "Baramulla": 1,
+      "Budgam": 1,
+      "Doda": 1,
+      "Ganderbal": 1,
+      "Jammu": 1,
+      "Kargil": 1,
+      "Kathua": 1,
+      "Kishtwar": 1,
+      "Kulgam": 1,
+      "Kupwara": 1,
+      "Leh": 1,
+      "Poonch": 1,
+      "Pulwama": 1,
+      "Rajouri": 1,
+      "Ramban": 1,
+      "Reasi": 1,
+      "Samba": 1,
+      "Shopian": 1,
+      "Srinagar": 1,
+      "Udhampur": 1
+    }
+  },
+  "Jharkhand": {
+    "state": "Jharkhand",
+    "pincodeStartsWith": ["80", "81", "82", "83", "84", "85"],
+    "districts": {
+      "Bokaro": 1,
+      "Chatra": 1,
+      "Deoghar": 1,
+      "Dhanbad": 1,
+      "Dumka": 1,
+      "East Singhbhum": 1,
+      "Garhwa": 1,
+      "Giridih": 1,
+      "Godda": 1,
+      "Gumla": 1,
+      "Hazaribag": 1,
+      "Jamtara": 1,
+      "Khunti": 1,
+      "Koderma": 1,
+      "Latehar": 1,
+      "Lohardaga": 1,
+      "Pakur": 1,
+      "Palamu": 1,
+      "Ramgarh": 1,
+      "Ranchi": 1,
+      "Sahibganj": 1,
+      "Seraikela-Kharsawan": 1,
+      "Simdega": 1,
+      "West Singhbhum": 1
+    }
+  },
+  "Karnataka": {
+    "state": "Karnataka",
+    "pincodeStartsWith": ["56", "57", "58", "59"],
+    "districts": {
+      "Bagalkot": 1,
+      "Ballari (Bellary)": 1,
+      "Belagavi (Belgaum)": 1,
+      "Bengaluru (Bangalore) Rural": 1,
+      "Bengaluru (Bangalore) Urban": 1,
+      "Bidar": 1,
+      "Chamarajanagar": 1,
+      "Chikballapur": 1,
+      "Chikkamagaluru (Chikmagalur)": 1,
+      "Chitradurga": 1,
+      "Dakshina Kannada": 1,
+      "Davangere": 1,
+      "Dharwad": 1,
+      "Gadag": 1,
+      "Hassan": 1,
+      "Haveri": 1,
+      "Kalaburagi (Gulbarga)": 1,
+      "Kodagu": 1,
+      "Kolar": 1,
+      "Koppal": 1,
+      "Mandya": 1,
+      "Mysuru (Mysore)": 1,
+      "Raichur": 1,
+      "Ramanagara": 1,
+      "Shivamogga (Shimoga)": 1,
+      "Tumakuru (Tumkur)": 1,
+      "Udupi": 1,
+      "Uttara Kannada (Karwar)": 1,
+      "Vijayapura (Bijapur)": 1,
+      "Yadgir": 1
+    }
+  },
+  "Kerala": {
+    "state": "Kerala",
+    "pincodeStartsWith": ["67", "68", "69"],
+    "districts": {
+      "Alappuzha": 1,
+      "Ernakulam": 1,
+      "Idukki": 1,
+      "Kannur": 1,
+      "Kasaragod": 1,
+      "Kollam": 1,
+      "Kottayam": 1,
+      "Kozhikode": 1,
+      "Malappuram": 1,
+      "Palakkad": 1,
+      "Pathanamthitta": 1,
+      "Thiruvananthapuram": 1,
+      "Thrissur": 1,
+      "Wayanad": 1
+    }
+  },
+  "Ladakh": {
+    "state": "Ladakh",
+    "pincodeStartsWith": ["18", "19"],
+    "districts": {
+      "Kargil": 1,
+      "Leh": 1
+    }
+  },
+  "Lakshadweep": {
+    "state": "Lakshadweep",
+    "pincodeStartsWith": ["682"],
+    "districts": {
+      "Agatti": 1,
+      "Amini": 1,
+      "Androth": 1,
+      "Bithra": 1,
+      "Chethlath": 1,
+      "Kavaratti": 1,
+      "Kadmath": 1,
+      "Kalpeni": 1,
+      "Kilthan": 1,
+      "Minicoy": 1
+    }
+  },
+  "Madhya Pradesh": {
+    "state": "Madhya Pradesh",
+    "pincodeStartsWith": ["45", "46", "47", "48"],
+    "districts": {
+      "Agar Malwa": 1,
+      "Alirajpur": 1,
+      "Anuppur": 1,
+      "Ashoknagar": 1,
+      "Balaghat": 1,
+      "Barwani": 1,
+      "Betul": 1,
+      "Bhind": 1,
+      "Bhopal": 1,
+      "Burhanpur": 1,
+      "Chhatarpur": 1,
+      "Chhindwara": 1,
+      "Damoh": 1,
+      "Datia": 1,
+      "Dewas": 1,
+      "Dhar": 1,
+      "Dindori": 1,
+      "Guna": 1,
+      "Gwalior": 1,
+      "Harda": 1,
+      "Hoshangabad": 1,
+      "Indore": 1,
+      "Jabalpur": 1,
+      "Jhabua": 1,
+      "Katni": 1,
+      "Khandwa": 1,
+      "Khargone": 1,
+      "Mandla": 1,
+      "Mandsaur": 1,
+      "Morena": 1,
+      "Narsinghpur": 1,
+      "Neemuch": 1,
+      "Panna": 1,
+      "Raisen": 1,
+      "Rajgarh": 1,
+      "Ratlam": 1,
+      "Rewa": 1,
+      "Sagar": 1,
+      "Satna": 1,
+      "Sehore": 1,
+      "Seoni": 1,
+      "Shahdol": 1,
+      "Shajapur": 1,
+      "Sheopur": 1,
+      "Shivpuri": 1,
+      "Sidhi": 1,
+      "Singrauli": 1,
+      "Tikamgarh": 1,
+      "Ujjain": 1,
+      "Umaria": 1,
+      "Vidisha": 1
+    }
+  },
+  "Maharashtra": {
+    "state": "Maharashtra",
+    "pincodeStartsWith": ["40", "41", "42", "43", "44"],
+    "districts": {
+      "Ahmednagar": 1,
+      "Akola": 1,
+      "Amravati": 1,
+      "Aurangabad": 1,
+      "Beed": 1,
+      "Bhandara": 1,
+      "Buldhana": 1,
+      "Chandrapur": 1,
+      "Dhule": 1,
+      "Gadchiroli": 1,
+      "Gondia": 1,
+      "Hingoli": 1,
+      "Jalgaon": 1,
+      "Jalna": 1,
+      "Kolhapur": 1,
+      "Latur": 1,
+      "Mumbai City": 1,
+      "Mumbai Suburban": 1,
+      "Nagpur": 1,
+      "Nanded": 1,
+      "Nandurbar": 1,
+      "Nashik": 1,
+      "Osmanabad": 1,
+      "Palghar": 1,
+      "Parbhani": 1,
+      "Pune": 1,
+      "Raigad": 1,
+      "Ratnagiri": 1,
+      "Sangli": 1,
+      "Satara": 1,
+      "Sindhudurg": 1,
+      "Solapur": 1,
+      "Thane": 1,
+      "Wardha": 1,
+      "Washim": 1,
+      "Yavatmal": 1
+    }
+  },
+  "Manipur": {
+    "state": "Manipur",
+    "pincodeStartsWith": ["795"],
+    "districts": {
+      "Bishnupur": 1,
+      "Chandel": 1,
+      "Churachandpur": 1,
+      "Imphal East": 1,
+      "Imphal West": 1,
+      "Jiribam": 1,
+      "Kakching": 1,
+      "Kamjong": 1,
+      "Kangpokpi": 1,
+      "Noney": 1,
+      "Pherzawl": 1,
+      "Senapati": 1,
+      "Tamenglong": 1,
+      "Tengnoupal": 1,
+      "Thoubal": 1,
+      "Ukhrul": 1
+    }
+  },
+  "Meghalaya": {
+    "state": "Meghalaya",
+    "pincodeStartsWith": ["793", "794"],
+    "districts": {
+      "East Garo Hills": 1,
+      "East Jaintia Hills": 1,
+      "East Khasi Hills": 1,
+      "North Garo Hills": 1,
+      "Ri Bhoi": 1,
+      "South Garo Hills": 1,
+      "South West Garo Hills ": 1,
+      "South West Khasi Hills": 1,
+      "West Garo Hills": 1,
+      "West Jaintia Hills": 1,
+      "West Khasi Hills": 1
+    }
+  },
+  "Mizoram": {
+    "state": "Mizoram",
+    "pincodeStartsWith": ["796"],
+    "districts": {
+      "Aizawl": 1,
+      "Champhai": 1,
+      "Kolasib": 1,
+      "Lawngtlai": 1,
+      "Lunglei": 1,
+      "Mamit": 1,
+      "Saiha": 1,
+      "Serchhip": 1
+    }
+  },
+  "Nagaland": {
+    "state": "Nagaland",
+    "pincodeStartsWith": ["797", "798"],
+    "districts": {
+      "Dimapur": 1,
+      "Kiphire": 1,
+      "Kohima": 1,
+      "Longleng": 1,
+      "Mokokchung": 1,
+      "Mon": 1,
+      "Peren": 1,
+      "Phek": 1,
+      "Tuensang": 1,
+      "Wokha": 1,
+      "Zunheboto": 1
+    }
+  },
+  "Odisha": {
+    "state": "Odisha",
+    "pincodeStartsWith": ["75", "76", "77"],
+    "districts": {
+      "Angul": 1,
+      "Balangir": 1,
+      "Balasore": 1,
+      "Bargarh": 1,
+      "Bhadrak": 1,
+      "Boudh": 1,
+      "Cuttack": 1,
+      "Deogarh": 1,
+      "Dhenkanal": 1,
+      "Gajapati": 1,
+      "Ganjam": 1,
+      "Jagatsinghapur": 1,
+      "Jajpur": 1,
+      "Jharsuguda": 1,
+      "Kalahandi": 1,
+      "Kandhamal": 1,
+      "Kendrapara": 1,
+      "Kendujhar (Keonjhar)": 1,
+      "Khordha": 1,
+      "Koraput": 1,
+      "Malkangiri": 1,
+      "Mayurbhanj": 1,
+      "Nabarangpur": 1,
+      "Nayagarh": 1,
+      "Nuapada": 1,
+      "Puri": 1,
+      "Rayagada": 1,
+      "Sambalpur": 1,
+      "Sonepur": 1,
+      "Sundargarh": 1
+    }
+  },
+  "Puducherry": {
+    "state": "Puducherry",
+    "pincodeStartsWith": ["605"],
+    "districts": {
+      "Karaikal": 1,
+      "Mahe": 1,
+      "Pondicherry": 1,
+      "Yanam": 1
+    }
+  },
+  "Punjab": {
+    "state": "Punjab",
+    "pincodeStartsWith": ["14", "15"],
+    "districts": {
+      "Amritsar": 1,
+      "Barnala": 1,
+      "Bathinda": 1,
+      "Faridkot": 1,
+      "Fatehgarh Sahib": 1,
+      "Fazilka": 1,
+      "Ferozepur": 1,
+      "Gurdaspur": 1,
+      "Hoshiarpur": 1,
+      "Jalandhar": 1,
+      "Kapurthala": 1,
+      "Ludhiana": 1,
+      "Mansa": 1,
+      "Moga": 1,
+      "Muktsar": 1,
+      "Nawanshahr (Shahid Bhagat Singh Nagar)": 1,
+      "Pathankot": 1,
+      "Patiala": 1,
+      "Rupnagar": 1,
+      "Sahibzada Ajit Singh Nagar (Mohali)": 1,
+      "Sangrur": 1,
+      "Tarn Taran": 1
+    }
+  },
+  "Rajasthan": {
+    "state": "Rajasthan",
+    "pincodeStartsWith": ["30", "31", "32", "33", "34"],
+    "districts": {
+      "Ajmer": 1,
+      "Alwar": 1,
+      "Banswara": 1,
+      "Baran": 1,
+      "Barmer": 1,
+      "Bharatpur": 1,
+      "Bhilwara": 1,
+      "Bikaner": 1,
+      "Bundi": 1,
+      "Chittorgarh": 1,
+      "Churu": 1,
+      "Dausa": 1,
+      "Dholpur": 1,
+      "Dungarpur": 1,
+      "Hanumangarh": 1,
+      "Jaipur": 1,
+      "Jaisalmer": 1,
+      "Jalore": 1,
+      "Jhalawar": 1,
+      "Jhunjhunu": 1,
+      "Jodhpur": 1,
+      "Karauli": 1,
+      "Kota": 1,
+      "Nagaur": 1,
+      "Pali": 1,
+      "Pratapgarh": 1,
+      "Rajsamand": 1,
+      "Sawai Madhopur": 1,
+      "Sikar": 1,
+      "Sirohi": 1,
+      "Sri Ganganagar": 1,
+      "Tonk": 1,
+      "Udaipur": 1
+    }
+  },
+  "Sikkim": {
+    "state": "Sikkim",
+    "pincodeStartsWith": ["737"],
+    "districts": {
+      "East Sikkim": 1,
+      "North Sikkim": 1,
+      "South Sikkim": 1,
+      "West Sikkim": 1
+    }
+  },
+  "Tamil Nadu": {
+    "state": "Tamil Nadu",
+    "pincodeStartsWith": ["60", "61", "62", "63", "64", "65", "66"],
+    "districts": {
+      "Ariyalur": 1,
+      "Chennai": 1,
+      "Coimbatore": 1,
+      "Cuddalore": 1,
+      "Dharmapuri": 1,
+      "Dindigul": 1,
+      "Erode": 1,
+      "Kanchipuram": 1,
+      "Kanyakumari": 1,
+      "Karur": 1,
+      "Krishnagiri": 1,
+      "Madurai": 1,
+      "Nagapattinam": 1,
+      "Namakkal": 1,
+      "Nilgiris": 1,
+      "Perambalur": 1,
+      "Pudukkottai": 1,
+      "Ramanathapuram": 1,
+      "Salem": 1,
+      "Sivaganga": 1,
+      "Thanjavur": 1,
+      "Theni": 1,
+      "Thoothukudi (Tuticorin)": 1,
+      "Tiruchirappalli": 1,
+      "Tirunelveli": 1,
+      "Tiruppur": 1,
+      "Tiruvallur": 1,
+      "Tiruvannamalai": 1,
+      "Tiruvarur": 1,
+      "Vellore": 1,
+      "Viluppuram": 1,
+      "Virudhunagar": 1
+    }
+  },
+  "Telangana": {
+    "state": "Telangana",
+    "pincodeStartsWith": ["50"],
+    "districts": {
+      "Adilabad": 1,
+      "Bhadradri Kothagudem": 1,
+      "Hyderabad": 1,
+      "Jagtial": 1,
+      "Jangaon": 1,
+      "Jayashankar Bhoopalpally": 1,
+      "Jogulamba Gadwal": 1,
+      "Kamareddy": 1,
+      "Karimnagar": 1,
+      "Khammam": 1,
+      "Komaram Bheem Asifabad": 1,
+      "Mahabubabad": 1,
+      "Mahabubnagar": 1,
+      "Mancherial": 1,
+      "Medak": 1,
+      "Medchal": 1,
+      "Nagarkurnool": 1,
+      "Nalgonda": 1,
+      "Nirmal": 1,
+      "Nizamabad": 1,
+      "Peddapalli": 1,
+      "Rajanna Sircilla": 1,
+      "Rangareddy": 1,
+      "Sangareddy": 1,
+      "Siddipet": 1,
+      "Suryapet": 1,
+      "Vikarabad": 1,
+      "Wanaparthy": 1,
+      "Warangal (Rural)": 1,
+      "Warangal (Urban)": 1,
+      "Yadadri Bhuvanagiri": 1
+    }
+  },
+  "Tripura": {
+    "state": "Tripura",
+    "pincodeStartsWith": ["799"],
+    "districts": {
+      "Dhalai": 1,
+      "Gomati": 1,
+      "Khowai": 1,
+      "North Tripura": 1,
+      "Sepahijala": 1,
+      "South Tripura": 1,
+      "Unakoti": 1,
+      "West Tripura": 1
+    }
+  },
+  "Uttar Pradesh": {
+    "state": "Uttar Pradesh",
+    "pincodeStartsWith": ["20", "21", "22", "23", "24", "25", "26", "27", "28"],
+    "districts": {
+      "Agra": 1,
+      "Aligarh": 1,
+      "Allahabad": 1,
+      "Ambedkar Nagar": 1,
+      "Amethi (Chatrapati Sahuji Mahraj Nagar)": 1,
+      "Amroha (J.P. Nagar)": 1,
+      "Auraiya": 1,
+      "Azamgarh": 1,
+      "Baghpat": 1,
+      "Bahraich": 1,
+      "Ballia": 1,
+      "Balrampur": 1,
+      "Banda": 1,
+      "Barabanki": 1,
+      "Bareilly": 1,
+      "Basti": 1,
+      "Bhadohi": 1,
+      "Bijnor": 1,
+      "Budaun": 1,
+      "Bulandshahr": 1,
+      "Chandauli": 1,
+      "Chitrakoot": 1,
+      "Deoria": 1,
+      "Etah": 1,
+      "Etawah": 1,
+      "Faizabad": 1,
+      "Farrukhabad": 1,
+      "Fatehpur": 1,
+      "Firozabad": 1,
+      "Gautam Buddha Nagar": 1,
+      "Ghaziabad": 1,
+      "Ghazipur": 1,
+      "Gonda": 1,
+      "Gorakhpur": 1,
+      "Hamirpur": 1,
+      "Hapur (Panchsheel Nagar)": 1,
+      "Hardoi": 1,
+      "Hathras": 1,
+      "Jalaun": 1,
+      "Jaunpur": 1,
+      "Jhansi": 1,
+      "Kannauj": 1,
+      "Kanpur Dehat": 1,
+      "Kanpur Nagar": 1,
+      "Kanshiram Nagar (Kasganj)": 1,
+      "Kaushambi": 1,
+      "Kushinagar (Padrauna)": 1,
+      "Lakhimpur - Kheri": 1,
+      "Lalitpur": 1,
+      "Lucknow": 1,
+      "Maharajganj": 1,
+      "Mahoba": 1,
+      "Mainpuri": 1,
+      "Mathura": 1,
+      "Mau": 1,
+      "Meerut": 1,
+      "Mirzapur": 1,
+      "Moradabad": 1,
+      "Muzaffarnagar": 1,
+      "Pilibhit": 1,
+      "Pratapgarh": 1,
+      "RaeBareli": 1,
+      "Rampur": 1,
+      "Saharanpur": 1,
+      "Sambhal (Bhim Nagar)": 1,
+      "Sant Kabir Nagar": 1,
+      "Shahjahanpur": 1,
+      "Shamali (Prabuddh Nagar)": 1,
+      "Shravasti": 1,
+      "Siddharth Nagar": 1,
+      "Sitapur": 1,
+      "Sonbhadra": 1,
+      "Sultanpur": 1,
+      "Unnao": 1,
+      "Varanasi": 1
+    }
+  },
+  "Uttarakhand": {
+    "state": "Uttarakhand",
+    "pincodeStartsWith": ["20", "21", "22", "23", "24", "25", "26", "27", "28"],
+    "districts": {
+      "Almora": 1,
+      "Bageshwar": 1,
+      "Chamoli": 1,
+      "Champawat": 1,
+      "Dehradun": 1,
+      "Haridwar": 1,
+      "Nainital": 1,
+      "Pauri Garhwal": 1,
+      "Pithoragarh": 1,
+      "Rudraprayag": 1,
+      "Tehri Garhwal": 1,
+      "Udham Singh Nagar": 1,
+      "Uttarkashi": 1
+    }
+  },
+  "West Bengal": {
+    "state": "West Bengal",
+    "pincodeStartsWith": ["70", "71", "72", "73", "74"],
+    "districts": {
+      "Alipurduar": 1,
+      "Bankura": 1,
+      "Birbhum": 1,
+      "Burdwan (Bardhaman)": 1,
+      "Cooch Behar": 1,
+      "Dakshin Dinajpur (South Dinajpur)": 1,
+      "Darjeeling": 1,
+      "Hooghly": 1,
+      "Howrah": 1,
+      "Jalpaiguri": 1,
+      "Kalimpong": 1,
+      "Kolkata": 1,
+      "Malda": 1,
+      "Murshidabad": 1,
+      "Nadia": 1,
+      "North 24 Parganas": 1,
+      "Paschim Medinipur (West Medinipur)": 1,
+      "Purba Medinipur (East Medinipur)": 1,
+      "Purulia": 1,
+      "South 24 Parganas": 1,
+      "Uttar Dinajpur (North Dinajpur)": 1
+    }
+  }
+};
+},{}],"component-functions/state-district-select.js":[function(require,module,exports) {
+"use strict";
+
+var _locationDetailsParsed = _interopRequireDefault(require("../../../../staticData/locationDetailsParsed.json"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+Array.from(document.getElementsByClassName('js--components-function--state-district-select')).forEach(function (stateSelect) {
+  stateSelect.addEventListener('change', function (e) {
+    var districtJsQuery = this.dataset.districtJsQuery;
+    var state = this.value;
+
+    if (!districtJsQuery || !state || !_locationDetailsParsed.default[state]) {
+      return;
+    }
+
+    var districtSelect = document.querySelector(districtJsQuery);
+    districtSelect.innerHTML = Object.keys(_locationDetailsParsed.default[state].districts).map(function (district) {
+      return "<option value='".concat(district, "'>").concat(district, "</option>");
+    }).join('');
+  });
+});
+},{"../../../../staticData/locationDetailsParsed.json":"../../../staticData/locationDetailsParsed.json"}],"component-functions/toggle-on-click.js":[function(require,module,exports) {
 Array.from(document.getElementsByClassName('js--components-function--toggle-on-click')).forEach(function (el) {
   el.addEventListener('click', function (e) {
     var _this$dataset = this.dataset,
@@ -4614,6 +5760,8 @@ if (lens && zoomedImg && toZoom && bigImg) {
 
 require("./ajax/add-to-cart-btn");
 
+require("./ajax/address");
+
 require("./ajax/cart");
 
 require("./ajax/change-my-email");
@@ -4652,12 +5800,14 @@ require("./component-functions/sidebar");
 
 require("./component-functions/sliders");
 
+require("./component-functions/state-district-select");
+
 require("./component-functions/toggle-on-click");
 
 require("./component-functions/increment-decrement-input-number");
 
 require("./pages/each-product");
-},{"./ajax/add-to-cart-btn":"ajax/add-to-cart-btn.js","./ajax/cart":"ajax/cart.js","./ajax/change-my-email":"ajax/change-my-email.js","./ajax/forgot-password":"ajax/forgot-password.js","./ajax/login":"ajax/login.js","./ajax/reset-password":"ajax/reset-password.js","./ajax/review":"ajax/review.js","./ajax/signup":"ajax/signup.js","./ajax/signup-complete":"ajax/signup-complete.js","./ajax/update-me":"ajax/update-me.js","./ajax/update-my-password":"ajax/update-my-password.js","./component-functions/confirm-dialog":"component-functions/confirm-dialog.js","./component-functions/btn-confirm-redirect":"component-functions/btn-confirm-redirect.js","./component-functions/dropdown":"component-functions/dropdown.js","./component-functions/flash-messages":"component-functions/flash-messages.js","./component-functions/form-rating":"component-functions/form-rating.js","./component-functions/remove-on-click":"component-functions/remove-on-click.js","./component-functions/search":"component-functions/search.js","./component-functions/sidebar":"component-functions/sidebar.js","./component-functions/sliders":"component-functions/sliders.js","./component-functions/toggle-on-click":"component-functions/toggle-on-click.js","./component-functions/increment-decrement-input-number":"component-functions/increment-decrement-input-number.js","./pages/each-product":"pages/each-product.js"}],"../../../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./ajax/add-to-cart-btn":"ajax/add-to-cart-btn.js","./ajax/address":"ajax/address.js","./ajax/cart":"ajax/cart.js","./ajax/change-my-email":"ajax/change-my-email.js","./ajax/forgot-password":"ajax/forgot-password.js","./ajax/login":"ajax/login.js","./ajax/reset-password":"ajax/reset-password.js","./ajax/review":"ajax/review.js","./ajax/signup":"ajax/signup.js","./ajax/signup-complete":"ajax/signup-complete.js","./ajax/update-me":"ajax/update-me.js","./ajax/update-my-password":"ajax/update-my-password.js","./component-functions/confirm-dialog":"component-functions/confirm-dialog.js","./component-functions/btn-confirm-redirect":"component-functions/btn-confirm-redirect.js","./component-functions/dropdown":"component-functions/dropdown.js","./component-functions/flash-messages":"component-functions/flash-messages.js","./component-functions/form-rating":"component-functions/form-rating.js","./component-functions/remove-on-click":"component-functions/remove-on-click.js","./component-functions/search":"component-functions/search.js","./component-functions/sidebar":"component-functions/sidebar.js","./component-functions/sliders":"component-functions/sliders.js","./component-functions/state-district-select":"component-functions/state-district-select.js","./component-functions/toggle-on-click":"component-functions/toggle-on-click.js","./component-functions/increment-decrement-input-number":"component-functions/increment-decrement-input-number.js","./pages/each-product":"pages/each-product.js"}],"../../../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -4685,7 +5835,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52434" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54886" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

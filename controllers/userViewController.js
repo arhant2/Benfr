@@ -8,11 +8,13 @@ const UnverifiedUser = require('../models/unverifiedUserModel');
 const Brand = require('../models/brandModel');
 const Category = require('../models/categoryModel');
 const Product = require('../models/productModel');
+const Address = require('../models/addressModel');
 const Cart = require('../models/cartModel');
+const Review = require('../models/reviewModel');
 const handlerFactoryUserViews = require('./handlerFactoryUserViews');
 
 const gramsGenerator = require('../utils/gramsGenerator');
-const Review = require('../models/reviewModel');
+const { locationDetails } = require('../utils/locationDetails');
 
 const handlerFactoryBrand = handlerFactoryUserViews(Brand, 'brand', 'brands');
 const handlerFactoryCategory = handlerFactoryUserViews(
@@ -24,6 +26,11 @@ const handlerFactoryProduct = handlerFactoryUserViews(
   Product,
   'product',
   'products'
+);
+const handlerFactoryAddress = handlerFactoryUserViews(
+  Address,
+  'address',
+  'addresses'
 );
 const handlerFactoryReview = handlerFactoryUserViews(
   Review,
@@ -338,6 +345,27 @@ exports.getOneProduct = catchAsync(async (req, res, next) => {
     reviews,
   });
 });
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Addresses
+exports.getAllAddressesMiddleware = (req, res, next) => {
+  req.customs.getAll = {
+    queryRestrict: {
+      user: req.customs.user.id,
+    },
+    limitDefault: 100,
+  };
+  next();
+};
+
+exports.addLocationDetails = (req, res, next) => {
+  res.locals.locationDetails = locationDetails;
+  next();
+};
+
+exports.getAllAddresses = handlerFactoryAddress.getAll;
+exports.getOneAddress = handlerFactoryAddress.getOne;
+exports.getNewAddressForm = handlerFactoryAddress.getNewForm;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Reviews

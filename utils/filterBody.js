@@ -1,3 +1,13 @@
+const makeEmptyStringToNull = (obj) => {
+  Object.entries(obj).forEach(([key, value]) => {
+    if (value && typeof value === 'object') {
+      makeEmptyStringToNull(value);
+    } else if (value === '') {
+      obj[key] = null;
+    }
+  });
+};
+
 module.exports = (inp, obj) => {
   const filteredObj = {};
   let arr = inp;
@@ -13,5 +23,6 @@ module.exports = (inp, obj) => {
       filteredObj[el] = obj[el];
     }
   });
+  makeEmptyStringToNull(filteredObj);
   return filteredObj;
 };

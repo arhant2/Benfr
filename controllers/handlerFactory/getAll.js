@@ -6,11 +6,11 @@ module.exports = (Model, { pluralName }) => {
     const features = new APIFeatures(
       Model.find(),
       req.query,
-      req.customs.getAllQuery
+      req.customs.getAll && req.customs.getAll.queryRestrict
     )
       .filter()
-      .sort()
-      .paginate()
+      .sort(req.customs.getAll && req.customs.getAll.sortDefault)
+      .paginate(req.customs.getAll && req.customs.getAll.limitDefault)
       .limitFields();
 
     const docs = await features.mongooseQuery;

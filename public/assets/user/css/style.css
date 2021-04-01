@@ -775,10 +775,10 @@ Featured Categories
 }
 .form__input[type=text]:focus, .form__input[type=tel]:focus, .form__input[type=email]:focus, .form__input[type=password]:focus, .form__select:focus, .form__textarea:focus {
   border-color: var(--color-grey-dark-3);
-  border-left: 2px solid var(--color-green);
+  border-left: 4px solid var(--color-green);
 }
 .form__input[type=text]:focus:invalid, .form__input[type=tel]:focus:invalid, .form__input[type=email]:focus:invalid, .form__input[type=password]:focus:invalid, .form__select:focus:invalid, .form__textarea:focus:invalid {
-  border-left: 3px solid var(--color-red);
+  border-left: 4px solid var(--color-red);
 }
 .form__input[type=text]:disabled, .form__input[type=tel]:disabled, .form__input[type=email]:disabled, .form__input[type=password]:disabled, .form__select:disabled, .form__textarea:disabled {
   background: var(--color-grey-light-2);

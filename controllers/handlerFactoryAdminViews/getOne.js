@@ -3,7 +3,8 @@ const AppError = require('../../utils/AppError');
 
 module.exports = (Model, { singularName }) => {
   return catchAsync(async (req, res, next) => {
-    const document = await Model.findById(req.params.id);
+    const document =
+      req.customs.document || (await Model.findById(req.params.id));
 
     if (!document) {
       return next(

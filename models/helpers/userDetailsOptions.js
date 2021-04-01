@@ -3,6 +3,9 @@ const validator = require('validator');
 const capitilize = require('../../utils/capitilize');
 const singularPluralManager = require('../../utils/singularPluralManager');
 
+const isValidMobileNumber = (val) =>
+  val.match(/^(?:(?:\+|0{0,2})91(\s*[\- ]\s*)?|[0]?)?[789]\d{9}$/);
+
 module.exports = (singularNameParam, pluralNameParam = undefined) => {
   const { singularName } = singularPluralManager(
     singularNameParam,
@@ -35,11 +38,13 @@ module.exports = (singularNameParam, pluralNameParam = undefined) => {
     mobile: (required = true) => ({
       type: String,
       validate: {
-        validator: (val) =>
-          val.match(/^(?:(?:\+|0{0,2})91(\s*[\- ]\s*)?|[0]?)?[789]\d{9}$/),
+        validator: isValidMobileNumber,
         message: 'Invalid mobile number',
       },
-      set: (val) => val.substring(val.length - 10, val.length),
+      set: (val) =>
+        isValidMobileNumber(val)
+          ? val.substring(val.length - 10, val.length)
+          : val,
       trim: true,
       required: requiredOption(required, 'mobile number'),
     }),

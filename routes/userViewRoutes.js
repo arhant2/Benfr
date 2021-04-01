@@ -1,6 +1,7 @@
 const express = require('express');
 
 const authController = require('../controllers/authController');
+const addressController = require('../controllers/addressController');
 const userViewController = require('../controllers/userViewController');
 
 const router = express.Router();
@@ -113,6 +114,35 @@ router.get(
   userViewController.setSidebarItems,
   authController.isLoggedIn,
   userViewController.getOneProduct
+);
+
+//// Addresses
+router.get(
+  '/addresses',
+  userViewController.setSidebarItems,
+  authController.isLoggedIn,
+  authController.protectView,
+  userViewController.getAllAddressesMiddleware,
+  userViewController.getAllAddresses
+);
+
+router.get(
+  '/addresses/new',
+  userViewController.setSidebarItems,
+  authController.isLoggedIn,
+  authController.protectView,
+  userViewController.addLocationDetails,
+  userViewController.getNewAddressForm
+);
+
+router.get(
+  '/addresses/:id',
+  userViewController.setSidebarItems,
+  authController.isLoggedIn,
+  authController.protectView,
+  addressController.checkIfAddressBelongsTouser,
+  userViewController.addLocationDetails,
+  userViewController.getOneAddress
 );
 
 //// Reviews

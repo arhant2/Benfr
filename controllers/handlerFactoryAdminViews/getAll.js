@@ -13,12 +13,12 @@ module.exports = (Model, { pluralName }) => {
     const features = new APIFeatures(
       Model.find(),
       req.query,
-      undefined,
+      req.customs.getAll && req.customs.getAll.queryRestrict,
       queryObjParsed
     )
       .filter()
-      .sort()
-      .paginate();
+      .sort(req.customs.getAll && req.customs.getAll.sortDefault)
+      .paginate(req.customs.getAll && req.customs.getAll.limitDefault);
 
     const documents = await features.mongooseQuery;
 

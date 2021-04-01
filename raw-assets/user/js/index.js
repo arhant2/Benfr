@@ -1,6 +1,7 @@
 // Build main.scss along
 
 import './ajax/add-to-cart-btn';
+import './ajax/address';
 import './ajax/cart';
 import './ajax/change-my-email';
 import './ajax/forgot-password';
@@ -22,6 +23,7 @@ import './component-functions/remove-on-click';
 import './component-functions/search';
 import './component-functions/sidebar';
 import './component-functions/sliders';
+import './component-functions/state-district-select';
 import './component-functions/toggle-on-click';
 import './component-functions/increment-decrement-input-number';
 

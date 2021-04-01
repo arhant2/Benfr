@@ -1,0 +1,36 @@
+extends base/_account
+
+include mixins/_account-box
+
+mixin addressCardEachItem(value, comma=false)
+  if value 
+    p.address__each-line.para-primary= `${value}${comma?',':''}`
+
+mixin addressCard(address)
+  .inner-card.address__box.js--ajax--delete-address
+    .address__address
+      +addressCardEachItem(address.name)
+      +addressCardEachItem(address.address.flat, true)
+      +addressCardEachItem(address.address.area, true)
+      +addressCardEachItem(address.address.landmark, true)
+      +addressCardEachItem(address.address.district, true)
+      +addressCardEachItem(`${address.address.state} - ${address.address.pincode}`)
+      p.address__each-line.para-primary
+        i.fas.fa-phone-alt
+        | &nbsp;#{`+91 ${address.mobile.substr(0, 4)} ${address.mobile.substr(4, 3)} ${address.mobile.substr(7, 3)}`}
+    .address__btns
+      a.btn.btn--round.btn--main-color(href=`/addresses/${address.id}`) Edit
+      | &nbsp;
+      button.btn.btn--round.btn--red.btn--load.js--ajax--delete-address__btn(data-address-id=address.id)
+        span.btn--load__content
+          | Remove
+        span.btn--load__load-content
+          i.fa.fa-circle-o-notch.fa-spin
+          | &nbsp;Loading
+
+block accountContent
+  +accountBox('Address Book', [['/myAccount', 'Account'], ['#', 'Adddress Book']])
+    each address in documents 
+      +addressCard(address)
+    .address__box.address__box--last-btns-right
+      a.btn.btn--round.btn--main-color(href='/addresses/new') New Address
