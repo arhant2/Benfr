@@ -43,7 +43,7 @@ nav.navbar: .navbar__inner.reset-anchor
           +userDropdownList(`/login?redirect=${encodedUrl}`, 'fas fa-user-circle', 'Login')
           +userDropdownList('/signup', 'fas fa-user-circle', 'Sign up')
         +userDropdownList('#', 'fas fa-box-open', 'My Orders')
-        +userDropdownList('#', 'fas fa-map-marker-alt', 'Addresses')
+        +userDropdownList('/addresses', 'fas fa-map-marker-alt', 'Addresses')
         if user
           +userDropdownList(`/logout?redirect=${encodedUrl}`, 'fas fa-sign-out-alt', 'Logout')
 

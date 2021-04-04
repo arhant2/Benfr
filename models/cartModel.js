@@ -81,6 +81,58 @@ cartSchema.methods.verifyCart = function () {
   });
 };
 
+cartSchema.methods.verifyCartForCheckout = function (expectedProducts) {
+  // Check if expected products are in correct form
+  if (
+    !Array.isArray(expectedProducts) ||
+    !expectedProducts.every(
+      (product) =>
+        typeof product === 'object' &&
+        mongoose.isValidObjectId(product.product) &&
+        typeof product.quantity === 'number' &&
+        typeof product.price === 'number'
+    )
+  ) {
+    throw new AppError('Invalid request!', 400);
+  }
+
+  // Check if products in cart are still valid
+  if (
+    expectedProducts.length !== this.products.length ||
+    !this.products.every(
+      (product) =>
+        !!product && product.quantity <= product.product.maxQuantityAllowedNow
+    )
+  ) {
+    throw new AppError(
+      'There is some update in you cart, cannot checkout!',
+      400
+    );
+  }
+
+  const cartProducts = {};
+
+  this.products.forEach((product) => {
+    cartProducts[product.id] = product;
+  });
+
+  if (
+    !expectedProducts.every((expectedProduct) => {
+      const cartProduct = cartProducts[expectedProduct.product];
+      return (
+        cartProduct &&
+        cartProduct.quantity === expectedProduct.quantity &&
+        cartProduct.product.discountedPrice === expectedProduct.price
+      );
+    })
+  ) {
+    throw new AppError(
+      'There is some update in you cart, cannot checkout!',
+      400
+    );
+  }
+};
+
 cartSchema.methods.addToCart = async function (id) {
   if (!mongoose.isValidObjectId(id)) {
     throw new AppError('Invalid product', 400);

@@ -1,0 +1,77 @@
+extends base/_base
+include mixins/_product-desc
+
+//- Address Line
+mixin addressLine(value, comma=false, blockElement=false)
+  if value 
+    if blockElement 
+      p.cart__address-each-line= `${value}${comma?', ':''}`
+    else
+      span.cart__address-each-line= `${value}${comma?', ':''}`
+
+
+//- Each Product Card
+mixin eachCartProductCard(product, idx)
+  .inner-card.reset-anchor.js--components-function--remove-onclick: .product-inner-card
+    a.product-inner-card__img-box(href=`/products/${product.product.name}/${product.product.id}` target='_blank')
+      img.product-inner-card__img(src=(product.product.images && product.product.images[0] && product.product.images[0].path) || '/assets/user/img/no-image.jpg')
+
+    .product-inner-card__main
+      +productDesc(product.product, false, true, true)
+
+        p.cart__text-quantity Quantity: #{product.quantity}
+        
+
+
+//- Main content
+block content
+
+  section.card.cart
+
+      // Main
+      .cart__main
+        h2.heading-tertiary.heading-tertiary--2 Review Order
+
+        each product, idx in document.products 
+          +eachCartProductCard(product, idx)
+
+      -
+        const amount = (cost) => {
+          if (document.products && document.products.length > 0) {
+            return `₹${Number(cost).toLocaleString('en-IN', {maximumFractionDigits: 2})}`;
+          }
+          return 'N/A';
+        }
+
+      .cart__address 
+        h2.heading-tertiary.heading-tertiary--2 Ship to 
+        .cart__address-inner-card.inner-card 
+          .cart__adress-icon: i.fas.fa-map-marked-alt
+          .card__address-actual
+            +addressLine(address.name, false, true)
+            +addressLine(address.address.flat, true)
+            +addressLine(address.address.area, true)
+            +addressLine(address.address.landmark, true)
+            +addressLine(address.address.district, true)
+            +addressLine(`${address.address.state} - ${address.address.pincode}`)
+            p.cart__address-each-line
+              i.fas.fa-phone-alt
+              | &nbsp;#{`+91 ${address.mobile.substr(0, 4)} ${address.mobile.substr(4, 3)} ${address.mobile.substr(7, 3)}`}
+
+
+      // Summary
+      .cart__summary 
+        h2.heading-tertiary.heading-tertiary--2 Summary 
+        
+        table.cart__summary-table
+          tr.cart__summary-table-row
+            th.cart__summary-table-head Subtotal
+            td.cart__summary-table-data= amount(document.subTotal)
+          tr.cart__summary-table-row
+            th.cart__summary-table-head Delivery charges
+            td.cart__summary-table-data= amount(document.deliveryCharge)
+          tr.cart__summary-table-row.cart__summary-table-row--net
+            th.cart__summary-table-head Total
+            td.cart__summary-table-data= amount(document.grandTotal)
+
+        button.btn.btn--new-blue.btn--round.btn--full Place Order

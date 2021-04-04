@@ -419,3 +419,27 @@ exports.getCart = catchAsync(async (req, res, next) => {
     document: cart,
   });
 });
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Checkout
+exports.getCheckoutSelectAddress = catchAsync(async (req, res, next) => {
+  const documents = await Address.find();
+
+  res.render('user/checkout-select-address', {
+    documents,
+  });
+});
+
+exports.getCheckoutNewAddress = catchAsync(async (req, res, next) => {
+  res.render('user/checkout-new-address');
+});
+
+exports.getCheckout = catchAsync(async (req, res, next) => {
+  const cart = await Cart.findOne({ user: req.customs.user.id });
+  const address = await Address.findById(req.query.address);
+
+  res.render('user/checkout', {
+    document: cart,
+    address,
+  });
+});

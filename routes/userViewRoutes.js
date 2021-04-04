@@ -163,4 +163,28 @@ router.get(
   userViewController.getCart
 );
 
+//// Checkout
+router.get(
+  '/checkout/address',
+  authController.isLoggedIn,
+  authController.protectView,
+  userViewController.getCheckoutSelectAddress
+);
+
+router.get(
+  '/checkout/address/new',
+  authController.isLoggedIn,
+  authController.protectView,
+  userViewController.addLocationDetails,
+  userViewController.getCheckoutNewAddress
+);
+
+router.get(
+  '/checkout',
+  userViewController.setSidebarItems,
+  authController.isLoggedIn,
+  authController.protectView,
+  userViewController.getCheckout
+);
+
 module.exports = router;

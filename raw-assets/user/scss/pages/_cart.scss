@@ -2,9 +2,14 @@
   display: grid;
 
   grid-template-columns: auto minmax(25rem, 28%);
+  grid-template-rows: auto auto;
   gap: 2%;
 
   font-size: 1.4rem;
+
+  &__main {
+    grid-row: 1 / -1;
+  }
 
   &__btns {
     display: flex;
@@ -60,9 +65,15 @@
     color: inherit;
   }
 
+  &__text-quantity {
+    font-weight: 500;
+    // color: var(--color-new-blue);
+  }
+
   /* Summary */
   &__summary {
     font-size: 1.6rem;
+    grid-column: 2 / -1;
   }
 
   &__summary-table {
@@ -92,5 +103,15 @@
 
   &__summary-table-data {
     text-align: right;
+  }
+
+  &__address-inner-card {
+    display: flex;
+  }
+
+  &__adress-icon {
+    margin-right: 1rem;
+    font-size: 2rem;
+    color: var(--color-yellow-dark);
   }
 }

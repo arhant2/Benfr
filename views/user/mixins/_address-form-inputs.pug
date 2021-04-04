@@ -1,0 +1,75 @@
+mixin addressFormInputs(address)
+  // Name
+  .form__group 
+    label.form__label(for='name')
+      span.form__star *
+      | Name 
+    input.form__input(type='text' name='name' id='name' placeholder='Your name' spellcheck='false' minlength=3  required value=address && address.name)
+
+  // Flat
+  .form__group 
+    label.form__label(for='address[flat]')
+      span.form__star *
+      | Flat, House no., Building, Apartment
+    input.form__input(type='text' name='address[flat]' id='address[flat]' placeholder='Enter address line 1' spellcheck='false' minlength=2 maxlength=50 required value=address && address.address && address.address.flat)
+
+  // Area
+  .form__group 
+    label.form__label(for='address[area]')
+      span.form__star *
+      | Area, Village, Town, Street
+    input.form__input(type='text' name='address[area]' id='address[area]' placeholder='Enter address line 2' spellcheck='false' minlength=2 maxlength=50 required value=address && address.address && address.address.area)
+  
+  // Landmark
+  .form__group 
+    label.form__label(for='address[landmark]')
+      | Landmark
+    input.form__input(type='text' name='address[landmark]' id='address[landmark]' placeholder='Enter landmark' spellcheck='false' minlength=2 maxlength=50 value=address && address.address && address.address.landmark)
+    
+  -
+    let selectedState = 0, selectedDistrict = 0;
+    if(address && address.address && address.address.state){
+      selectedState = locationDetails.findIndex(location => location.state === address.address.state);
+    }
+
+    if(address && address.address && address.address.district){
+      selectedDistrict = locationDetails[selectedState].districts.findIndex(district => district === address.address.state);
+    }
+
+  // State
+  .form__group 
+    label.form__label(for='address[state]')
+      span.form__star *
+      | State/Union Territory
+    select.form__select.js--components-function--state-district-select(name='address[state]' id='address[state]' data-district-js-query='#address-district')
+      each location, i in locationDetails 
+        if i === selectedState
+          option(value=location.state selected)= location.state
+        else
+          option(value=location.state)= location.state
+    
+  // District
+  .form__group 
+    label.form__label(for='address-district')
+      span.form__star *
+      | District
+    select.form__select(name='address[district]' id='address-district')
+      each district, i in locationDetails[selectedState].districts 
+        if i === selectedDistrict
+          option(value=district selected)= district
+        else
+          option(value=district)= district
+
+  // Pincode
+  .form__group 
+    label.form__label(for='address[pincode]')
+      span.form__star *
+      | Pincode
+    input.form__input(type='text' name='address[pincode]' id='address[pincode]' placeholder='Enter Pincode' spellcheck='false' pattern!='^[0-9]*$' title='Please enter a valid pincode' minlength=6 maxlength=6 required value=address && address.address && address.address.pincode)
+
+  // Mobile
+  .form__group
+    label.form__label(for='mobile')
+      span.form__star *
+      | Mobile
+    input.form__input#mobile(type='tel' name='mobile' placeholder='Your Mobile' pattern=String.raw`^(?:(?:\+|0{0,2})91(\s*[\- ]\s*)?|[0]?)?[789]\d{9}$` title='Please enter a valid indian number' value=address && address.mobile required)
