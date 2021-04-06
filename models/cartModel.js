@@ -81,6 +81,21 @@ cartSchema.methods.verifyCart = function () {
   });
 };
 
+cartSchema.methods.verifyCartBeforeCheckout = function () {
+  if (this.products.length <= 0) {
+    throw new AppError('There must be some items with which you checkout', 400);
+  }
+
+  this.products.forEach((product) => {
+    if (!product.product || product.quantity > product.maxQuantityAllowedNow) {
+      throw new AppError(
+        'There is some update in your cart, cannot checkout!',
+        400
+      );
+    }
+  });
+};
+
 cartSchema.methods.verifyCartForCheckout = function (expectedProducts) {
   if (!expectedProducts) {
     expectedProducts = [];

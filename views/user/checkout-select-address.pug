@@ -10,7 +10,7 @@ mixin addressCardEachItem(value, comma=false, blockElement=false)
 mixin addressCard(address)
   .inner-card.checkout-select-address-card
     .checkout-select-address-card__checbox-outer 
-      input.checkout-select-address-card__checkbox(type='radio' name='address' id=address.id)
+      input.checkout-select-address-card__checkbox(type='radio' name='address' id=address.id value=address.id)
       label.checkout-select-address-card__checbox-label(for=address.id) 
     .checkout-select-address-card__address-outer
       +addressCardEachItem(address.name, false, true)
@@ -26,7 +26,7 @@ mixin addressCard(address)
 block loginSignupContent
   h2.heading-quadinary.heading-quadinary--2 Select an address
 
-  form.form
+  form.form#checkout-select-address-form
 
     each address in documents
       +addressCard(address)
@@ -37,3 +37,11 @@ block loginSignupContent
         span.btn--load__load-content
           i.fa.fa-circle-o-notch.fa-spin
           | &nbsp;Loading
+
+    ul.login-signup__extra-list
+      li.login-signup__extra-list-item
+        | Checkout with new address?&nbsp;
+        a.btn.btn--text(href='/checkout/address/new') New Address
+      li.login-signup__extra-list-item
+        |  Go back to Cart?&nbsp;
+        a.btn.btn--text(href='/cart') Go to Cart

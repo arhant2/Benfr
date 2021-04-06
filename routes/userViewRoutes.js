@@ -3,6 +3,7 @@ const express = require('express');
 const authController = require('../controllers/authController');
 const addressController = require('../controllers/addressController');
 const userViewController = require('../controllers/userViewController');
+const cartController = require('../controllers/cartController');
 
 const router = express.Router();
 
@@ -180,10 +181,13 @@ router.get(
 );
 
 router.get(
-  '/checkout',
+  '/checkout/:id',
   userViewController.setSidebarItems,
   authController.isLoggedIn,
   authController.protectView,
+  addressController.checkIfAddressBelongsTouser,
+  userViewController.getCheckoutMiddlewareChangeDocumentToAddressAndAttach,
+  cartController.verifyAndAttachCartBeforeCheckout,
   userViewController.getCheckout
 );
 

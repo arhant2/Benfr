@@ -4,6 +4,7 @@ import './ajax/add-to-cart-btn';
 import './ajax/address';
 import './ajax/cart';
 import './ajax/change-my-email';
+import './ajax/checkout-address';
 import './ajax/forgot-password';
 import './ajax/login';
 import './ajax/reset-password';

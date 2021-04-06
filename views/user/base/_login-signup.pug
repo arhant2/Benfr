@@ -6,6 +6,7 @@ mixin loginSignupList(links)
       li.login_signup__footer-list-item: a.btn.btn--text(href=link[0])= link[1]
 
 block body
+  include ../components/_confirm-dialog
   .login-signup
     .login-signup__outer-box
       .login-signup__logo

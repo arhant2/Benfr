@@ -423,7 +423,11 @@ exports.getCart = catchAsync(async (req, res, next) => {
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Checkout
 exports.getCheckoutSelectAddress = catchAsync(async (req, res, next) => {
-  const documents = await Address.find();
+  const documents = await Address.find({ user: req.customs.user.id });
+
+  if (!documents) {
+    return res.redirect('/checkout/address/new');
+  }
 
   res.render('user/checkout-select-address', {
     documents,
@@ -434,12 +438,21 @@ exports.getCheckoutNewAddress = catchAsync(async (req, res, next) => {
   res.render('user/checkout-new-address');
 });
 
-exports.getCheckout = catchAsync(async (req, res, next) => {
-  const cart = await Cart.findOne({ user: req.customs.user.id });
-  const address = await Address.findById(req.query.address);
+exports.getCheckoutMiddlewareChangeDocumentToAddressAndAttach = (
+  req,
+  res,
+  next
+) => {
+  req.customs.address = req.customs.document;
+  delete req.customs.document;
 
+  res.locals.address = req.customs.address;
+
+  next();
+};
+
+exports.getCheckout = catchAsync(async (req, res, next) => {
   res.render('user/checkout', {
-    document: cart,
-    address,
+    document: req.customs.document,
   });
 });

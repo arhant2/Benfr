@@ -92,3 +92,39 @@ exports.putCart = catchAsync(async (req, res, next) => {
     message: 'Put cart successful',
   });
 });
+
+//////////////////////////////////////////
+//// Verify cart before checkout
+exports.verifyAndAttachCartBeforeCheckout = catchAsync(
+  async (req, res, next) => {
+    const cart = await Cart.findOne({ user: req.customs.user.id });
+
+    if (!cart) {
+      return next(
+        new AppError('There must be some items with which you checkout', 400)
+      );
+    }
+
+    cart.verifyCartBeforeCheckout();
+
+    req.customs.document = cart;
+
+    next();
+  }
+);
+
+//////////////////////////////////////////
+//// Verify cart for checkout
+exports.verifyAndAttachForCheckout = catchAsync(async (req, res, next) => {
+  const cart = await Cart.findOne({ user: req.customs.user.id });
+
+  if (!cart) {
+    return next(
+      new AppError('There must be some items with which you checkout', 400)
+    );
+  }
+
+  await cart.verifyCartForCheckout(req.body.products);
+
+  res.customs.document = cart;
+});

@@ -22,6 +22,11 @@ mixin eachCartProductCard(product, idx)
         p.cart__text-quantity Quantity: #{product.quantity}
         
 
+    .u-display-none
+      input(type='text' name=`products[${idx}][product]` value=product.product.id readonly)
+      input(type='number' name=`products[${idx}][quantity]` value=product.quantity readonly)
+      input(type='number' name=`products[${idx}][]` value=product.product.discountedPrice readonly)
+
 
 //- Main content
 block content
@@ -57,6 +62,9 @@ block content
             p.cart__address-each-line
               i.fas.fa-phone-alt
               | &nbsp;#{`+91 ${address.mobile.substr(0, 4)} ${address.mobile.substr(4, 3)} ${address.mobile.substr(7, 3)}`}
+
+          .u-display-none 
+            input(type='text' name='address' value=address.id)
 
 
       // Summary

@@ -30,15 +30,7 @@ exports.checkout = catchAsync(async (req, res, next) => {
     );
   }
 
-  const cart = await Cart.findOne({ user: req.customs.user.id });
-
-  if (!cart) {
-    return next(
-      new AppError('There must be some items with which you checkout', 400)
-    );
-  }
-
-  await cart.verifyCartForCheckout(req.body.products);
+  const cart = req.customs.document;
 
   // return res.send('Verified');
 

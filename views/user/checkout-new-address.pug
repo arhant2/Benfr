@@ -5,13 +5,20 @@ include mixins/_address-form-inputs
 block loginSignupContent
   h2.heading-quadinary.heading-quadinary--2 New address (For checkout)
 
-  form.form
+  form.form#checkout-new-address-form
     +addressFormInputs  
 
-
     .form__btn-group
-      button#login-form-btn.btn.btn--full.btn--round.btn--red.btn--load
+      button#checkout-new-address-form-btn.btn.btn--full.btn--round.btn--red.btn--load
         span.btn--load__content Save and continue
         span.btn--load__load-content
           i.fa.fa-circle-o-notch.fa-spin
           | &nbsp;Loading
+
+  ul.login-signup__extra-list
+      li.login-signup__extra-list-item
+        | Checkout with existing address?&nbsp;
+        a.btn.btn--text(href='/checkout/address') Existing Address
+      li.login-signup__extra-list-item
+        |  Go back to Cart?&nbsp;
+        a.btn.btn--text(href='/cart') Go to Cart

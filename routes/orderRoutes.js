@@ -2,6 +2,7 @@ const express = require('express');
 
 const authController = require('../controllers/authController');
 const orderController = require('../controllers/orderController');
+const cartController = require('../controllers/cartController');
 
 const router = express.Router();
 
@@ -12,6 +13,7 @@ router.post(
   '/checkout',
   authController.protect,
   authController.restrictTo('user'),
+  cartController.verifyAndAttachForCheckout,
   orderController.checkout
 );
 

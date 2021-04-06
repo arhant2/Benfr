@@ -78,4 +78,9 @@ block content
             th.cart__summary-table-head Total
             td.cart__summary-table-data= amount(document.grandTotal)
 
-        button.btn.btn--new-blue.btn--round.btn--full Checkout
+        if document.products && document.products.length > 0
+
+          button.btn.btn--new-blue.btn--round.btn--full.js--components-function--btn-confirm-redirect(type='button' data-confirm-message='Proceed to Checkout? Please ensure you have saved the changes.' data-redirect-to='/checkout/address') Checkout
+
+        else 
+          button.btn.btn--new-blue.btn--round.btn--full(disabled) Checkout
