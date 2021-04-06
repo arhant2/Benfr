@@ -1,69 +1,101 @@
 const mongoose = require('mongoose');
-const catchAsync = require('../utils/catchAsync');
-// const AppError = require('../utils/AppError');
-const Product = require('../models/productModel');
 
-exports.verifyCartMiddleware = catchAsync(async (req, res, next) => {
-  req.customs.verifyCart = {
-    changed: false,
-  };
-  if (
-    !req.body.products ||
-    !Array.isArray(req.body.products) ||
-    req.body.products.length === 0
-  ) {
-    req.customs.verifyCart.changed = true;
-    req.req.body.products = [];
-    return next();
+const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/AppError');
+const Order = require('../models/orderModel');
+const Cart = require('../models/cartModel');
+const Address = require('../models/addressModel');
+
+const handlerFactory = require('./handlerFactory')(Order, 'order', 'orders');
+
+//////////////////////////////////////////
+// Checkout
+//////////////////////////////////////////
+exports.checkout = catchAsync(async (req, res, next) => {
+  // Check if body contains an address
+  if (!req.body.address || !mongoose.isValidObjectId(req.body.address)) {
+    return next(new AppError('Invalid address, please enter an address'));
   }
-  const taken = {};
-  req.body.products.forEach((product) => {
-    if (
-      !(typeof product === 'object') ||
-      !mongoose.isValidObjectId(product.id) ||
-      !taken[product.id] ||
-      typeof product.name !== 'string' ||
-      typeof product !== 'number' ||
-      product.price <= 0 ||
-      !Number.isInteger(Number(product.quantity)) ||
-      product.quantity < 1
-    ) {
-      req.customs.verifyCart.changed = true;
-      req.body.products = [];
-      return next();
-    }
-    taken[product.id] = true;
+
+  const address = await Address.findOne({
+    _id: req.body.address,
+    user: req.customs.user.id,
   });
-  const productsDB = await Product.find({
-    _id: {
-      $in: req.body.products.map((el) => el.id),
-    },
+  if (!address) {
+    return next(
+      new AppError(
+        'No address with specified details found associated with current user',
+        404
+      )
+    );
+  }
+
+  const cart = await Cart.findOne({ user: req.customs.user.id });
+
+  if (!cart) {
+    return next(
+      new AppError('There must be some items with which you checkout', 400)
+    );
+  }
+
+  await cart.verifyCartForCheckout(req.body.products);
+
+  // return res.send('Verified');
+
+  const order = await Order.newOrder(req.customs.user, address, cart);
+
+  res.status(201).json({
+    status: 'success',
+    message: 'Successfully placed the order',
+    order,
   });
-  const index = {};
-  productsDB.forEach((product, i) => {
-    index[product.id] = i;
+});
+
+//////////////////////////////////////////
+// Next stage
+//////////////////////////////////////////
+exports.nextStage = catchAsync(async (req, res, next) => {
+  const order = await Order.findById(req.params.id);
+
+  if (!order) {
+    return next(new AppError('No order found with given details'));
+  }
+
+  await order.nextStage(req.body.currentStage, req.body.products);
+});
+
+//////////////////////////////////////////
+// For testing
+//////////////////////////////////////////
+exports.getAll = handlerFactory.getAll;
+exports.getOne = handlerFactory.getOne;
+
+//////////////////////////////////////////
+// If order exists and user has priviliges to access it
+//////////////////////////////////////////
+exports.orderExistsAndHavePriviliges = catchAsync(async (req, res, next) => {
+  const order =
+    req.customs.user.role === 'admin'
+      ? await Order.findById(req.params.id)
+      : await Order.findOne({ _id: req.params.id, user: req.customs.id });
+
+  if (!order) {
+    return next(new AppError('No order with specified details found.', 404));
+  }
+
+  req.customs.document = order;
+});
+
+//////////////////////////////////////////
+// cancel
+//////////////////////////////////////////
+exports.cancelOrder = catchAsync(async (req, res, next) => {
+  const order = req.customs.document;
+
+  await order.cancel();
+
+  res.status(200).json({
+    status: 'success',
+    message: 'Cancelled order successfully',
   });
-  const finalProducts = [];
-  let message = '';
-  req.body.products.forEach((product) => {
-    if (!index[product.id]) {
-      req.customs.verifyCart.changed = true;
-      message += `${product.name} is no more available\n`;
-      return;
-    }
-    const productDB = productsDB[index[product.id]];
-    if (product.name !== productDB.name) {
-      req.customs.verifyCart.changed = true;
-      product.name = productDB.name;
-    }
-    if (product.price !== productDB.price) {
-      req.customs.verifyCart.changed = true;
-      message += `Price of ${product.name} changed from ${product.price} to ${productDB.price}\n`;
-      product.price = productDB.price;
-    }
-    finalProducts.push(product);
-  });
-  req.body.products = finalProducts;
-  req.customs.verifyCart.message = message;
-  next();
 });

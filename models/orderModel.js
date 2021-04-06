@@ -70,17 +70,6 @@ const orderSchema = mongoose.Schema(
       default: ['booked'],
     },
     address: mongoose.Schema.Types.Mixed,
-    statusBy: [
-      {
-        id: mongoose.Types.ObjectId,
-        type: String,
-        enum: ['admin', 'user'],
-      },
-    ],
-    completed: {
-      type: Boolean,
-      default: false,
-    },
     cancelled: {
       by: {
         user: { type: mongoose.Types.ObjectId, ref: 'User' },
@@ -143,13 +132,15 @@ orderSchema.statics.newOrder = async function (user, address, cart) {
 
   await order.save();
 
-  await Promise.allSettled(
-    order.products.map(({ product, quantity }) => {
-      product.currentStock -= quantity;
-      product.quantitySold += quantity;
+  const arr = await Promise.allSettled([
+    ...order.products.map(({ product, quantity }) => {
+      product.currentStock -= quantity.now;
+      product.quantitySold += quantity.now;
+
       return product.save();
-    })
-  );
+    }),
+    cart.remove(),
+  ]);
 };
 
 //////////////////////////////////////////
@@ -160,7 +151,16 @@ orderSchema.statics.newOrder = async function (user, address, cart) {
 //        ^                                   ^
 //        |      <~~~ Can change here ~~~>    |
 
-orderSchema.methods.nextStep = async function (productsRequested) {
+orderSchema.methods.nextStage = async function (
+  expectedStatus,
+  productsRequested
+) {
+  if (this.status !== expectedStatus) {
+    throw new AppError(
+      'Cannot move to next stage, try again later or try by refreshing (Order not in requested/displayed stage)',
+      400
+    );
+  }
   // If cancelled or delivered nothing can be done
   if (this.status === 'cancelled') {
     throw new AppError('Cancelled order cannot be modified', 400);

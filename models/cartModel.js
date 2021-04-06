@@ -21,7 +21,7 @@ const cartProductSchema = new mongoose.Schema(
 );
 
 cartProductSchema.virtual('totalEach').get(function () {
-  return this.product.discountedPrice * this.quantity;
+  return this?.product.discountedPrice * this.quantity;
 });
 
 const cartSchema = new mongoose.Schema(
@@ -68,7 +68,7 @@ cartSchema.methods.clearCart = function () {
 cartSchema.methods.verifyCart = function () {
   this.products = this.products.filter(
     (product) =>
-      !!product &&
+      product.product &&
       product.quantity >= 0 &&
       product.product.maxQuantityAllowedNow >= 0
   );
@@ -82,18 +82,33 @@ cartSchema.methods.verifyCart = function () {
 };
 
 cartSchema.methods.verifyCartForCheckout = function (expectedProducts) {
+  if (!expectedProducts) {
+    expectedProducts = [];
+  }
+
+  const set = new Set();
+
   // Check if expected products are in correct form
   if (
     !Array.isArray(expectedProducts) ||
-    !expectedProducts.every(
-      (product) =>
+    !expectedProducts.every((product) => {
+      const isOk =
         typeof product === 'object' &&
         mongoose.isValidObjectId(product.product) &&
         typeof product.quantity === 'number' &&
-        typeof product.price === 'number'
-    )
+        typeof product.price === 'number' &&
+        !set.has(product.product);
+
+      isOk && set.add(product.product);
+
+      return isOk;
+    })
   ) {
     throw new AppError('Invalid request!', 400);
+  }
+
+  if (expectedProducts.length <= 0) {
+    throw new AppError('There must be some items with which you checkout', 400);
   }
 
   // Check if products in cart are still valid
@@ -101,7 +116,8 @@ cartSchema.methods.verifyCartForCheckout = function (expectedProducts) {
     expectedProducts.length !== this.products.length ||
     !this.products.every(
       (product) =>
-        !!product && product.quantity <= product.product.maxQuantityAllowedNow
+        product.product &&
+        product.quantity <= product.product.maxQuantityAllowedNow
     )
   ) {
     throw new AppError(
@@ -113,12 +129,13 @@ cartSchema.methods.verifyCartForCheckout = function (expectedProducts) {
   const cartProducts = {};
 
   this.products.forEach((product) => {
-    cartProducts[product.id] = product;
+    cartProducts[product.product.id] = product;
   });
 
   if (
     !expectedProducts.every((expectedProduct) => {
       const cartProduct = cartProducts[expectedProduct.product];
+
       return (
         cartProduct &&
         cartProduct.quantity === expectedProduct.quantity &&

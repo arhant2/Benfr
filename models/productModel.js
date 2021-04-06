@@ -136,7 +136,7 @@ const productSchema = new mongoose.Schema(
       required: true,
       min: [1, 'Maximum quantity of products must be atleast 1'],
     },
-    quanitySold: {
+    quantitySold: {
       type: Number,
       default: 0,
     },
