@@ -3,11 +3,13 @@ const mongoose = require('mongoose');
 const Product = require('./productModel');
 const AppError = require('../utils/AppError');
 
-const variationSchema = mongoose.Schema(
+// VariationSchema to use virtuals
+const variationSchema = new mongoose.Schema(
   {
     booked: Number,
     confirmed: Number,
     delivered: Number,
+    // now: Number, (virtual)
   },
   {
     toJSON: { virtuals: true },
@@ -25,7 +27,8 @@ variationSchema.virtual('now').get(function () {
   return this.booked;
 });
 
-const orderProductSchema = mongoose.Schema(
+// product scheama to use totalEach virtual
+const orderProductSchema = new mongoose.Schema(
   {
     product: {
       type: mongoose.Types.ObjectId,
@@ -47,7 +50,26 @@ orderProductSchema.virtual('totalEach').get(function () {
   return this.discountedPrice * this.quantity.now;
 });
 
-const orderSchema = mongoose.Schema(
+const statusSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      enum: [
+        'booked',
+        'confirmed',
+        'packed',
+        'inTransit',
+        'delivered',
+        'cancelled',
+      ],
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+const orderSchema = new mongoose.Schema(
   {
     user: {
       type: mongoose.Types.ObjectId,
@@ -57,17 +79,13 @@ const orderSchema = mongoose.Schema(
     // subTotal: Number, (virtual)
     // grandTotal: Number, (virtual)
     deliveryCharge: Number,
-    status: {
-      type: [String],
-      enum: [
-        'booked',
-        'confirmed',
-        'packed',
-        'inTransit',
-        'delivered',
-        'cancelled',
+    statusAll: {
+      type: [statusSchema],
+      default: [
+        {
+          name: 'booked',
+        },
       ],
-      default: ['booked'],
     },
     address: mongoose.Schema.Types.Mixed,
     cancelled: {
@@ -98,6 +116,10 @@ const orderSchema = mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
+
+orderSchema.virtual('status').get(function () {
+  return this.statusAll[this.statusAll.length - 1];
+});
 
 orderSchema.virtual('subTotal').get(function () {
   return this.products.reduce((total, product) => total + product.totalEach, 0);
@@ -155,17 +177,17 @@ orderSchema.methods.nextStage = async function (
   expectedStatus,
   productsRequested
 ) {
-  if (this.status !== expectedStatus) {
+  if (this.status.name !== expectedStatus) {
     throw new AppError(
       'Cannot move to next stage, try again later or try by refreshing (Order not in requested/displayed stage)',
       400
     );
   }
   // If cancelled or delivered nothing can be done
-  if (this.status === 'cancelled') {
+  if (this.status.name === 'cancelled') {
     throw new AppError('Cancelled order cannot be modified', 400);
   }
-  if (this.status === 'delivered') {
+  if (this.status.name === 'delivered') {
     throw new AppError('Delivered order cannot be modified', 400);
   }
 
@@ -173,7 +195,7 @@ orderSchema.methods.nextStage = async function (
   const mongooseQueries = [];
 
   // If booked or inTranit productsRequested can be there for updation
-  if (this.status === 'booked' || this.status === 'inTransit') {
+  if (this.status.name === 'booked' || this.status.name === 'inTransit') {
     // if not there create one
     if (productsRequested === undefined) {
       productsRequested = [];
@@ -236,7 +258,7 @@ orderSchema.methods.nextStage = async function (
         );
       }
 
-      if (this.status === 'booked') {
+      if (this.status.name === 'booked') {
         productDB.quantity.confirmed = productRequested.quantity;
       } else {
         productDB.delivered = productRequested.quantity;
@@ -253,8 +275,12 @@ orderSchema.methods.nextStage = async function (
   ];
 
   // Change status
-  this.status =
-    statusTypes[statusTypes.findIndex((status) => status === this.status) + 1];
+  this.statusAll.push({
+    name:
+      statusTypes[
+        statusTypes.findIndex((status) => status === this.status.name) + 1
+      ],
+  });
 
   // Save document
   await this.save();
@@ -270,14 +296,14 @@ orderSchema.methods.nextStage = async function (
 //////////////////////////////////////////
 orderSchema.methods.cancelOrder = async function (user, reason) {
   // If cancelled or delivered nothing can be done
-  if (this.status === 'cancelled') {
+  if (this.status.name === 'cancelled') {
     throw new AppError('Order is already cancelled', 400);
   }
-  if (this.status === 'delivered') {
+  if (this.status.name === 'delivered') {
     throw new AppError('Delivered order cannot be cancelled', 400);
   }
 
-  this.status = 'cancelled';
+  this.statusAll.push({ name: 'cancelled' });
   this.status.cancelled = {
     by: user,
     userType: user.role,
