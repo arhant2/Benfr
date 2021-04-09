@@ -32,9 +32,35 @@ const upload = multer({
 });
 
 const deleteFilesCloudinary = async (obj) => {
-  if (!obj) {
+  if (!obj || !obj?.length) {
     return;
   }
+
+  // For testing
+  // (() => {
+  //   const path = require('path');
+  //   const fs = require('fs');
+  //   const dateFormator = require('../utils/dateFormator');
+
+  //   const data = JSON.parse(
+  //     fs.readFileSync(
+  //       path.join(__dirname, '../z__playground/deleteImages.json'),
+  //       'utf-8'
+  //     )
+  //   );
+
+  //   data.push(obj);
+  //   data.push({
+  //     time: dateFormator.dateTimeDayFormatted(Date.now()),
+  //   });
+
+  //   fs.writeFileSync(
+  //     path.join(__dirname, '../z__playground/deleteImages.json'),
+  //     JSON.stringify(data)
+  //   );
+
+  //   console.log(obj);
+  // })();
 
   const res = await Promise.allSettled(
     Object.values(obj).map((el) => cloudinary.uploader.destroy(el.filename))
@@ -70,7 +96,6 @@ const uploadFilesCloudinaryMiddlware = (folder = 'benfr') =>
             entry[1].path,
             {
               folder,
-              format: 'png',
             }
           );
 
@@ -87,16 +112,50 @@ const uploadFilesCloudinaryMiddlware = (folder = 'benfr') =>
 
     if (anyFileRejected) {
       await deleteFilesCloudinary(filesAccepted);
-      return next(AppError('Something went wrong!', 500));
+      return next(new AppError('Something went wrong!', 500));
     }
 
     req.files = filesAccepted;
     next();
   });
 
+const getThumbnailLink = (publicId) =>
+  cloudinary.url(publicId, {
+    width: 250,
+    height: 250,
+    quality: 'auto:low',
+    crop: 'fit',
+  });
+
+const uploadThubmnail = async (publicIdOringinal, folder) => {
+  const publicId = ((arr = publicIdOringinal.split('/')) =>
+    arr[arr.length - 1])();
+
+  const resCloudinary = await promisify(cloudinary.uploader.upload)(
+    getThumbnailLink(publicIdOringinal),
+    {
+      folder,
+      public_id: publicId,
+      overwrite: false,
+    }
+  );
+
+  return {
+    path: resCloudinary.url,
+    filename: resCloudinary.public_id,
+  };
+
+  try {
+  } catch (err) {
+    throw new AppError('Server error, please try again later', 500);
+  }
+};
+
 module.exports = {
   cloudinary,
   upload,
   deleteFilesCloudinary,
   uploadFilesCloudinaryMiddlware,
+  getThumbnailLink,
+  uploadThubmnail,
 };

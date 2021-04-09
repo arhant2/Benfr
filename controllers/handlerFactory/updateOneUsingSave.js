@@ -2,10 +2,18 @@ const catchAsync = require('../../utils/catchAsync');
 const AppError = require('../../utils/AppError');
 const { deleteFilesCloudinary } = require('../../cloudinary');
 
-const handleImagesAndData = async (req, doc) => {
+const handleImagesAndData = (req, doc) => {
   const deleteIndices = Object.keys(req.body)
     .filter((arg) => arg.startsWith('deleteImage') && req.body[arg])
-    .map((arg) => Number(arg.substring(11)));
+    .map((arg) => Number(arg.substring('deleteImage'.length)));
+
+  req.files &&
+    Object.keys(req.files).forEach((file) => {
+      const idx = file.substring('image'.length) * 1;
+      if (!deleteIndices.includes(idx)) {
+        deleteIndices.push(idx);
+      }
+    });
 
   if (req.files || deleteIndices.length) {
     if (!doc.images) {
@@ -22,21 +30,19 @@ const handleImagesAndData = async (req, doc) => {
         }
         return;
       }
-      if (doc.images[index]) {
-        deleteImages.push(doc.images[index]);
-      }
+
       images[index] = doc.images[index];
     });
-
-    await deleteFilesCloudinary(deleteImages);
 
     Object.keys(req.files).forEach((key) => {
       images[Number(key.substring(5))] = req.files[key];
     });
 
-    doc.images = [...images].filter((el) => el !== undefined);
+    doc.images = [...images].filter((el) => el !== undefined && el !== null);
 
     // console.log(doc.images);
+
+    return deleteFilesCloudinary(deleteImages);
   }
 
   Object.keys(req.body)
@@ -61,13 +67,11 @@ module.exports = (Model, { singularName }) => {
         );
       }
 
-      await handleImagesAndData(req, doc);
-
-      console.log(req.body);
-
-      // console.log(doc);
+      const handleImagesPromise = handleImagesAndData(req, doc);
 
       await doc.save();
+
+      await handleImagesPromise;
 
       // console.log(doc);
       // doc.images.filter((image) => image !== undefined);

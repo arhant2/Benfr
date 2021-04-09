@@ -1,1 +1,0 @@
--> Change time for unverified user token to 1 day

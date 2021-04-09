@@ -126,5 +126,7 @@ exports.verifyAndAttachForCheckout = catchAsync(async (req, res, next) => {
 
   await cart.verifyCartForCheckout(req.body.products);
 
-  res.customs.document = cart;
+  req.customs.document = cart;
+
+  next();
 });

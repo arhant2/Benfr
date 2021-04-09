@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const Product = require('./productModel');
 const AppError = require('../utils/AppError');
 
+const { uploadThubmnail } = require('../cloudinary');
+
 // VariationSchema to use virtuals
 const variationSchema = new mongoose.Schema(
   {
@@ -37,6 +39,10 @@ const orderProductSchema = new mongoose.Schema(
     name: String,
     price: Number,
     discountedPrice: Number,
+    thumbnail: {
+      path: String,
+      filename: String,
+    },
     quantity: variationSchema,
     // totalEach: Number (virtual)
   },
@@ -140,17 +146,32 @@ orderSchema.statics.newOrder = async function (user, address, cart) {
   order.user = user;
   order.address = address;
 
-  order.products = cart.products.map(({ product, quantity }) => ({
-    product,
-    name: product.name,
-    price: product.price,
-    discountedPrice: product.discountedPrice,
-    quantity: {
-      booked: quantity,
-    },
-  }));
-
   order.deliveryCharge = cart.deliveryCharge;
+
+  order.products = await Promise.all(
+    cart.products.map(async ({ product, quantity }) => {
+      const obj = {
+        product: product.id,
+        name: product.name,
+        price: product.price,
+        discountedPrice: product.discountedPrice,
+        quantity: {
+          booked: quantity,
+        },
+      };
+
+      const filename = product.images?.[0]?.filename;
+
+      if (filename) {
+        obj.thumbnail = await uploadThubmnail(
+          filename,
+          'benfr/thumbnails/products'
+        );
+      }
+
+      return obj;
+    })
+  );
 
   await order.save();
 
@@ -163,6 +184,8 @@ orderSchema.statics.newOrder = async function (user, address, cart) {
     }),
     cart.remove(),
   ]);
+
+  return order;
 };
 
 //////////////////////////////////////////

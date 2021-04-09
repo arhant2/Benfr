@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 const AppError = require('../utils/AppError');
 const stringNormalize = require('../utils/stringNormalize');
 const gramsGenerator = require('../utils/gramsGenerator');
+const imageSchema = require('./helpers/imageSchema');
 // const arrayRemoveReduntantAndUnecessary = require('../utils/arrayRemoveReduntantAndUnecessary');
 
 const productSchema = new mongoose.Schema(
@@ -141,12 +142,7 @@ const productSchema = new mongoose.Schema(
       default: 0,
     },
     images: {
-      type: [
-        {
-          path: String,
-          filename: String,
-        },
-      ],
+      type: [imageSchema],
       default: [],
     },
     grams: {
