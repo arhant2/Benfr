@@ -191,4 +191,20 @@ router.get(
   userViewController.getCheckout
 );
 
+const catchAsync = require('../utils/catchAsync');
+const Order = require('../models/orderModel');
+
+//// Orders
+router.get(
+  '/orders/:id',
+  userViewController.setSidebarItems,
+  authController.isLoggedIn,
+  catchAsync(async (req, res, next) => {
+    const document = await Order.findById(req.params.id);
+    res.render('user/order-one', {
+      document: document,
+    });
+  })
+);
+
 module.exports = router;

@@ -77,6 +77,14 @@ textarea {
     height: 0.5rem;
     border-radius: 0.5rem;
   }
+
+  &--no-bottom-line {
+    margin-bottom: 0;
+
+    &::after {
+      display: none;
+    }
+  }
 }
 
 .heading-tertiary {
@@ -100,7 +108,7 @@ textarea {
     font-size: 3.4rem;
   }
 
-  &::before {
+  &::after {
     content: '';
     background: #ff523b;
     width: 100px;
@@ -109,6 +117,14 @@ textarea {
     position: absolute;
     bottom: -3px;
     left: 0%;
+  }
+
+  &--no-bottom-line {
+    margin-bottom: 0;
+
+    &::after {
+      display: none;
+    }
   }
 }
 
@@ -134,6 +150,11 @@ textarea {
   }
 }
 
+.heading-pentaniary {
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
 .para-primary {
   font-size: 1.4rem;
   line-height: 1.9;
@@ -142,4 +163,28 @@ textarea {
 
 .strong-text {
   font-weight: 600;
+}
+
+.light-text {
+  color: var(--color-grey-dark-2);
+}
+
+.smaller-text {
+  font-size: 1.15rem;
+}
+
+.small-text {
+  font-size: 1.3rem;
+
+  &--light {
+    color: var(--color-grey-dark-2);
+  }
+}
+
+.line-height-small {
+  line-height: 1.5;
+}
+
+.text-align-right {
+  text-align: right;
 }

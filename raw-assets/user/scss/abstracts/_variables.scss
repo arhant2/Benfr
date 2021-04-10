@@ -1,5 +1,5 @@
 // This loop will have to have generic color components, they can be easily iterated
-$colors: 'purple', 'green', 'blue', 'yellow', 'red', 'pink', 'primary',
+$colors: 'purple', 'green', 'blue', 'yellow', 'red', 'pink', 'orange', 'primary',
   'secondary', 'new-blue';
 
 :root {
@@ -49,10 +49,17 @@ $colors: 'purple', 'green', 'blue', 'yellow', 'red', 'pink', 'primary',
   --color-pink-dark: #e0165b;
   --color-pink-darker: #b21148;
 
+  --color-orange-lighter: #ffbbb2;
+  --color-orange-light: #ff8e7f;
+  --color-orange: #ff523b;
+  --color-orange-dark: #f61d00;
+  --color-orange-darker: #c31700;
+
   /* Get darker from 1 to 4 */
   --color-grey-light-1: #faf9f9;
   --color-grey-light-2: #f4f2f2;
   --color-grey-light-3: #f0eeee;
+  --color-grey-light-3_5: #dfdfdf;
   --color-grey-light-4: #ccc;
 
   /* Get lihter from 1 to 4 */

@@ -1,0 +1,99 @@
+extends base/_account
+
+include mixins/_account-box
+
+block accountContent
+  +accountBox(`Order #${document.id}`, [['/orders', 'Orders'], ['#', 'View Order']])
+
+    .my-order-one-container
+      // Order summary
+      section.my-order-one-section.my-order-one-summary
+        .my-order-one-summary__by-box
+          .my-order-one-summary__by-heading.heading-tertiary.heading-tertiary--no-bottom-line Order 
+          .my-order-one-summary__by-person By: #{document.address.name}
+
+        .my-order-one-summary__completed-box 
+          .my-order-one-summary__completed-heading.heading-pentaniary Completed 
+          .my-order-one-summary__completed-value.heading-tertiary.heading-tertiary--no-bottom-line #{document.statusAll.length * 20}%
+          .progress 
+            .progress__bar.progress__bar--orange(style=`width: ${document.statusAll.length * 20}%;`)
+
+        .my-order-one-summary__booking-box
+          .my-order-one-summary__booking-heading.heading-pentaniary Booking Date 
+          .my-order-one-summary__booking-date 8th April, 2021
+
+
+      // Order status
+      section.my-order-one-section.my-order-one-status
+        each status in [['booked', 'Ordered'], ['confirmed', 'Confirmed'], ['packed', 'Packed'], ['In-Transit', 'inTransit'], ['delivered', 'Delivered']]
+            - const foundStatus = document.statusAll.find(foundStatus => foundStatus.name === status[0]);
+
+            .my-order-one-status__box(class=foundStatus?'my-order-one-status__box--active':'my-order-one-status__box--inactive')
+              .my-order-one-status__circle
+              .my-order-one-status__name= status[1]
+              .my-order-one-status__date.light-text.smaller-text= foundStatus ? helpers.dateFormator.dateFormatted(foundStatus.createdAt): 'XX XX, XXXXX'
+
+
+      // Billing info
+      section.my-order-one-section.my-order-one-billing
+        .my-order-one-section__header 
+          h3.heading-tertiary.heading-tertiary--no-bottom-line Billing Info
+          .my-order-one-section__btns-group 
+            button.btn.btn--red.btn--round Cancel Order
+        
+        .my-order-one-billing__body
+          .my-order-one-billing__each 
+            .my-order-one-billing__each-heading.light-text.smaller-text Payment Method
+            .my-order-one-billing__each-body
+              p Cash on Delivery
+
+          .my-order-one-billing__each 
+            .my-order-one-billing__each-heading.light-text.smaller-text Ship to
+            .my-order-one-billing__each-body.line-height-small
+              p= document.address.name 
+              p #{document.address.address.flat},
+              p #{document.address.address.area},
+              if document.address.address.landmark 
+                p #{document.address.address.landmark},
+              p #{document.address.address.district}, 
+              p #{document.address.address.state} - 110059
+              p +91 9999 999 999
+
+          .my-order-one-billing__each 
+            .my-order-one-billing__each-heading.light-text.smaller-text Shipping method
+            .my-order-one-billing__each-body.text-align-right
+              p Standard
+
+
+      // Products
+      section.my-order-one-section.my-order-one-products
+        .my-order-one-section__header 
+          h3.heading-tertiary.heading-tertiary--no-bottom-line Products
+
+        table.my-order-one-products__table
+          colgroup 
+            col.my-order-one-products__col.my-order-one-products__col--product
+            col.my-order-one-products__col.my-order-one-products__col--quantity
+            col.my-order-one-products__col.my-order-one-products__col--total-each
+          each product in document.products
+            tr.my-order-one-products__row 
+              td.my-order-one-products__data.my-order-one-products__product
+                img.my-order-one-products__product-img(src=product.thumbnail && product.thumbnail.path || '/assets/user/img/no-image.jpg')   
+                span.my-order-one-products__product-name= product.name     
+              td.my-order-one-products__data.my-order-one-products__quantity x#{product.quantity.now}
+              td.my-order-one-products__data.my-order-one-products__total-each.strong-text ₹#{Number(product.totalEach).toLocaleString('en-IN', {maximumFractionDigits: 2})}
+  
+          tr.my-order-one-products__row-extras
+            td.my-order-one-products__data-extras
+            td.my-order-one-products__data-extras Subtotal
+            td.my-order-one-products__data-extras ₹#{Number(document.subTotal).toLocaleString('en-IN', {maximumFractionDigits: 2})}
+
+          tr.my-order-one-products__row-extras
+            td.my-order-one-products__data-extras
+            td.my-order-one-products__data-extras Delivery Charges
+            td.my-order-one-products__data-extras ₹#{Number(document.deliveryCharge).toLocaleString('en-IN', {maximumFractionDigits: 2})}
+
+          tr.my-order-one-products__row-extras.strong-text
+            td.my-order-one-products__data-extras
+            td.my-order-one-products__data-extras Total
+            td.my-order-one-products__data-extras ₹#{Number(document.grandTotal).toLocaleString('en-IN', {maximumFractionDigits: 2})}

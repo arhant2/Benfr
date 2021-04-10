@@ -3048,8 +3048,8 @@ var submitForm = function submitForm() {
               (0, _flashMessages.clearFlashMessages)();
 
               if (isNew) {
-                (0, _flashMessages.addFlashMessage)('success', "Successfully created ".concat(singularName.small, ". Reloading..."));
-                console.log(res);
+                (0, _flashMessages.addFlashMessage)('success', "Successfully created ".concat(singularName.small, ". Reloading...")); // console.log(res);
+
                 setTimeout(function () {
                   window.location.replace("/a/".concat(pluralName.small, "/").concat(res.data.data[singularName.small].id));
                 }, 2000);
@@ -25732,7 +25732,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61163" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49650" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
