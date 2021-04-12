@@ -1,9 +1,10 @@
 const express = require('express');
 
+const userViewController = require('../controllers/userViewController');
 const authController = require('../controllers/authController');
 const addressController = require('../controllers/addressController');
-const userViewController = require('../controllers/userViewController');
 const cartController = require('../controllers/cartController');
+const orderController = require('../controllers/orderController');
 
 const router = express.Router();
 
@@ -191,20 +192,23 @@ router.get(
   userViewController.getCheckout
 );
 
-const catchAsync = require('../utils/catchAsync');
-const Order = require('../models/orderModel');
-
 //// Orders
 router.get(
   '/orders/:id',
   userViewController.setSidebarItems,
   authController.isLoggedIn,
-  catchAsync(async (req, res, next) => {
-    const document = await Order.findById(req.params.id);
-    res.render('user/order-one', {
-      document: document,
-    });
-  })
+  authController.protectView,
+  orderController.checkIfOrderBelongsTouser,
+  userViewController.getOneOrder
+);
+
+router.get(
+  '/orders',
+  userViewController.setSidebarItems,
+  authController.isLoggedIn,
+  authController.protectView,
+  userViewController.getAllOrdersMiddleware,
+  userViewController.getAllOrders
 );
 
 module.exports = router;

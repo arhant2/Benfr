@@ -151,7 +151,7 @@ orderSchema.statics.newOrder = async function (user, address, cart) {
   order.products = await Promise.all(
     cart.products.map(async ({ product, quantity }) => {
       const obj = {
-        product: product.id,
+        product: product,
         name: product.name,
         price: product.price,
         discountedPrice: product.discountedPrice,

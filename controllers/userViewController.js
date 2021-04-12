@@ -11,6 +11,7 @@ const Product = require('../models/productModel');
 const Address = require('../models/addressModel');
 const Cart = require('../models/cartModel');
 const Review = require('../models/reviewModel');
+const Order = require('../models/orderModel');
 const handlerFactoryUserViews = require('./handlerFactoryUserViews');
 
 const gramsGenerator = require('../utils/gramsGenerator');
@@ -37,6 +38,7 @@ const handlerFactoryReview = handlerFactoryUserViews(
   'review',
   'reviews'
 );
+const handlerFactoryOrder = handlerFactoryUserViews(Order, 'order', 'orders');
 
 // ===== Generic things ======
 
@@ -456,3 +458,18 @@ exports.getCheckout = catchAsync(async (req, res, next) => {
     document: req.customs.document,
   });
 });
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Orders
+exports.getAllOrdersMiddleware = (req, res, next) => {
+  req.customs.getAll = {
+    queryRestrict: {
+      user: req.customs.user.id,
+    },
+    limitDefault: 10,
+  };
+  next();
+};
+
+exports.getOneOrder = handlerFactoryOrder.getOne;
+exports.getAllOrders = handlerFactoryOrder.getAll;

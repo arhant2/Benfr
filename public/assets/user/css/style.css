@@ -209,6 +209,9 @@ textarea {
   font-family: var(--font-family-secondary);
   font-weight: 700;
 }
+.heading-tertiary--center {
+  transform-origin: 50% 0;
+}
 .heading-tertiary--bigger {
   font-size: 3.4rem;
 }
@@ -345,6 +348,7 @@ Utility class - usable classes
   /* 3. Rounded corner */
   /* 4. Big Button */
   /*5. Full width */
+  /*5. Border color */
   /* ----- Dark text ----- */
   /* -----  Special color buttons ----- */
 }
@@ -480,6 +484,14 @@ Utility class - usable classes
   font-weight: 600;
   letter-spacing: 2px;
   line-height: 1;
+}
+.btn--border-color {
+  background: var(--color-white);
+  color: var(--current-color);
+  border: 1px solid var(--current-color);
+}
+.btn--border-color:hover {
+  color: var(--color-white);
 }
 .btn--dark-text {
   color: var(--color-grey-dark-1);
@@ -1412,6 +1424,34 @@ Navbar
   color: var(--color-new-blue-light);
 }
 
+.order-confirmation {
+  background-color: var(--color-white);
+  border-radius: 0.4rem;
+  width: 90%;
+  max-width: 65rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem 0 5rem;
+}
+.order-confirmation__container {
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.65);
+  min-height: 100vh;
+  width: 100vw;
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.order-confirmation__video {
+  width: 40%;
+}
+.order-confirmation__para {
+  margin: -1rem 0 3rem;
+}
+
 .product-desc {
   font-weight: 400;
 }
@@ -1619,6 +1659,7 @@ Navbar
   background: var(--current-color);
   border-top-left-radius: 0.4rem;
   border-bottom-left-radius: 0.4rem;
+  width: calc(var(--percentage) * 1%);
 }
 .progress__bar--purple {
   --current-color-lighter: var(--color-purple-lighter);
@@ -2629,6 +2670,11 @@ Home
   grid-template-columns: 10rem 2fr 1fr 1fr;
   align-items: center;
   gap: 2%;
+  transition: all 0.2s;
+  border-left: 0 solid var(--color-primary);
+}
+.my-orders__card:hover {
+  border-left-width: 0.3rem;
 }
 .my-orders__box-1 {
   height: 10rem;
@@ -2744,6 +2790,11 @@ Home
 .my-orders__date {
   font-weight: 600;
   line-height: 1.4;
+}
+.my-orders__pagination {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 2rem;
 }
 
 .wishlist__main {

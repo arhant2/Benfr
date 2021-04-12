@@ -18,20 +18,35 @@ mixin eachCartProductCard(product, idx)
 
     .product-inner-card__main
       +productDesc(product.product, false, true, true)
-
         p.cart__text-quantity Quantity: #{product.quantity}
         
 
     .u-display-none
       input(type='text' name=`products[${idx}][product]` value=product.product.id readonly)
       input(type='number' name=`products[${idx}][quantity]` value=product.quantity readonly)
-      input(type='number' name=`products[${idx}][]` value=product.product.discountedPrice readonly)
+      input(type='number' name=`products[${idx}][price]` value=product.product.discountedPrice readonly)
 
+
+  
 
 //- Main content
 block content
 
-  section.card.cart
+  // Order confirmation
+  #orderConfirmation.order-confirmation__container.u-display-none(data-none-class='u-display-none')
+    section.order-confirmation
+      video.order-confirmation__video(src="/assets/user/video/order-confirmation.mp4" autoplay muted loop) 
+      
+      h2.heading-tertiary.heading-tertiary--center.heading-tertiary--no-bottom-line.order-confirmation__heading Your order has been placed
+
+      p.order-confirmation__para.light-text You will be receiving a confirmation email with order details
+
+      button#orderConfirmationBtn.order-confirmation__button.btn.btn--round.btn--new-blue.btn--border-color 
+        i.fas.fa-compass.fa-spin
+        | &nbsp;&nbsp;View the Order
+
+  // Actual content
+  form#checkout-form.card.cart
 
       // Main
       .cart__main
@@ -82,4 +97,8 @@ block content
             th.cart__summary-table-head Total
             td.cart__summary-table-data= amount(document.grandTotal)
 
-        button.btn.btn--new-blue.btn--round.btn--full Place Order
+        button#checkout-form-btn.btn.btn--new-blue.btn--round.btn--full.btn--load
+          span.btn--load__content Place Order
+          span.btn--load__load-content
+            i.fa.fa-circle-o-notch.fa-spin
+            | &nbsp;Loading

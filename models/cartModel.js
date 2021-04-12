@@ -21,7 +21,7 @@ const cartProductSchema = new mongoose.Schema(
 );
 
 cartProductSchema.virtual('totalEach').get(function () {
-  return this?.product.discountedPrice * this.quantity;
+  return this.product.discountedPrice * this.quantity;
 });
 
 const cartSchema = new mongoose.Schema(
@@ -110,8 +110,8 @@ cartSchema.methods.verifyCartForCheckout = function (expectedProducts) {
       const isOk =
         typeof product === 'object' &&
         mongoose.isValidObjectId(product.product) &&
-        typeof product.quantity === 'number' &&
-        typeof product.price === 'number' &&
+        typeof (product.quantity * 1) === 'number' &&
+        typeof (product.price * 1) === 'number' &&
         !set.has(product.product);
 
       isOk && set.add(product.product);
@@ -125,6 +125,11 @@ cartSchema.methods.verifyCartForCheckout = function (expectedProducts) {
   if (expectedProducts.length <= 0) {
     throw new AppError('There must be some items with which you checkout', 400);
   }
+
+  expectedProducts.forEach((product) => {
+    product.quantity *= 1;
+    product.price *= 1;
+  });
 
   // Check if products in cart are still valid
   if (

@@ -96,5 +96,7 @@
     background: var(--current-color);
     border-top-left-radius: 0.4rem;
     border-bottom-left-radius: 0.4rem;
+
+    width: calc(var(--percentage) * 1%);
   }
 }

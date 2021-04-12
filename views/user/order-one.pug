@@ -16,7 +16,7 @@ block accountContent
           .my-order-one-summary__completed-heading.heading-pentaniary Completed 
           .my-order-one-summary__completed-value.heading-tertiary.heading-tertiary--no-bottom-line #{document.statusAll.length * 20}%
           .progress 
-            .progress__bar.progress__bar--orange(style=`width: ${document.statusAll.length * 20}%;`)
+            .progress__bar.progress__bar--orange(style=`--percentage: ${document.statusAll.length * 20};`)
 
         .my-order-one-summary__booking-box
           .my-order-one-summary__booking-heading.heading-pentaniary Booking Date 

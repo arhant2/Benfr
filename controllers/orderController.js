@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/AppError');
 const Order = require('../models/orderModel');
-const Cart = require('../models/cartModel');
 const Address = require('../models/addressModel');
 
 const handlerFactory = require('./handlerFactory')(Order, 'order', 'orders');
@@ -39,7 +38,9 @@ exports.checkout = catchAsync(async (req, res, next) => {
   res.status(201).json({
     status: 'success',
     message: 'Successfully placed the order',
-    order,
+    data: {
+      order,
+    },
   });
 });
 
@@ -57,13 +58,7 @@ exports.nextStage = catchAsync(async (req, res, next) => {
 });
 
 //////////////////////////////////////////
-// For testing
-//////////////////////////////////////////
-exports.getAll = handlerFactory.getAll;
-exports.getOne = handlerFactory.getOne;
-
-//////////////////////////////////////////
-// If order exists and user has priviliges to access it
+// If order exists and user/admin has priviliges to access/modify it
 //////////////////////////////////////////
 exports.orderExistsAndHavePriviliges = catchAsync(async (req, res, next) => {
   const order =
@@ -79,7 +74,7 @@ exports.orderExistsAndHavePriviliges = catchAsync(async (req, res, next) => {
 });
 
 //////////////////////////////////////////
-// cancel
+// Cancel Order
 //////////////////////////////////////////
 exports.cancelOrder = catchAsync(async (req, res, next) => {
   const order = req.customs.document;
@@ -91,3 +86,29 @@ exports.cancelOrder = catchAsync(async (req, res, next) => {
     message: 'Cancelled order successfully',
   });
 });
+
+//////////////////////////////////////////
+// Check if order belongs to user
+//////////////////////////////////////////
+exports.checkIfOrderBelongsTouser = catchAsync(async (req, res, next) => {
+  const order = await Order.findOne({
+    _id: req.params.id,
+    user: req.customs.user.id,
+  });
+  if (!order) {
+    return next(
+      new AppError(
+        'No order with specified details found associated with current user',
+        404
+      )
+    );
+  }
+  req.customs.document = order;
+  next();
+});
+
+//////////////////////////////////////////
+// Getting
+//////////////////////////////////////////
+exports.getAll = handlerFactory.getAll;
+exports.getOne = handlerFactory.getOne;

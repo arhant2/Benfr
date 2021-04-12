@@ -3497,7 +3497,106 @@ if (form && formVerify && verifySection && verifySection.dataset.displayNoneClas
     };
   }());
 }
-},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../component-functions/flash-messages":"component-functions/flash-messages.js"}],"ajax/checkout-address.js":[function(require,module,exports) {
+},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../component-functions/flash-messages":"component-functions/flash-messages.js"}],"ajax/checkout.js":[function(require,module,exports) {
+"use strict";
+
+require("regenerator-runtime/runtime");
+
+var _axios = _interopRequireDefault(require("axios"));
+
+var _alertDialog = _interopRequireDefault(require("../component-functions/alert-dialog"));
+
+var _handleError = _interopRequireDefault(require("../utils/handleError"));
+
+var _flashMessages = require("../component-functions/flash-messages");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+// Show order confirmation
+var showOrderConfirmation = function showOrderConfirmation(url) {
+  var _orderConfirmation$da;
+
+  var orderConfirmation = document.getElementById('orderConfirmation');
+  var orderConfirmationBtn = document.getElementById('orderConfirmationBtn');
+  var noneClass = orderConfirmation === null || orderConfirmation === void 0 ? void 0 : (_orderConfirmation$da = orderConfirmation.dataset) === null || _orderConfirmation$da === void 0 ? void 0 : _orderConfirmation$da.noneClass;
+
+  var fnToCall = function fnToCall() {
+    window.location.replace(url);
+  }; // If orderConfirmation section is not there show alert instead
+
+
+  if (!noneClass || !orderConfirmationBtn) {
+    (0, _alertDialog.default)('Sucessful', 'Your order has been placed. You will be receiving a confirmation email with order details', fnToCall);
+    return;
+  }
+
+  orderConfirmation.classList.remove(noneClass);
+  orderConfirmationBtn.addEventListener('click', function (e) {
+    e.preventDefault();
+    fnToCall();
+  });
+};
+
+var form = document.getElementById('checkout-form');
+var btn = document.getElementById('checkout-form-btn');
+
+if (form) {
+  form.addEventListener('submit', /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
+      var data, res;
+      return regeneratorRuntime.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              e.preventDefault();
+              data = new FormData(this);
+
+              if (btn) {
+                btn.setAttribute('disabled', 'disabled');
+              }
+
+              _context.prev = 3;
+              _context.next = 6;
+              return (0, _axios.default)({
+                method: 'POST',
+                url: '/api/v1/orders/checkout',
+                data: data
+              });
+
+            case 6:
+              res = _context.sent;
+              (0, _flashMessages.clearFlashMessages)();
+              showOrderConfirmation("/orders/".concat(res.data.data.order.id));
+              _context.next = 15;
+              break;
+
+            case 11:
+              _context.prev = 11;
+              _context.t0 = _context["catch"](3);
+              (0, _handleError.default)(_context.t0);
+
+              if (btn) {
+                btn.removeAttribute('disabled');
+              }
+
+            case 15:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee, this, [[3, 11]]);
+    }));
+
+    return function (_x) {
+      return _ref.apply(this, arguments);
+    };
+  }());
+}
+},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../component-functions/alert-dialog":"component-functions/alert-dialog.js","../utils/handleError":"utils/handleError.js","../component-functions/flash-messages":"component-functions/flash-messages.js"}],"ajax/checkout-address.js":[function(require,module,exports) {
 "use strict";
 
 require("regenerator-runtime/runtime");
@@ -5872,6 +5971,8 @@ require("./ajax/cart");
 
 require("./ajax/change-my-email");
 
+require("./ajax/checkout");
+
 require("./ajax/checkout-address");
 
 require("./ajax/forgot-password");
@@ -5915,7 +6016,7 @@ require("./component-functions/toggle-on-click");
 require("./component-functions/increment-decrement-input-number");
 
 require("./pages/each-product");
-},{"./ajax/add-to-cart-btn":"ajax/add-to-cart-btn.js","./ajax/address":"ajax/address.js","./ajax/cart":"ajax/cart.js","./ajax/change-my-email":"ajax/change-my-email.js","./ajax/checkout-address":"ajax/checkout-address.js","./ajax/forgot-password":"ajax/forgot-password.js","./ajax/login":"ajax/login.js","./ajax/reset-password":"ajax/reset-password.js","./ajax/review":"ajax/review.js","./ajax/signup":"ajax/signup.js","./ajax/signup-complete":"ajax/signup-complete.js","./ajax/update-me":"ajax/update-me.js","./ajax/update-my-password":"ajax/update-my-password.js","./component-functions/confirm-dialog":"component-functions/confirm-dialog.js","./component-functions/btn-confirm-redirect":"component-functions/btn-confirm-redirect.js","./component-functions/dropdown":"component-functions/dropdown.js","./component-functions/flash-messages":"component-functions/flash-messages.js","./component-functions/form-rating":"component-functions/form-rating.js","./component-functions/remove-on-click":"component-functions/remove-on-click.js","./component-functions/search":"component-functions/search.js","./component-functions/sidebar":"component-functions/sidebar.js","./component-functions/sliders":"component-functions/sliders.js","./component-functions/state-district-select":"component-functions/state-district-select.js","./component-functions/toggle-on-click":"component-functions/toggle-on-click.js","./component-functions/increment-decrement-input-number":"component-functions/increment-decrement-input-number.js","./pages/each-product":"pages/each-product.js"}],"../../../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./ajax/add-to-cart-btn":"ajax/add-to-cart-btn.js","./ajax/address":"ajax/address.js","./ajax/cart":"ajax/cart.js","./ajax/change-my-email":"ajax/change-my-email.js","./ajax/checkout":"ajax/checkout.js","./ajax/checkout-address":"ajax/checkout-address.js","./ajax/forgot-password":"ajax/forgot-password.js","./ajax/login":"ajax/login.js","./ajax/reset-password":"ajax/reset-password.js","./ajax/review":"ajax/review.js","./ajax/signup":"ajax/signup.js","./ajax/signup-complete":"ajax/signup-complete.js","./ajax/update-me":"ajax/update-me.js","./ajax/update-my-password":"ajax/update-my-password.js","./component-functions/confirm-dialog":"component-functions/confirm-dialog.js","./component-functions/btn-confirm-redirect":"component-functions/btn-confirm-redirect.js","./component-functions/dropdown":"component-functions/dropdown.js","./component-functions/flash-messages":"component-functions/flash-messages.js","./component-functions/form-rating":"component-functions/form-rating.js","./component-functions/remove-on-click":"component-functions/remove-on-click.js","./component-functions/search":"component-functions/search.js","./component-functions/sidebar":"component-functions/sidebar.js","./component-functions/sliders":"component-functions/sliders.js","./component-functions/state-district-select":"component-functions/state-district-select.js","./component-functions/toggle-on-click":"component-functions/toggle-on-click.js","./component-functions/increment-decrement-input-number":"component-functions/increment-decrement-input-number.js","./pages/each-product":"pages/each-product.js"}],"../../../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -5943,7 +6044,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64580" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61244" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -17,7 +17,7 @@
     "no-unused-vars": ["error", { "argsIgnorePattern": "req|res|next|val" }],
     "no-unused-expressions": [
       "error",
-      { "allowShortCircuit ": true, "allowTernary ": true }
+      { "allowShortCircuit": true, "allowTernary": true }
     ]
   },
   "ignorePatterns": ["raw-assets/*"]

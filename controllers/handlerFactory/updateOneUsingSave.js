@@ -3,6 +3,12 @@ const AppError = require('../../utils/AppError');
 const { deleteFilesCloudinary } = require('../../cloudinary');
 
 const handleImagesAndData = (req, doc) => {
+  Object.keys(req.body)
+    .filter((arg) => !arg.startsWith('deleteImage'))
+    .forEach((arg) => {
+      doc[arg] = req.body[arg];
+    });
+
   const deleteIndices = Object.keys(req.body)
     .filter((arg) => arg.startsWith('deleteImage') && req.body[arg])
     .map((arg) => Number(arg.substring('deleteImage'.length)));
@@ -44,13 +50,6 @@ const handleImagesAndData = (req, doc) => {
 
     return deleteFilesCloudinary(deleteImages);
   }
-
-  Object.keys(req.body)
-    .filter((arg) => !arg.startsWith('deleteImage'))
-    .forEach((arg) => {
-      // console.log(arg);
-      doc[arg] = req.body[arg];
-    });
 };
 
 module.exports = (Model, { singularName }) => {

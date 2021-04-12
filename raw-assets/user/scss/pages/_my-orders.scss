@@ -4,6 +4,14 @@
     grid-template-columns: 10rem 2fr 1fr 1fr;
     align-items: center;
     gap: 2%;
+
+    transition: all 0.2s;
+
+    border-left: 0 solid var(--color-primary);
+
+    &:hover {
+      border-left-width: 0.3rem;
+    }
   }
 
   &__box-1 {
@@ -53,5 +61,11 @@
   &__date {
     font-weight: 600;
     line-height: 1.4;
+  }
+
+  &__pagination {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 2rem;
   }
 }

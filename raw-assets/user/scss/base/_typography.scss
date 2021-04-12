@@ -104,6 +104,10 @@ textarea {
     font-weight: 700;
   }
 
+  &--center {
+    transform-origin: 50% 0;
+  }
+
   &--bigger {
     font-size: 3.4rem;
   }
