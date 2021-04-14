@@ -115,6 +115,9 @@ const orderSchema = new mongoose.Schema(
         ],
       },
     },
+    status: mongoose.Schema.Types.Mixed,
+    subTotal: Number,
+    grandTotal: Number,
   },
   {
     timestamps: true,
@@ -123,17 +126,36 @@ const orderSchema = new mongoose.Schema(
   }
 );
 
-orderSchema.virtual('status').get(function () {
-  return this.statusAll[this.statusAll.length - 1];
+orderSchema.pre('save', function (next) {
+  // console.log(this.isModified('statusAll'));
+
+  if (this.isModified('statusAll')) {
+    this.status = this.statusAll[this.statusAll.length - 1];
+  }
+  if (this.isModified('products')) {
+    this.subTotal = this.products.reduce(
+      (total, product) => total + product.totalEach,
+      0
+    );
+  }
+  if (this.isModified('subTotal') || this.isModified('deliveryCharge')) {
+    this.grandTotal = this.subTotal + this.deliveryCharge;
+  }
+
+  next();
 });
 
-orderSchema.virtual('subTotal').get(function () {
-  return this.products.reduce((total, product) => total + product.totalEach, 0);
-});
+// orderSchema.virtual('status').get(function () {
+//   return this.statusAll[this.statusAll.length - 1];
+// });
 
-orderSchema.virtual('grandTotal').get(function () {
-  return this.subTotal + this.deliveryCharge;
-});
+// orderSchema.virtual('subTotal').get(function () {
+//   return this.products.reduce((total, product) => total + product.totalEach, 0);
+// });
+
+// orderSchema.virtual('grandTotal').get(function () {
+//   return this.subTotal + this.deliveryCharge;
+// });
 
 //////////////////////////////////////////
 // New Order
@@ -232,10 +254,11 @@ orderSchema.methods.nextStage = async function (
           product &&
           typeof product === 'object' &&
           mongoose.isValidObjectId(product.product) &&
-          typeof product.quantity === 'number' &&
+          typeof (product.quantity * 1) === 'number' &&
           product.quantity >= 0
       )
     ) {
+      // console.log('Yaha aaya');
       throw new AppError(
         'Invalid request, please send request in correct form',
         400
@@ -245,14 +268,14 @@ orderSchema.methods.nextStage = async function (
     // only keep needed properties i.e. product and quantity
     productsRequested = productsRequested.map(({ product, quantity }) => ({
       product,
-      quantity,
+      quantity: quantity * 1,
     }));
 
     // for each products in database, update them
     this.products.forEach((productDB) => {
       // Find if a product is requested
       let productRequested = productsRequested.find(
-        (product) => product.product === productDB.product
+        (product) => product.product === productDB.product.toString()
       );
 
       // if not found create one
@@ -273,10 +296,15 @@ orderSchema.methods.nextStage = async function (
       // if database has high quantity update it
       else if (productDB.quantity.now > productRequested.quantity) {
         const quantityDiff = productDB.quantity.now - productRequested.quantity;
+
+        // console.log('yo: ', quantityDiff);
+
         mongooseQueries.push(
           Product.findByIdAndUpdate(productDB.product, {
-            currentStock: { $inc: quantityDiff },
-            quantitySold: { $inc: -quantityDiff },
+            $inc: {
+              currentStock: quantityDiff,
+              quantitySold: -quantityDiff,
+            },
           })
         );
       }
@@ -284,10 +312,14 @@ orderSchema.methods.nextStage = async function (
       if (this.status.name === 'booked') {
         productDB.quantity.confirmed = productRequested.quantity;
       } else {
-        productDB.delivered = productRequested.quantity;
+        productDB.quantity.delivered = productRequested.quantity;
       }
     });
   }
+
+  // console.log(this);
+
+  // throw new AppError('Testing error', 400);
 
   const statusTypes = [
     'booked',
@@ -311,6 +343,8 @@ orderSchema.methods.nextStage = async function (
   // if mongooseQueries is there execute them
   if (mongooseQueries.length > 0) {
     await Promise.allSettled(mongooseQueries);
+
+    // console.log(mongooseQueries);
   }
 };
 
@@ -326,10 +360,16 @@ orderSchema.methods.cancelOrder = async function (user, reason) {
     throw new AppError('Delivered order cannot be cancelled', 400);
   }
 
+  if (!reason) {
+    throw new AppError('Please give a reason for order cancellation', 400);
+  }
+
   this.statusAll.push({ name: 'cancelled' });
-  this.status.cancelled = {
-    by: user,
-    userType: user.role,
+  this.cancelled = {
+    by: {
+      user,
+      userType: user.role,
+    },
     reason,
   };
 
@@ -337,12 +377,27 @@ orderSchema.methods.cancelOrder = async function (user, reason) {
 
   const mongooseQueries = [];
 
+  const quantityCalculate = (productDB) => {
+    if (productDB.quantity.delivered !== undefined) {
+      return productDB.quantity.delivered;
+    }
+    if (productDB.quantity.confirmed !== undefined) {
+      return productDB.quantity.confirmed;
+    }
+    return productDB.quantity.booked;
+  };
+
   this.products.forEach((productDB) => {
-    if (productDB.quantity.now > 0) {
+    // console.log(productDB);
+    const quantity = quantityCalculate(productDB);
+
+    if (quantity > 0) {
       mongooseQueries.push(
         Product.findByIdAndUpdate(productDB.product, {
-          currentStock: { $inc: productDB.quantity.now },
-          quantitySold: { $inc: -productDB.quantitynow },
+          $inc: {
+            currentStock: quantity,
+            quantitySold: -quantity,
+          },
         })
       );
     }

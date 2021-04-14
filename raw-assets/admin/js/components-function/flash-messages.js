@@ -18,6 +18,10 @@ if (flashMessages) {
   });
 }
 
+const scrollToFlashMessages = () => {
+  window.scrollTo(0, 0);
+};
+
 const addFlashMessage = (type, message) => {
   if (!flashMessages) {
     alert(message);
@@ -42,6 +46,8 @@ const addFlashMessage = (type, message) => {
   const markup = `<div class="flash-messages__message flash-messages__message--${color} js--components-function--flash-messages__message"><div class="flash-messages__icon">${icon}</div><div class="flash-messages__content"><h4 class="flash-messages__heading">${heading}</h4><div class="flash-messages__body">${message}</div></div><button class="flash-messages__close-btn js--components-function--flash-close-btn">&Cross;</button></div>`;
 
   flashMessages.insertAdjacentHTML('afterbegin', markup);
+
+  scrollToFlashMessages();
 };
 
 const clearFlashMessages = () => {
@@ -50,4 +56,4 @@ const clearFlashMessages = () => {
   }
 };
 
-export { addFlashMessage, clearFlashMessages };
+export { addFlashMessage, clearFlashMessages, scrollToFlashMessages };

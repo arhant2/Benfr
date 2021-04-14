@@ -65,11 +65,17 @@ block content
                 span.form__star *
                 | Discounted Price
               input.form-group-input.form__input--single-line.u-width-full(type='number' name='discountedPrice' min=0 placeholder='₹ 5,999' required value=(document && document.discountedPrice))
-          .form__group
-            label.form__group-label(for='currentStock')
-              span.form__star *
-              | Current Inventory
-            input.form-group-input.form__input--single-line(type='number' name='currentStock' min=0 placeholder='100' required value=(document && document.currentStock || 0))
+          .form__group.form__group--partition-half
+            div
+              label.form__group-label(for='currentStock')
+                span.form__star *
+                | Current Inventory
+              input.form-group-input.form__input--single-line.u-width-full(type='number' name='currentStock' min=0 placeholder='100' required value=(document && document.currentStock || 0))
+            div
+              label.form__group-label(for='quantitySold') Quantity Sold
+              .form-group-input.form__input--single-line.form__input--disabled.u-width-full.tooltip
+                | #{document && document.quantitySold || 0}
+                .tooltip__element.tooltip__element--right You cannot edit this
 
         // Specifications
         .card.u-margin-bottom-main.js--page-each-product--specifications

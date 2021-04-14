@@ -2674,7 +2674,7 @@ module.exports = require('./lib/axios');
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.clearFlashMessages = exports.addFlashMessage = void 0;
+exports.scrollToFlashMessages = exports.clearFlashMessages = exports.addFlashMessage = void 0;
 var flashMessages = document.querySelector('.js--components-function--flash-messages');
 
 if (flashMessages) {
@@ -2685,6 +2685,12 @@ if (flashMessages) {
     }
   });
 }
+
+var scrollToFlashMessages = function scrollToFlashMessages() {
+  window.scrollTo(0, 0);
+};
+
+exports.scrollToFlashMessages = scrollToFlashMessages;
 
 var addFlashMessage = function addFlashMessage(type, message) {
   if (!flashMessages) {
@@ -2710,6 +2716,7 @@ var addFlashMessage = function addFlashMessage(type, message) {
 
   var markup = "<div class=\"flash-messages__message flash-messages__message--".concat(color, " js--components-function--flash-messages__message\"><div class=\"flash-messages__icon\">").concat(icon, "</div><div class=\"flash-messages__content\"><h4 class=\"flash-messages__heading\">").concat(heading, "</h4><div class=\"flash-messages__body\">").concat(message, "</div></div><button class=\"flash-messages__close-btn js--components-function--flash-close-btn\">&Cross;</button></div>");
   flashMessages.insertAdjacentHTML('afterbegin', markup);
+  scrollToFlashMessages();
 };
 
 exports.addFlashMessage = addFlashMessage;
@@ -2824,6 +2831,65 @@ var confirmFunction = function confirmFunction(title, message, noFn, yesFn) {
 
 var _default = confirmFunction;
 exports.default = _default;
+},{}],"utils/btnsStatesClass.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var btnsStateClass = /*#__PURE__*/function () {
+  function btnsStateClass(allBtnObjs) {
+    _classCallCheck(this, btnsStateClass);
+
+    this.allBtnObjs = allBtnObjs;
+  }
+
+  _createClass(btnsStateClass, [{
+    key: "disableBtns",
+    value: function disableBtns(loadBtnName) {
+      this.allBtnObjs.forEach(function (_ref) {
+        var name = _ref.name,
+            btn = _ref.btn;
+
+        if (btn) {
+          btn.setAttribute('disabled', 'disabled');
+
+          if (name === loadBtnName && btn.dataset.loadClass) {
+            btn.classList.add(btn.dataset.loadClass);
+          }
+        }
+      });
+    }
+  }, {
+    key: "enableBtns",
+    value: function enableBtns() {
+      this.allBtnObjs.forEach(function (_ref2) {
+        var name = _ref2.name,
+            btn = _ref2.btn;
+
+        if (btn) {
+          btn.removeAttribute('disabled');
+
+          if (btn.dataset.loadClass) {
+            btn.classList.remove(btn.dataset.loadClass);
+          }
+        }
+      });
+    }
+  }]);
+
+  return btnsStateClass;
+}();
+
+exports.default = btnsStateClass;
 },{}],"../../../utils/capitilize.js":[function(require,module,exports) {
 module.exports = function (word) {
   return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
@@ -2958,6 +3024,8 @@ var _confirmDialog = _interopRequireDefault(require("../components-function/conf
 
 var _flashMessages = require("../components-function/flash-messages");
 
+var _btnsStatesClass = _interopRequireDefault(require("../utils/btnsStatesClass"));
+
 var _singularPluralManager = _interopRequireDefault(require("../../../../utils/singularPluralManager"));
 
 var _eachProduct = require("../pages/each-product");
@@ -2976,38 +3044,16 @@ var idInput = document.getElementById('id');
 var id = idInput && idInput.value;
 var isNew = !id;
 var singularName, pluralName;
-
-var disableBtns = function disableBtns(loadingBtn) {
-  var helper = function helper(btn, name) {
-    if (btn) {
-      btn.setAttribute('disabled', 'disabled');
-
-      if (name === loadingBtn && btn.dataset.loadClass) {
-        btn.classList.add(btn.dataset.loadClass);
-      }
-    }
-  };
-
-  helper(saveBtn, 'save');
-  helper(deleteBtn, 'delete');
-  helper(discardBtn, 'discard');
-};
-
-var enableBtns = function enableBtns() {
-  var helper = function helper(btn, name) {
-    if (btn) {
-      btn.removeAttribute('disabled');
-
-      if (btn.dataset.loadClass) {
-        btn.classList.remove(btn.dataset.loadClass);
-      }
-    }
-  };
-
-  helper(saveBtn, 'save');
-  helper(deleteBtn, 'delete');
-  helper(discardBtn, 'discard');
-};
+var btnStates = new _btnsStatesClass.default([{
+  name: 'save',
+  btn: saveBtn
+}, {
+  name: 'delete',
+  btn: deleteBtn
+}, {
+  name: 'discard',
+  btn: discardBtn
+}]);
 
 var submitForm = function submitForm() {
   form.addEventListener('submit', function (e) {
@@ -3038,7 +3084,7 @@ var submitForm = function submitForm() {
                 obj.method = 'PATCH';
               }
 
-              disableBtns('save');
+              btnStates.disableBtns('save');
               _context.prev = 5;
               _context.next = 8;
               return (0, _axios.default)(obj);
@@ -3067,7 +3113,7 @@ var submitForm = function submitForm() {
               _context.prev = 13;
               _context.t0 = _context["catch"](5);
               (0, _handleError.default)(_context.t0);
-              enableBtns();
+              btnStates.enableBtns();
 
             case 17:
             case "end":
@@ -3088,7 +3134,7 @@ var deleteFunction = function deleteFunction() {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              disableBtns('delete');
+              btnStates.disableBtns('delete');
               _context2.prev = 1;
               _context2.next = 4;
               return (0, _axios.default)({
@@ -3109,7 +3155,7 @@ var deleteFunction = function deleteFunction() {
               _context2.prev = 9;
               _context2.t0 = _context2["catch"](1);
               (0, _handleError.default)(_context2.t0);
-              enableBtns();
+              btnStates.enableBtns();
 
             case 13:
             case "end":
@@ -3137,7 +3183,95 @@ if (form) {
     deleteFunction();
   }
 }
-},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../components-function/confirm-dialog":"components-function/confirm-dialog.js","../components-function/flash-messages":"components-function/flash-messages.js","../../../../utils/singularPluralManager":"../../../utils/singularPluralManager.js","../pages/each-product":"pages/each-product.js"}],"components-function/btn-confirm-redirect.js":[function(require,module,exports) {
+},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../components-function/confirm-dialog":"components-function/confirm-dialog.js","../components-function/flash-messages":"components-function/flash-messages.js","../utils/btnsStatesClass":"utils/btnsStatesClass.js","../../../../utils/singularPluralManager":"../../../utils/singularPluralManager.js","../pages/each-product":"pages/each-product.js"}],"ajax/order-one.js":[function(require,module,exports) {
+"use strict";
+
+require("regenerator-runtime/runtime");
+
+var _axios = _interopRequireDefault(require("axios"));
+
+var _handleError = _interopRequireDefault(require("../utils/handleError"));
+
+var _flashMessages = require("../components-function/flash-messages");
+
+var _confirmDialog = _interopRequireDefault(require("../components-function/confirm-dialog"));
+
+var _btnsStatesClass = _interopRequireDefault(require("../utils/btnsStatesClass"));
+
+var _document$getElementB;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+var form = document.getElementById('order-one-form');
+var nextBtn = document.getElementById('order-one-next-btn');
+var invoiceBtn = document.getElementById('order-one-invoice-btn');
+var cancelBtn = document.getElementById('order-one-cancel-btn');
+var resetBtn = document.getElementById('order-one-reset-btn');
+var id = (_document$getElementB = document.getElementById('id')) === null || _document$getElementB === void 0 ? void 0 : _document$getElementB.value;
+var btnStates = new _btnsStatesClass.default([{
+  name: 'next',
+  btn: nextBtn
+}, {
+  name: 'invoice',
+  btn: invoiceBtn
+}, {
+  name: 'cancel',
+  btn: cancelBtn
+}, {
+  name: 'reset',
+  btn: resetBtn
+}]); // Submit form
+
+if (form && id) {
+  form.addEventListener('submit', function (e) {
+    var _this = this;
+
+    e.preventDefault();
+    (0, _confirmDialog.default)('Confirm changes', 'Confirm changes and move to next stage?', undefined, /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+      var data;
+      return regeneratorRuntime.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              data = new FormData(_this);
+              btnStates.disableBtns('next');
+              _context.prev = 2;
+              _context.next = 5;
+              return (0, _axios.default)({
+                method: 'PATCH',
+                url: "/api/v1/orders/".concat(id, "/next"),
+                data: data
+              });
+
+            case 5:
+              (0, _flashMessages.clearFlashMessages)();
+              (0, _flashMessages.addFlashMessage)('success', "Successfully moved the order to next stage. Reloading...");
+              setTimeout(function () {
+                window.location.reload();
+              }, 2000);
+              _context.next = 14;
+              break;
+
+            case 10:
+              _context.prev = 10;
+              _context.t0 = _context["catch"](2);
+              (0, _handleError.default)(_context.t0);
+              btnStates.enableBtns();
+
+            case 14:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee, null, [[2, 10]]);
+    })));
+  });
+}
+},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../components-function/flash-messages":"components-function/flash-messages.js","../components-function/confirm-dialog":"components-function/confirm-dialog.js","../utils/btnsStatesClass":"utils/btnsStatesClass.js"}],"components-function/btn-confirm-redirect.js":[function(require,module,exports) {
 "use strict";
 
 var _confirmDialog = _interopRequireDefault(require("./confirm-dialog"));
@@ -3145,8 +3279,7 @@ var _confirmDialog = _interopRequireDefault(require("./confirm-dialog"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 Array.from(document.getElementsByClassName('js--components-function--btn-confirm-redirect')).forEach(function (btn) {
-  console.log(btn.dataset);
-
+  // console.log(btn.dataset);
   if (!btn.dataset.redirectTo) {
     return;
   }
@@ -25691,6 +25824,8 @@ Array.from(imageOuters).forEach(function (imageOuter) {
 
 require("./ajax/generic-form");
 
+require("./ajax/order-one");
+
 require("./components-function/btn-confirm-redirect");
 
 require("./components-function/chart");
@@ -25704,7 +25839,7 @@ require("./components-function/flash-messages");
 require("./components-function/form-image");
 
 require("./pages/each-product");
-},{"./ajax/generic-form":"ajax/generic-form.js","./components-function/btn-confirm-redirect":"components-function/btn-confirm-redirect.js","./components-function/chart":"components-function/chart.js","./components-function/confirm-dialog":"components-function/confirm-dialog.js","./components-function/dropdown":"components-function/dropdown.js","./components-function/flash-messages":"components-function/flash-messages.js","./components-function/form-image":"components-function/form-image.js","./pages/each-product":"pages/each-product.js"}],"../../../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./ajax/generic-form":"ajax/generic-form.js","./ajax/order-one":"ajax/order-one.js","./components-function/btn-confirm-redirect":"components-function/btn-confirm-redirect.js","./components-function/chart":"components-function/chart.js","./components-function/confirm-dialog":"components-function/confirm-dialog.js","./components-function/dropdown":"components-function/dropdown.js","./components-function/flash-messages":"components-function/flash-messages.js","./components-function/form-image":"components-function/form-image.js","./pages/each-product":"pages/each-product.js"}],"../../../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -25732,7 +25867,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49650" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60301" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

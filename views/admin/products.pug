@@ -9,7 +9,7 @@ block content
   +header('Products', [['/a/products', 'Products']])
 
     - 
-      const linkCreator = (query) => `/a/products` + (queryObjParsed.limit ? `?limit=${queryObjParsed.limit}&` : '?') + (queryObjParsed.sort ? `&sort=${queryObjParsed.sort}`: '') + `${query}`;
+      const linkCreator = (query) => `/a/products` + (queryObjParsed.limit ? `?limit=${queryObjParsed.limit}&` : '?') + (queryObjParsed.sort ? `&sort=${queryObjParsed.sort}`: '') + (query ? `&${query}`: '');
 
       const types = [
         [linkCreator(''), 'All'],
@@ -85,23 +85,3 @@ block content
           .main-table__item.main-table__item--important= product.brand.name
           .main-table__item.main-table__item--important= product.discountedPrice
           .main-table__item.main-table__item--unimportant= product.currentStock 
-
-
-//- <div class="main-table__row">
-//-   <div class="main-table__item main-table__item--first">
-//-     <img
-//-       src="img/product-1.jpg"
-//-       alt="Product image"
-//-       class="main-table__item-img"
-//-     />
-//-     <div class="main-table__item-first-text">Amazon Alexa 3</div>
-//-   </div>
-//-   <div
-//-     class="main-table__item main-table_item--status main-table_item--status-green"
-//-   >
-//-     <span>Active</span>
-//-   </div>
-//-   <div class="main-table__item main-table__item--important">Amazon</div>
-//-   <div class="main-table__item main-table__item--important">₹5,999</div>
-//-   <div class="main-table__item main-table__item--unimportant">123</div>
-//-         </div>

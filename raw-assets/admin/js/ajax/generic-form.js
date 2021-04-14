@@ -2,7 +2,6 @@ import 'regenerator-runtime/runtime';
 import axios from 'axios';
 
 import handleError from '../utils/handleError';
-
 import confirmDialog from '../components-function/confirm-dialog';
 
 import {
@@ -10,8 +9,8 @@ import {
   clearFlashMessages,
 } from '../components-function/flash-messages';
 
+import btnStatesClass from '../utils/btnsStatesClass';
 import singularPluralManager from '../../../../utils/singularPluralManager';
-
 import { productFormDataSpecificationsManage } from '../pages/each-product';
 
 const form = document.getElementById('generic-form');
@@ -24,33 +23,20 @@ const isNew = !id;
 
 let singularName, pluralName;
 
-const disableBtns = (loadingBtn) => {
-  const helper = (btn, name) => {
-    if (btn) {
-      btn.setAttribute('disabled', 'disabled');
-      if (name === loadingBtn && btn.dataset.loadClass) {
-        btn.classList.add(btn.dataset.loadClass);
-      }
-    }
-  };
-  helper(saveBtn, 'save');
-  helper(deleteBtn, 'delete');
-  helper(discardBtn, 'discard');
-};
-
-const enableBtns = () => {
-  const helper = (btn, name) => {
-    if (btn) {
-      btn.removeAttribute('disabled');
-      if (btn.dataset.loadClass) {
-        btn.classList.remove(btn.dataset.loadClass);
-      }
-    }
-  };
-  helper(saveBtn, 'save');
-  helper(deleteBtn, 'delete');
-  helper(discardBtn, 'discard');
-};
+const btnStates = new btnStatesClass([
+  {
+    name: 'save',
+    btn: saveBtn,
+  },
+  {
+    name: 'delete',
+    btn: deleteBtn,
+  },
+  {
+    name: 'discard',
+    btn: discardBtn,
+  },
+]);
 
 const submitForm = () => {
   form.addEventListener('submit', function (e) {
@@ -79,7 +65,7 @@ const submitForm = () => {
           obj.method = 'PATCH';
         }
 
-        disableBtns('save');
+        btnStates.disableBtns('save');
 
         try {
           const res = await axios(obj);
@@ -109,7 +95,7 @@ const submitForm = () => {
           }
         } catch (err) {
           handleError(err);
-          enableBtns();
+          btnStates.enableBtns();
         }
       }
     );
@@ -125,7 +111,7 @@ const deleteFunction = () => {
       `Are you sure, you want to delete this ${singularName.capital}? Please note that this cannot be undone!`,
       undefined,
       async () => {
-        disableBtns('delete');
+        btnStates.disableBtns('delete');
 
         try {
           const res = await axios({
@@ -142,7 +128,7 @@ const deleteFunction = () => {
           }, 2000);
         } catch (err) {
           handleError(err);
-          enableBtns();
+          btnStates.enableBtns();
         }
       }
     );

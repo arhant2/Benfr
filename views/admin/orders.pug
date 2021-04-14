@@ -1,0 +1,81 @@
+extends base/_base
+
+block append variables
+  - 
+    sidebarActive = 'Orders';
+    //- topbarFeatureBtn = ['/a/products/new', 'Add new product', 'fas fa-plus'];
+
+block content
+  +header('Orders', [['#', 'Orders']])
+
+    - 
+      const linkCreator = (query) => `/a/orders` + (queryObjParsed.limit ? `?limit=${queryObjParsed.limit}` : '?') + (queryObjParsed.sort ? `&sort=${queryObjParsed.sort}`: '') + (query ? `&${query}`: '');
+
+      const typesAndNamesOnly = [
+        ['booked', 'Booked'],
+        ['confirmed', 'Confirmed'],
+        ['packed', 'Packed'],
+        ['inTransit', 'Dispatched'],
+        ['delivered', 'Delivered'],
+        ['cancelled', 'Cancelled Orders'],
+      ]
+
+      const types = [[linkCreator(''), 'All Orders'], [linkCreator('status.name=booked&status.name=confirmed&status.name=packed&status.name=inTransit'), 'Active Orders'], ...typesAndNamesOnly.map(el => [linkCreator(`status.name=${el[0]}`), el[1]])];
+
+      let currentActive = typesAndNamesOnly.findIndex(el => el[0] === queryObjParsed.filter?.['status.name']);
+
+      if(Array.isArray(queryObjParsed.filter?.['status.name'])){
+        currentActive = 1;
+      }else if(currentActive === -1){
+        currentActive = 0;
+      }else{
+        currentActive += 2;
+      }
+
+
+    +menuDropdown('Filter by status', types, currentActive)
+
+
+    +menuSort([
+      ['name', 'Name [A-Z]'],
+      ['-name', 'Name [Z-A]'],
+      ['-createdAt', 'Created (Newest First)'],
+      ['createdAt', 'Created (Oldest First)'],
+      ['-updatedAt', 'Updated (Newest First)'],
+      ['updatedAt', 'Updated (Oldest First)'],
+    ])
+
+    +menuLimit
+    +menuPagination
+
+  main.main
+    .main-table 
+      .main-table__heading-container 
+        .main-table__heading Order# 
+        .main-table__heading.main-table__heading--status Status
+        .main-table__heading.main-table__heading--important Amount
+        .main-table__heading.main-table__heading--unimportant Customer
+        .main-table__heading.main-table__heading--important Location
+
+          - 
+            const statusOptions = {
+              booked: ['Booked', 'yellow', 'fas fa-inbox'],
+              confirmed: ['Confirmed', 'blue', 'fas fa-chess-king'],
+              packed: ['Packed', 'pink', 'fas fa-boxes'],
+              inTransit: ['In-Transit', 'purple', 'fas fa-motorcycle'],
+              delivered: ['Delivered', 'green', 'fas fa-check'],
+              cancelled: ['Cancelled', 'red', 'fas fa-times'],
+            };
+
+      each order in documents
+        a.main-table__row.reset-anchor(href=`/a/orders/${order.id}`)
+          .main-table__item.main-table__item--first
+            .main-table__item-img.icon-round.icon-round(class=`icon-round--${statusOptions[order.status.name][1]}`): i(class=statusOptions[order.status.name][2])
+
+            .main-table__item-first-text= `${order.id} (${helpers.dateFormator.dateFormatted(order.createdAt)})`
+          
+          .main-table__item.main-table_item--status(class=`main-table_item--status-${statusOptions[order.status.name][1]}`): span= statusOptions[order.status.name][0]
+
+          .main-table__item.main-table__item--important ₹#{Number(order.grandTotal).toLocaleString('en-IN', {maximumFractionDigits: 2})}
+          .main-table__item.main-table__item--unimportant= order.address.name.split(' ')[0]
+          .main-table__item.main-table__item--important= order.address.address.state 

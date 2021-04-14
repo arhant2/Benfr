@@ -33,7 +33,7 @@ block accountContent
                 packed: ['Packed', 'pink'],
                 inTransit: ['In-Transit', 'purple'],
                 delivered: ['Delivered', 'green'],
-                cancelled: ['cancelled', 'red'],
+                cancelled: ['Cancelled', 'red'],
               };
             .my-orders__status(class=`my-orders__status--${statusOptions[order.status.name][1]}`)= statusOptions[order.status.name][0]
 

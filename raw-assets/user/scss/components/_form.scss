@@ -4,6 +4,10 @@
 
   &__group {
     margin-bottom: 1.5rem;
+
+    &--no-margin {
+      margin-bottom: 0;
+    }
   }
 
   &__btn-group {

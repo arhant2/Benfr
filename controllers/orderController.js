@@ -55,22 +55,29 @@ exports.nextStage = catchAsync(async (req, res, next) => {
   }
 
   await order.nextStage(req.body.currentStage, req.body.products);
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      order,
+    },
+  });
 });
 
 //////////////////////////////////////////
 // If order exists and user/admin has priviliges to access/modify it
 //////////////////////////////////////////
 exports.orderExistsAndHavePriviliges = catchAsync(async (req, res, next) => {
-  const order =
-    req.customs.user.role === 'admin'
-      ? await Order.findById(req.params.id)
-      : await Order.findOne({ _id: req.params.id, user: req.customs.id });
+  const order = await (req.customs.user.role === 'admin'
+    ? Order.findById(req.params.id)
+    : Order.findOne({ _id: req.params.id, user: req.customs.user.id }));
 
   if (!order) {
     return next(new AppError('No order with specified details found.', 404));
   }
 
   req.customs.document = order;
+  next();
 });
 
 //////////////////////////////////////////
@@ -79,11 +86,14 @@ exports.orderExistsAndHavePriviliges = catchAsync(async (req, res, next) => {
 exports.cancelOrder = catchAsync(async (req, res, next) => {
   const order = req.customs.document;
 
-  await order.cancel();
+  await order.cancelOrder(req.customs.user, req.body.reason);
 
   res.status(200).json({
     status: 'success',
     message: 'Cancelled order successfully',
+    document: {
+      order,
+    },
   });
 });
 

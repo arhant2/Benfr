@@ -24,16 +24,20 @@ router.post(
 );
 
 router.patch(
-  '/next',
+  '/:id/next',
   authController.protect,
   authController.restrictTo('admin'),
+  upload.none(),
+  orderFilters.nextStage,
   orderController.nextStage
 );
 
 router.delete(
-  '/cancel',
+  '/:id/cancel',
   authController.protect,
   orderController.orderExistsAndHavePriviliges,
+  upload.none(),
+  orderFilters.cancelOrder,
   orderController.cancelOrder
 );
 

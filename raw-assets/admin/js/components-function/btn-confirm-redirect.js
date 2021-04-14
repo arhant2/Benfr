@@ -5,7 +5,7 @@ Array.from(
     'js--components-function--btn-confirm-redirect'
   )
 ).forEach((btn) => {
-  console.log(btn.dataset);
+  // console.log(btn.dataset);
 
   if (!btn.dataset.redirectTo) {
     return;

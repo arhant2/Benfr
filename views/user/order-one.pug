@@ -14,22 +14,35 @@ block accountContent
 
         .my-order-one-summary__completed-box 
           .my-order-one-summary__completed-heading.heading-pentaniary Completed 
-          .my-order-one-summary__completed-value.heading-tertiary.heading-tertiary--no-bottom-line #{document.statusAll.length * 20}%
+          - const percentage = document.status.name === 'cancelled'? 0: document.statusAll.length * 20;
+          .my-order-one-summary__completed-value.heading-tertiary.heading-tertiary--no-bottom-line #{percentage}%
           .progress 
-            .progress__bar.progress__bar--orange(style=`--percentage: ${document.statusAll.length * 20};`)
+            .progress__bar.progress__bar--orange(style=`--percentage: ${percentage};`)
 
         .my-order-one-summary__booking-box
           .my-order-one-summary__booking-heading.heading-pentaniary Booking Date 
-          .my-order-one-summary__booking-date 8th April, 2021
+          .my-order-one-summary__booking-date= helpers.dateFormator.dateFormatted(document.createdAt)
 
 
       // Order status
       section.my-order-one-section.my-order-one-status
-        each status in [['booked', 'Ordered'], ['confirmed', 'Confirmed'], ['packed', 'Packed'], ['In-Transit', 'inTransit'], ['delivered', 'Delivered']]
-            - const foundStatus = document.statusAll.find(foundStatus => foundStatus.name === status[0]);
 
-            .my-order-one-status__box(class=foundStatus?'my-order-one-status__box--active':'my-order-one-status__box--inactive')
-              .my-order-one-status__circle
+        each status in [['booked', 'Ordered'], ['confirmed', 'Confirmed'], ['packed', 'Packed'], ['inTransit', 'In-Transit'], ['delivered', 'Delivered'], ['cancelled', 'Cancelled']]
+          - const foundStatus = document.statusAll.find(foundStatus => foundStatus.name === status[0]);
+
+          //- if order is not cancelled, show all status except cancelled else if order is canclled, show only status found(that is in database)
+          if document.status.name !== 'cancelled' && status[0] !== 'cancelled' || document.status.name === 'cancelled' && foundStatus
+            - 
+              let statusClass;
+              if (!foundStatus) {
+                statusClass = 'my-order-one-status__box--inactive';
+              } else if(foundStatus.name === 'cancelled') {
+                statusClass = 'my-order-one-status__box--cancelled'
+              } else {
+                statusClass = 'my-order-one-status__box--active';
+              }
+            .my-order-one-status__box(class=statusClass)
+              .my-order-one-status__circle(class=status[0]==='cancelled'?'my-order-one-status__circle--cross': '')
               .my-order-one-status__name= status[1]
               .my-order-one-status__date.light-text.smaller-text= foundStatus ? helpers.dateFormator.dateFormatted(foundStatus.createdAt): 'XX XX, XXXXX'
 
@@ -78,8 +91,10 @@ block accountContent
           each product in document.products
             tr.my-order-one-products__row 
               td.my-order-one-products__data.my-order-one-products__product
-                img.my-order-one-products__product-img(src=product.thumbnail && product.thumbnail.path || '/assets/user/img/no-image.jpg')   
-                span.my-order-one-products__product-name= product.name     
+                a.reset-anchor(href=`/products/${product.product}` target='_blank')
+                  img.my-order-one-products__product-img(src=product.thumbnail && product.thumbnail.path || '/assets/user/img/no-image.jpg' alt=product.name)  
+                a.reset-anchor(href=`/products/${product.product}` target='_blank') 
+                  span.my-order-one-products__product-name= product.name     
               td.my-order-one-products__data.my-order-one-products__quantity x#{product.quantity.now}
               td.my-order-one-products__data.my-order-one-products__total-each.strong-text ₹#{Number(product.totalEach).toLocaleString('en-IN', {maximumFractionDigits: 2})}
   

@@ -25,9 +25,7 @@ const clearFlashMessages = () => {
 };
 
 const scrollToFlashMessages = () => {
-  if (flashMessages) {
-    flashMessages.scrollIntoView();
-  }
+  window.scrollTo(0, 0);
 };
 
 const addFlashMessage = (type, message) => {

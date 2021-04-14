@@ -1,0 +1,187 @@
+extends base/_base
+
+block append variables
+  - 
+    sidebarActive = 'Orders';
+    //- topbarFeatureBtn = ['/a/products/new', 'Add new product', 'fas fa-plus'];
+
+mixin addressEachLine(value, comma=false)
+  if value 
+    p.small-text.small-text--light= `${value}${comma?',':''}`
+
+
+block content 
+  +header(`Order #${document.id}`, [['/a/orders', 'Orders'], [`/a/orders/${document.id}`, `Order #${document.id}`]])
+
+  form#order-one-form.main 
+
+    // Order top
+    section.order-top
+
+      // Order top-left 
+      .order-top__left: .card.card--partition.order-card-user-status
+        div: .customer-imp
+          img.icon-round.icon-round--no-border.customer-imp__img(src=`/assets/admin/img/avatar/${Math.floor(Math.random()*16)}.png` alt='Customer avatar')
+          h2.heading-secondary.customer-imp__heading #{document.user.name} (#{document.user.email})
+          p.small-text.small-text--light.customer-imp__heading-base Customer since #{helpers.dateFormator.dateFormatted(document.createdAt)}
+          
+
+        .order-status
+          each status in [['booked', 'Ordered'], ['confirmed', 'Confirmed'], ['packed', 'Packed'], ['inTransit', 'In-Transit'], ['delivered', 'Delivered'], ['cancelled', 'Cancelled']]
+              - const foundStatus = document.statusAll.find(foundStatus => foundStatus.name === status[0]);
+
+               //- if order is not cancelled, show all status except cancelled else if order is cancelled, show only status found(that is in database)
+              if document.status.name !== 'cancelled' && status[0] !== 'cancelled' || document.status.name === 'cancelled' && foundStatus
+                - 
+                  let statusClass;
+                  if (!foundStatus) {
+                    statusClass = 'order-status__box--inactive';
+                  } else if(foundStatus.name === 'cancelled') {
+                    statusClass = 'order-status__box--cancelled'
+                  } else {
+                    statusClass = 'order-status__box--active';
+                  }
+                .order-status__box(class=statusClass)
+                  .order-status__circle(class=status[0]==='cancelled'?'order-status__circle--cross': '')
+                  .order-status__name= status[1]
+                  .order-status__date.light-text.smaller-text= foundStatus ? helpers.dateFormator.dateFormatted(foundStatus.createdAt): 'XX XX, XXXXX'
+
+        if document.status.name === 'cancelled' && document.cancelled
+          div
+            p Cancelled by: #{document.cancelled.by.userType === 'user'? 'User': 'Admin'}
+            p Cancelled due to: #{document.cancelled.reason}
+
+
+      // Order top-right
+      .order-top__right
+        .card
+          h3.card__heading.heading-secondary Delivery Information
+          .customer-contact
+            .customer-contact__box
+              .customer-contact__icon: i.fas.fa-envelope
+              .customer-contact__information
+                +addressEachLine(document.address.name)
+                +addressEachLine(document.address.address.flat, true)
+                +addressEachLine(document.address.address.area, true)
+                +addressEachLine(document.address.address.landmark, true)
+                +addressEachLine(document.address.address.district, true)
+                +addressEachLine(`${document.address.address.state} - ${document.address.address.pincode}`)
+
+            .customer-contact__box
+              .customer-contact__icon: i.fas.fa-phone-alt
+              .customer-contact__information
+                p.small-text.small-text--light +91 #{document.address.mobile}
+
+
+    
+    // Order middle
+    section.order-middle
+      h2.heading-secondary.heading-secondary--big.order-middle__heading Order Details
+      .order-middle__btns
+
+        // Id of product to entertain
+        .u-display-none
+          input#id(type='text' value=document.id readonly)
+        
+        if document.status.name !== 'delivered' && document.status.name !== 'cancelled'
+
+          // Current stage of product
+          .u-display-none
+            input(type='text' name='currentStage' value=document.status.name readonly)
+
+          // Move to next stage button
+
+          -
+            const statusArr = [['booked', 'Ordered'], ['confirmed', 'Confirmed'], ['packed', 'Packed'], ['inTransit', 'In-Transit'], ['delivered', 'Delivered'], ['cancelled', 'Cancelled']];
+
+            let nextStatus = statusArr[statusArr.findIndex(status => status[0] === document.status.name) + 1][1];
+
+          button#order-one-next-btn.btn.btn--primary(data-load-class='btn--load')
+            span.btn--load__content
+              | Mark as #{nextStatus}&nbsp;
+              i.fas.fa-shipping-fast
+            span.btn--load__load-content
+              i.fa.fa-circle-o-notch.fa-spin
+              | &nbsp;&nbsp;Loading
+
+          | &nbsp;
+
+        if document.status.name !== 'cancelled'
+          // Download invoice button
+          button#order-one-invoice-btn.btn.btn--green(type='button' data-load-class='btn--load')
+            span.btn--load__content
+              i.fas.fa-download
+              | &nbsp;Download Invoice
+            span.btn--load__load-content
+              i.fa.fa-circle-o-notch.fa-spin
+              | &nbsp;&nbsp;Loading
+
+          | &nbsp;
+
+        if document.status.name !== 'delivered' && document.status.name !== 'cancelled'
+          // Cancel order button
+          button#order-one-cancel-btn.btn.btn--red(type='button' data-load-class='btn--load')
+            span.btn--load__content
+              i.fas.fa-times
+              | &nbsp;Cancel order
+            span.btn--load__load-content
+              i.fa.fa-circle-o-notch.fa-spin
+              | &nbsp;&nbsp;Loading
+
+          | &nbsp;
+
+          // Reset Changes button
+          button#order-one-reset-btn.btn.btn--text.js--components-function--btn-confirm-redirect(type='button' data-redirect-to=`/a/orders/${document.id}` data-confirm-message='Are you sure, you want to reset changes?')
+            | Reset Changes
+
+
+
+    // Main table
+    .main-table.main-table--orders
+
+      // Table heading
+      .main-table__heading-container
+        .main-table__heading Item 
+        .main-table__heading.main-table__heading--unimportant Original Price
+        .main-table__heading.main-table__heading--important Price
+        .main-table__heading.main-table__heading--important Quantity
+        .main-table__heading.main-table__heading--important Total Price
+
+      // Table rows
+      each product, i in document.products
+        .main-table__row
+          .main-table__item.main-table__item--first
+            img.main-table__item-img(src=product.thumbnail && product.thumbnail.path || '/assets/user/img/no-image.jpg' alt=product.name)
+            .main-table__item-first-text= product.name
+          .main-table__item.main-table_item--unimportant ₹#{Number(product.price).toLocaleString('en-IN', {maximumFractionDigits: 2})}
+          .main-table__item.main-table_item--important ₹#{Number(product.discountedPrice).toLocaleString('en-IN', {maximumFractionDigits: 2})}
+          .main-table__item.main-table__item--important
+            if product.quantity.booked 
+              p Ordered - #{product.quantity.booked}
+            if product.quantity.confirmed
+              p Confirmed - #{product.quantity.confirmed}
+            if product.quantity.delivered
+              p Delivered - #{product.quantity.delivered}
+
+            if (document.status.name === 'booked' || document.status.name === 'inTransit')
+              p 
+              | #{(document.status.name === 'booked') ? 'Confirm': 'Deliver'} - 
+              input.form-group-input.form__input--small(type='number' placeholder=product.quantity.now min=0 max=product.quantity.now value=product.quantity.now name=`product[${i}][quantity]`)
+
+              // Hidden
+              input.u-display-none(type='text' value=product.id name=`product[${i}][product]` readonly)
+
+          .main-table__item.main-table__item--important= product.totalEach
+
+
+    // Order total
+    .order-total: .card.order-total__content
+      .order-total__row
+        h3.heading-secondary.order-total__name Subtotal 
+        .order-total__value ₹#{Number(document.subTotal).toLocaleString('en-IN', {maximumFractionDigits: 2})}
+      .order-total__row
+        h3.heading-secondary.order-total__name Shipping 
+        .order-total__value ₹#{Number(document.deliveryCharge).toLocaleString('en-IN', {maximumFractionDigits: 2})}
+      .order-total__row
+        h3.heading-secondary.order-total__name Total 
+        .order-total__value ₹#{Number(document.grandTotal).toLocaleString('en-IN', {maximumFractionDigits: 2})}

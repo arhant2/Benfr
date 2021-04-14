@@ -2813,9 +2813,7 @@ var clearFlashMessages = function clearFlashMessages() {
 exports.clearFlashMessages = clearFlashMessages;
 
 var scrollToFlashMessages = function scrollToFlashMessages() {
-  if (flashMessages) {
-    flashMessages.scrollIntoView();
-  }
+  window.scrollTo(0, 0);
 };
 
 exports.scrollToFlashMessages = scrollToFlashMessages;
@@ -6044,7 +6042,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61244" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60304" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
