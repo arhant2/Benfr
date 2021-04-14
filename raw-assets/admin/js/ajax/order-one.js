@@ -39,7 +39,7 @@ const btnStates = new btnStatesClass([
   },
 ]);
 
-// Submit form
+// Submit form(Move to next stage)
 if (form && id) {
   form.addEventListener('submit', function (e) {
     e.preventDefault();
@@ -75,6 +75,50 @@ if (form && id) {
           btnStates.enableBtns();
         }
       }
+    );
+  });
+}
+
+// Cancel order
+if (cancelBtn && id) {
+  cancelBtn.addEventListener('click', function (e) {
+    e.preventDefault();
+
+    const cancelOrder = async (reason) => {
+      if (!reason) {
+        return;
+      }
+      btnStates.disableBtns('cancel');
+
+      try {
+        const res = await axios({
+          method: 'DELETE',
+          url: `/api/v1/orders/${id}/cancel`,
+          data: {
+            reason,
+          },
+        });
+
+        addFlashMessage(
+          'success',
+          'Cancelled order successfully! Reloading...'
+        );
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      } catch (err) {
+        handleError(err);
+        btnStates.enableBtns();
+      }
+    };
+
+    popup.prompt(
+      'Cancel order',
+      'Please enter a reason for order cancellation',
+      cancelOrder,
+      'Cannot fulfill order',
+      4,
+      200
     );
   });
 }

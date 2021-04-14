@@ -52,7 +52,15 @@ block accountContent
         .my-order-one-section__header 
           h3.heading-tertiary.heading-tertiary--no-bottom-line Billing Info
           .my-order-one-section__btns-group 
-            button.btn.btn--red.btn--round Cancel Order
+            // Id of product to entertain
+            .u-display-none
+              input#id(type='text' value=document.id readonly)
+            if document.status.name !== 'cancelled' && document.status.name !== 'delivered'
+              button#order-one-cancel-btn.btn.btn--red.btn--round.btn--load(type='button')
+                span.btn--load__content Cancel Order
+                span.btn--load__load-content
+                  i.fa.fa-circle-o-notch.fa-spin
+                  | &nbsp;Loading
         
         .my-order-one-billing__body
           .my-order-one-billing__each 

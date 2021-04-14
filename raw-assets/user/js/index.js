@@ -8,6 +8,7 @@ import './ajax/checkout';
 import './ajax/checkout-address';
 import './ajax/forgot-password';
 import './ajax/login';
+import './ajax/order-one';
 import './ajax/reset-password';
 import './ajax/review';
 import './ajax/signup';

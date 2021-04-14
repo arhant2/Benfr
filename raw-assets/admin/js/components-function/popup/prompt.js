@@ -44,7 +44,7 @@ const promptFunction = (
     !container.dataset.noneClass
   ) {
     const ans = prompt(message, defaultInput);
-    fn(ans);
+    fn && fn(ans);
     return;
   }
 
@@ -63,13 +63,13 @@ const promptFunction = (
     e.preventDefault();
     const ans = textarea.value || undefined;
     removeEventListenerAndHide();
-    fn(ans);
+    fn && fn(ans);
   };
 
   // Function to call if request is cancelled
   fnToCallCancel = () => {
     removeEventListenerAndHide();
-    fn();
+    fn && fn();
   };
 
   form.addEventListener('submit', fnToCallForm);
@@ -80,6 +80,7 @@ const promptFunction = (
   heading.textContent = title;
   body.textContent = message;
   textarea.textContent = defaultInput || '';
+  textarea.value = defaultInput || '';
   textarea.minLength = minlength;
   textarea.maxLength = maxlength;
   container.classList.remove(container.dataset.noneClass);

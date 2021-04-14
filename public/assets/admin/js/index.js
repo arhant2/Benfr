@@ -2888,7 +2888,7 @@ var promptFunction = function promptFunction(title, message, fn, defaultInput) {
   // Call the default one if the custom one cannot be called
   if (!container || !form || !heading || !body || !(closeBtn1 || closeBtn2) || !container.dataset.noneClass) {
     var ans = prompt(message, defaultInput);
-    fn(ans);
+    fn && fn(ans);
     return;
   }
 
@@ -2906,13 +2906,13 @@ var promptFunction = function promptFunction(title, message, fn, defaultInput) {
     e.preventDefault();
     var ans = textarea.value || undefined;
     removeEventListenerAndHide();
-    fn(ans);
+    fn && fn(ans);
   }; // Function to call if request is cancelled
 
 
   fnToCallCancel = function fnToCallCancel() {
     removeEventListenerAndHide();
-    fn();
+    fn && fn();
   };
 
   form.addEventListener('submit', fnToCallForm);
@@ -2922,6 +2922,7 @@ var promptFunction = function promptFunction(title, message, fn, defaultInput) {
   heading.textContent = title;
   body.textContent = message;
   textarea.textContent = defaultInput || '';
+  textarea.value = defaultInput || '';
   textarea.minLength = minlength;
   textarea.maxLength = maxlength;
   container.classList.remove(container.dataset.noneClass);
@@ -3346,7 +3347,7 @@ var btnStates = new _btnsStatesClass.default([{
 }, {
   name: 'reset',
   btn: resetBtn
-}]); // Submit form
+}]); // Submit form(Move to next stage)
 
 if (form && id) {
   form.addEventListener('submit', function (e) {
@@ -3392,6 +3393,69 @@ if (form && id) {
         }
       }, _callee, null, [[2, 10]]);
     })));
+  });
+} // Cancel order
+
+
+if (cancelBtn && id) {
+  cancelBtn.addEventListener('click', function (e) {
+    e.preventDefault();
+
+    var cancelOrder = /*#__PURE__*/function () {
+      var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(reason) {
+        var res;
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                if (reason) {
+                  _context2.next = 2;
+                  break;
+                }
+
+                return _context2.abrupt("return");
+
+              case 2:
+                btnStates.disableBtns('cancel');
+                _context2.prev = 3;
+                _context2.next = 6;
+                return (0, _axios.default)({
+                  method: 'DELETE',
+                  url: "/api/v1/orders/".concat(id, "/cancel"),
+                  data: {
+                    reason: reason
+                  }
+                });
+
+              case 6:
+                res = _context2.sent;
+                (0, _flashMessages.addFlashMessage)('success', 'Cancelled order successfully! Reloading...');
+                setTimeout(function () {
+                  window.location.reload();
+                }, 2000);
+                _context2.next = 15;
+                break;
+
+              case 11:
+                _context2.prev = 11;
+                _context2.t0 = _context2["catch"](3);
+                (0, _handleError.default)(_context2.t0);
+                btnStates.enableBtns();
+
+              case 15:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, null, [[3, 11]]);
+      }));
+
+      return function cancelOrder(_x) {
+        return _ref2.apply(this, arguments);
+      };
+    }();
+
+    _index.default.prompt('Cancel order', 'Please enter a reason for order cancellation', cancelOrder, 'Cannot fulfill order', 4, 200);
   });
 }
 },{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../components-function/flash-messages":"components-function/flash-messages.js","../components-function/popup/index":"components-function/popup/index.js","../utils/btnsStatesClass":"utils/btnsStatesClass.js"}],"components-function/btn-confirm-redirect.js":[function(require,module,exports) {
@@ -25990,7 +26054,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63981" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64596" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

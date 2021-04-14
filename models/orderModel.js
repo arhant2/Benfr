@@ -110,8 +110,8 @@ const orderSchema = new mongoose.Schema(
           'Reason for order cancellation must be of atleast 4 characters',
         ],
         maxlength: [
-          50,
-          'Reason for order cancellation must be of 50 characters at maximum',
+          200,
+          'Reason for order cancellation must be of 200 characters at maximum',
         ],
       },
     },
@@ -358,6 +358,13 @@ orderSchema.methods.cancelOrder = async function (user, reason) {
   }
   if (this.status.name === 'delivered') {
     throw new AppError('Delivered order cannot be cancelled', 400);
+  }
+
+  if (user.role === 'user' && this.status.name === 'inTransit') {
+    throw new AppError(
+      'Order is In-Transit, You cannot cancel the order!',
+      400
+    );
   }
 
   if (!reason) {

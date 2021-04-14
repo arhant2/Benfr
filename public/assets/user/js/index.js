@@ -2800,7 +2800,7 @@ var promptFunction = function promptFunction(title, message, fn, defaultInput) {
   // Call the default one if the custom one cannot be called
   if (!container || !form || !heading || !body || !(closeBtn1 || closeBtn2) || !container.dataset.noneClass) {
     var ans = prompt(message, defaultInput);
-    fn(ans);
+    fn && fn(ans);
     return;
   }
 
@@ -2818,13 +2818,13 @@ var promptFunction = function promptFunction(title, message, fn, defaultInput) {
     e.preventDefault();
     var ans = textarea.value || undefined;
     removeEventListenerAndHide();
-    fn(ans);
+    fn && fn(ans);
   }; // Function to call if request is cancelled
 
 
   fnToCallCancel = function fnToCallCancel() {
     removeEventListenerAndHide();
-    fn();
+    fn && fn();
   };
 
   form.addEventListener('submit', fnToCallForm);
@@ -2834,6 +2834,7 @@ var promptFunction = function promptFunction(title, message, fn, defaultInput) {
   heading.textContent = title;
   body.textContent = message;
   textarea.textContent = defaultInput || '';
+  textarea.value = defaultInput || '';
   textarea.minLength = minlength;
   textarea.maxLength = maxlength;
   container.classList.remove(container.dataset.noneClass);
@@ -3940,7 +3941,92 @@ if (form) {
     };
   }());
 }
-},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../component-functions/flash-messages":"component-functions/flash-messages.js"}],"ajax/reset-password.js":[function(require,module,exports) {
+},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../component-functions/flash-messages":"component-functions/flash-messages.js"}],"ajax/order-one.js":[function(require,module,exports) {
+"use strict";
+
+require("regenerator-runtime/runtime");
+
+var _axios = _interopRequireDefault(require("axios"));
+
+var _handleError = _interopRequireDefault(require("../utils/handleError"));
+
+var _flashMessages = require("../component-functions/flash-messages");
+
+var _index = _interopRequireDefault(require("../component-functions/popup/index"));
+
+var _document$getElementB;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+var cancelBtn = document.getElementById('order-one-cancel-btn');
+var id = (_document$getElementB = document.getElementById('id')) === null || _document$getElementB === void 0 ? void 0 : _document$getElementB.value;
+
+if (cancelBtn && id) {
+  cancelBtn.addEventListener('click', function (e) {
+    e.preventDefault();
+
+    var cancelOrder = /*#__PURE__*/function () {
+      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(reason) {
+        var res;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                if (reason) {
+                  _context.next = 2;
+                  break;
+                }
+
+                return _context.abrupt("return");
+
+              case 2:
+                cancelBtn.setAttribute('disabled', 'disabled');
+                _context.prev = 3;
+                _context.next = 6;
+                return (0, _axios.default)({
+                  method: 'DELETE',
+                  url: "/api/v1/orders/".concat(id, "/cancel"),
+                  data: {
+                    reason: reason
+                  }
+                });
+
+              case 6:
+                res = _context.sent;
+                (0, _flashMessages.addFlashMessage)('success', 'Cancelled order successfully! Reloading...');
+                setTimeout(function () {
+                  window.location.reload();
+                }, 2000);
+                _context.next = 15;
+                break;
+
+              case 11:
+                _context.prev = 11;
+                _context.t0 = _context["catch"](3);
+                (0, _handleError.default)(_context.t0);
+                cancelBtn.removeAttribute('disabled');
+
+              case 15:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, null, [[3, 11]]);
+      }));
+
+      return function cancelOrder(_x) {
+        return _ref.apply(this, arguments);
+      };
+    }();
+
+    _index.default.prompt('Cancel order', 'Please enter a reason for order cancellation', cancelOrder, undefined, 4, 200);
+  });
+}
+},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../component-functions/flash-messages":"component-functions/flash-messages.js","../component-functions/popup/index":"component-functions/popup/index.js"}],"ajax/reset-password.js":[function(require,module,exports) {
 "use strict";
 
 require("regenerator-runtime/runtime");
@@ -6062,6 +6148,8 @@ require("./ajax/forgot-password");
 
 require("./ajax/login");
 
+require("./ajax/order-one");
+
 require("./ajax/reset-password");
 
 require("./ajax/review");
@@ -6097,7 +6185,7 @@ require("./component-functions/toggle-on-click");
 require("./component-functions/increment-decrement-input-number");
 
 require("./pages/each-product");
-},{"./ajax/add-to-cart-btn":"ajax/add-to-cart-btn.js","./ajax/address":"ajax/address.js","./ajax/cart":"ajax/cart.js","./ajax/change-my-email":"ajax/change-my-email.js","./ajax/checkout":"ajax/checkout.js","./ajax/checkout-address":"ajax/checkout-address.js","./ajax/forgot-password":"ajax/forgot-password.js","./ajax/login":"ajax/login.js","./ajax/reset-password":"ajax/reset-password.js","./ajax/review":"ajax/review.js","./ajax/signup":"ajax/signup.js","./ajax/signup-complete":"ajax/signup-complete.js","./ajax/update-me":"ajax/update-me.js","./ajax/update-my-password":"ajax/update-my-password.js","./component-functions/btn-confirm-redirect":"component-functions/btn-confirm-redirect.js","./component-functions/dropdown":"component-functions/dropdown.js","./component-functions/flash-messages":"component-functions/flash-messages.js","./component-functions/form-rating":"component-functions/form-rating.js","./component-functions/remove-on-click":"component-functions/remove-on-click.js","./component-functions/search":"component-functions/search.js","./component-functions/sidebar":"component-functions/sidebar.js","./component-functions/sliders":"component-functions/sliders.js","./component-functions/state-district-select":"component-functions/state-district-select.js","./component-functions/toggle-on-click":"component-functions/toggle-on-click.js","./component-functions/increment-decrement-input-number":"component-functions/increment-decrement-input-number.js","./pages/each-product":"pages/each-product.js"}],"../../../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./ajax/add-to-cart-btn":"ajax/add-to-cart-btn.js","./ajax/address":"ajax/address.js","./ajax/cart":"ajax/cart.js","./ajax/change-my-email":"ajax/change-my-email.js","./ajax/checkout":"ajax/checkout.js","./ajax/checkout-address":"ajax/checkout-address.js","./ajax/forgot-password":"ajax/forgot-password.js","./ajax/login":"ajax/login.js","./ajax/order-one":"ajax/order-one.js","./ajax/reset-password":"ajax/reset-password.js","./ajax/review":"ajax/review.js","./ajax/signup":"ajax/signup.js","./ajax/signup-complete":"ajax/signup-complete.js","./ajax/update-me":"ajax/update-me.js","./ajax/update-my-password":"ajax/update-my-password.js","./component-functions/btn-confirm-redirect":"component-functions/btn-confirm-redirect.js","./component-functions/dropdown":"component-functions/dropdown.js","./component-functions/flash-messages":"component-functions/flash-messages.js","./component-functions/form-rating":"component-functions/form-rating.js","./component-functions/remove-on-click":"component-functions/remove-on-click.js","./component-functions/search":"component-functions/search.js","./component-functions/sidebar":"component-functions/sidebar.js","./component-functions/sliders":"component-functions/sliders.js","./component-functions/state-district-select":"component-functions/state-district-select.js","./component-functions/toggle-on-click":"component-functions/toggle-on-click.js","./component-functions/increment-decrement-input-number":"component-functions/increment-decrement-input-number.js","./pages/each-product":"pages/each-product.js"}],"../../../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -6125,7 +6213,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63979" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64599" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
