@@ -8,7 +8,7 @@ import {
   clearFlashMessages,
 } from '../component-functions/flash-messages';
 
-import confirmDialog from '../component-functions/confirm-dialog';
+import popup from '../component-functions/popup/index';
 
 /////////////////////////////////////////////////////////////////////
 // Select address form
@@ -49,7 +49,7 @@ import confirmDialog from '../component-functions/confirm-dialog';
 
     const data = new FormData(this);
 
-    confirmDialog(
+    popup.confirm(
       'Confirm',
       'Save address and continue to checkcout?',
       undefined,

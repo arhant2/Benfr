@@ -3,8 +3,7 @@ import axios from 'axios';
 
 import handleError from '../utils/handleError';
 
-import alertDialog from '../component-functions/alert-dialog';
-import confirmDialog from '../component-functions/confirm-dialog';
+import popup from '../component-functions/popup/index';
 
 ////////////////////////////////
 // Posting/updating of review
@@ -45,7 +44,7 @@ import confirmDialog from '../component-functions/confirm-dialog';
           data,
         });
 
-        alertDialog(
+        popup.alert(
           'Success',
           `${
             reviewId ? 'Updated your' : 'Posted your'
@@ -84,7 +83,7 @@ Array.from(
       !likedClass ||
       likeCountElement.dataset.likeCount === undefined
     ) {
-      alertDialog(
+      popup.alert(
         'Error',
         'Cannot like/unlike the post now, please retry later!'
       );
@@ -134,14 +133,14 @@ Array.from(
     const card = this.closest('.js--ajax--review-each');
 
     if (!reviewId || !productId || !card) {
-      alertDialog(
+      popup.alert(
         'Error',
         'Cannot mark review as inappropriate now, please try again later!'
       );
       return;
     }
 
-    confirmDialog(
+    popup.confirm(
       'Confirm marking',
       'Are you sure you want mark the review as inappropriate? This action cannot be undone and doing so will hide this review for you',
       undefined,
@@ -172,11 +171,11 @@ Array.from(
     const { reviewId, productId } = this.dataset;
 
     if (!reviewId || !productId) {
-      alertDialog('Error', 'Cannot delete review now, please try again later!');
+      popup.alert('Error', 'Cannot delete review now, please try again later!');
       return;
     }
 
-    confirmDialog(
+    popup.confirm(
       'Confirm delete',
       'Are you sure, you want to delete this review? This cannot be undone.',
       undefined,
@@ -189,7 +188,7 @@ Array.from(
             url: `/api/v1/products/${productId}/reviews/${reviewId}`,
           });
 
-          alertDialog(
+          popup.alert(
             'Success',
             'Deleted your review successfully! Reload the page to see changes...',
             () => {

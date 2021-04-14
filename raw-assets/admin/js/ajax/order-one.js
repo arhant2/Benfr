@@ -8,7 +8,7 @@ import {
   clearFlashMessages,
 } from '../components-function/flash-messages';
 
-import confirmDialog from '../components-function/confirm-dialog';
+import popup from '../components-function/popup/index';
 import btnStatesClass from '../utils/btnsStatesClass';
 
 const form = document.getElementById('order-one-form');
@@ -44,7 +44,7 @@ if (form && id) {
   form.addEventListener('submit', function (e) {
     e.preventDefault();
 
-    confirmDialog(
+    popup.confirm(
       'Confirm changes',
       'Confirm changes and move to next stage?',
       undefined,

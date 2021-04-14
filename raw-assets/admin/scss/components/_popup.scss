@@ -1,4 +1,4 @@
-.confirm-dialog {
+.popup {
   &__container {
     position: fixed;
     background-color: rgba(0, 0, 0, 0.6);
@@ -20,7 +20,7 @@
   width: 90%;
   max-width: 40rem;
 
-  .confirm-dialog__top-bar {
+  &__top-bar {
     padding: 0.8rem 1rem;
     display: flex;
     align-items: center;
@@ -31,11 +31,11 @@
     border-radius: 0.4rem 0.4rem 0 0;
   }
 
-  .confirm-dialog__body {
+  &__body {
     padding: 1.8rem 1rem;
   }
 
-  .confirm-dialog__btns {
+  &__btns {
     padding: 0.6rem 1rem;
     background-color: var(--color-grey-light-2);
     border-top: 1px solid var(--color-grey-light-4);

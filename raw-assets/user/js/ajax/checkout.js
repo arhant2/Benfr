@@ -1,7 +1,7 @@
 import 'regenerator-runtime/runtime';
 import axios from 'axios';
 
-import alertDialog from '../component-functions/alert-dialog';
+import popup from '../component-functions/popup/index';
 import handleError from '../utils/handleError';
 import { clearFlashMessages } from '../component-functions/flash-messages';
 
@@ -17,7 +17,7 @@ const showOrderConfirmation = (url) => {
 
   // If orderConfirmation section is not there show alert instead
   if (!noneClass || !orderConfirmationBtn) {
-    alertDialog(
+    popup.alert(
       'Sucessful',
       'Your order has been placed. You will be receiving a confirmation email with order details',
       fnToCall

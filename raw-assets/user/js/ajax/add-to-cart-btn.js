@@ -1,8 +1,7 @@
 import 'regenerator-runtime/runtime';
 import axios from 'axios';
 
-import alertDialog from '../component-functions/alert-dialog';
-import confirmDialog from '../component-functions/confirm-dialog';
+import popup from '../component-functions/popup/index';
 
 import handleError from '../utils/handleError';
 
@@ -12,7 +11,7 @@ Array.from(document.getElementsByClassName('js--ajax--add-cart-btn')).forEach(
       const { product } = this.dataset;
 
       if (!product) {
-        return alertDialog(
+        return popup.alert(
           'Error',
           'Cannot add product, please try again later!'
         );
@@ -31,7 +30,7 @@ Array.from(document.getElementsByClassName('js--ajax--add-cart-btn')).forEach(
 
         this.removeAttribute('disabled');
 
-        confirmDialog(
+        popup.confirm(
           'Redirect to cart',
           'Product added to cart successfully. Go to cart page?',
           undefined,

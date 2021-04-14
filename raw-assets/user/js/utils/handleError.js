@@ -3,7 +3,7 @@ import {
   clearFlashMessages,
 } from '../component-functions/flash-messages';
 
-import alertDialog from '../component-functions/alert-dialog';
+import popup from '../component-functions/popup/index';
 
 export default function (err, alert = false) {
   clearFlashMessages();
@@ -22,7 +22,7 @@ export default function (err, alert = false) {
   }
 
   if (alert) {
-    alertDialog('Error', message);
+    popup.alert('Error', message);
     return;
   }
 

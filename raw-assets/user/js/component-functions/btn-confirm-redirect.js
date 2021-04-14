@@ -1,4 +1,4 @@
-import confirmDialog from './confirm-dialog';
+import popup from './popup/index';
 
 Array.from(
   document.getElementsByClassName(
@@ -16,7 +16,7 @@ Array.from(
       return;
     }
 
-    confirmDialog(
+    popup.confirm(
       'Confirm redirect',
       this.dataset.confirmMessage,
       undefined,

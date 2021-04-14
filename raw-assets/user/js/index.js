@@ -15,7 +15,6 @@ import './ajax/signup-complete';
 import './ajax/update-me';
 import './ajax/update-my-password';
 
-import './component-functions/confirm-dialog';
 import './component-functions/btn-confirm-redirect';
 import './component-functions/dropdown';
 import './component-functions/flash-messages';

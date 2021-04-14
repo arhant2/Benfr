@@ -2668,39 +2668,36 @@ module.exports.default = axios;
 
 },{"./utils":"../../../node_modules/axios/lib/utils.js","./helpers/bind":"../../../node_modules/axios/lib/helpers/bind.js","./core/Axios":"../../../node_modules/axios/lib/core/Axios.js","./core/mergeConfig":"../../../node_modules/axios/lib/core/mergeConfig.js","./defaults":"../../../node_modules/axios/lib/defaults.js","./cancel/Cancel":"../../../node_modules/axios/lib/cancel/Cancel.js","./cancel/CancelToken":"../../../node_modules/axios/lib/cancel/CancelToken.js","./cancel/isCancel":"../../../node_modules/axios/lib/cancel/isCancel.js","./helpers/spread":"../../../node_modules/axios/lib/helpers/spread.js","./helpers/isAxiosError":"../../../node_modules/axios/lib/helpers/isAxiosError.js"}],"../../../node_modules/axios/index.js":[function(require,module,exports) {
 module.exports = require('./lib/axios');
-},{"./lib/axios":"../../../node_modules/axios/lib/axios.js"}],"component-functions/alert-dialog.js":[function(require,module,exports) {
+},{"./lib/axios":"../../../node_modules/axios/lib/axios.js"}],"component-functions/popup/alert.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var container = document.getElementsByClassName('js--components-function--alert-dialog')[0];
-var heading = document.getElementsByClassName('js--components-function--alert-dialog__heading')[0];
-var body = document.getElementsByClassName('js--components-function--alert-dialog__body')[0];
-var confirmBtn = document.getElementsByClassName('js--components-function--alert-dialog__confirm-btn')[0];
+var container = document.getElementsByClassName('js--components-function--popup-alert')[0];
+var heading = document.getElementsByClassName('js--components-function--popup-alert__heading')[0];
+var body = document.getElementsByClassName('js--components-function--popup-alert__body')[0];
+var confirmBtn = document.getElementsByClassName('js--components-function--popup-alert__confirm-btn')[0];
 
 var alertFunction = function alertFunction(title, message, fn) {
   // Call the default one if the custom one cannot be called
   if (!container || !heading || !body || !confirmBtn || !container.dataset.noneClass) {
     alert(message);
-    fn();
+    fn && fn();
     return;
   }
 
   var fnToCall; // Remove listeners and hide the dialog when work is done
 
-  var removeEventListener = function removeEventListener() {
+  var removeEventListenerAndHide = function removeEventListenerAndHide() {
     container.classList.add(container.dataset.noneClass);
     confirmBtn.removeEventListener('click', fnToCall);
   };
 
   fnToCall = function fnToCall() {
-    removeEventListener();
-
-    if (fn) {
-      fn();
-    }
+    removeEventListenerAndHide();
+    fn && fn();
   };
 
   confirmBtn.addEventListener('click', fnToCall); // Add message
@@ -2712,29 +2709,27 @@ var alertFunction = function alertFunction(title, message, fn) {
 
 var _default = alertFunction;
 exports.default = _default;
-},{}],"component-functions/confirm-dialog.js":[function(require,module,exports) {
+},{}],"component-functions/popup/confirm.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var container = document.getElementsByClassName('js--components-function--confirm-dialog')[0];
-var heading = document.getElementsByClassName('js--components-function--confirm-dialog__heading')[0];
-var body = document.getElementsByClassName('js--components-function--confirm-dialog__body')[0];
-var closeBtn1 = document.getElementsByClassName('js--components-function--confirm-dialog__close-btn-1')[0];
-var closeBtn2 = document.getElementsByClassName('js--components-function--confirm-dialog__close-btn-2')[0];
-var confirmBtn = document.getElementsByClassName('js--components-function--confirm-dialog__confirm-btn')[0];
+var container = document.getElementsByClassName('js--components-function--popup-confirm')[0];
+var heading = document.getElementsByClassName('js--components-function--popup-confirm__heading')[0];
+var body = document.getElementsByClassName('js--components-function--popup-confirm__body')[0];
+var closeBtn1 = document.getElementsByClassName('js--components-function--popup-confirm__close-btn-1')[0];
+var closeBtn2 = document.getElementsByClassName('js--components-function--popup-confirm__close-btn-2')[0];
+var confirmBtn = document.getElementsByClassName('js--components-function--popup-confirm__confirm-btn')[0];
 
 var confirmFunction = function confirmFunction(title, message, noFn, yesFn) {
   // Call the default one if the custom one cannot be called
   if (!container || !heading || !body || !(closeBtn1 || closeBtn2) || !confirmBtn || !container.dataset.noneClass) {
     if (window.confirm(message)) {
-      yesFn();
+      yesFn && yesFn();
     } else {
-      if (noFn) {
-        noFn();
-      }
+      noFn && noFn();
     }
 
     return;
@@ -2742,7 +2737,7 @@ var confirmFunction = function confirmFunction(title, message, noFn, yesFn) {
 
   var noFnToCall, yesFnToCall; // Remove listeners and hide the dialog when work is done
 
-  var removeEventListener = function removeEventListener() {
+  var removeEventListenerAndHide = function removeEventListenerAndHide() {
     container.classList.add(container.dataset.noneClass);
     confirmBtn.removeEventListener('click', yesFnToCall);
 
@@ -2756,16 +2751,13 @@ var confirmFunction = function confirmFunction(title, message, noFn, yesFn) {
   };
 
   yesFnToCall = function yesFnToCall() {
-    removeEventListener();
-    yesFn();
+    removeEventListenerAndHide();
+    yesFn && yesFn();
   };
 
   noFnToCall = function noFnToCall() {
-    removeEventListener();
-
-    if (noFn) {
-      noFn();
-    }
+    removeEventListenerAndHide();
+    noFn && noFn();
   };
 
   confirmBtn.addEventListener('click', yesFnToCall);
@@ -2786,7 +2778,92 @@ var confirmFunction = function confirmFunction(title, message, noFn, yesFn) {
 
 var _default = confirmFunction;
 exports.default = _default;
-},{}],"component-functions/flash-messages.js":[function(require,module,exports) {
+},{}],"component-functions/popup/prompt.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var container = document.getElementsByClassName('js--components-function--popup-prompt')[0];
+var form = document.getElementsByClassName('js--components-function--popup-prompt__form')[0];
+var heading = document.getElementsByClassName('js--components-function--popup-prompt__heading')[0];
+var body = document.getElementsByClassName('js--components-function--popup-prompt__body')[0];
+var textarea = document.getElementsByClassName('js--components-function--popup-prompt__textarea')[0];
+var closeBtn1 = document.getElementsByClassName('js--components-function--popup-prompt__close-btn-1')[0];
+var closeBtn2 = document.getElementsByClassName('js--components-function--popup-prompt__close-btn-2')[0];
+
+var promptFunction = function promptFunction(title, message, fn, defaultInput) {
+  var minlength = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 1;
+  var maxlength = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 10;
+
+  // Call the default one if the custom one cannot be called
+  if (!container || !form || !heading || !body || !(closeBtn1 || closeBtn2) || !container.dataset.noneClass) {
+    var ans = prompt(message, defaultInput);
+    fn(ans);
+    return;
+  }
+
+  var fnToCallForm, fnToCallCancel; // Remove listeners and hide the dialog when work is done
+
+  var removeEventListenerAndHide = function removeEventListenerAndHide() {
+    container.classList.add(container.dataset.noneClass);
+    form.removeEventListener('submit', fnToCallForm);
+    closeBtn1 && closeBtn1.removeEventListener('click', fnToCallCancel);
+    closeBtn2 && closeBtn2.removeEventListener('click', fnToCallCancel);
+  }; // Function to call while submitting form
+
+
+  fnToCallForm = function fnToCallForm(e) {
+    e.preventDefault();
+    var ans = textarea.value || undefined;
+    removeEventListenerAndHide();
+    fn(ans);
+  }; // Function to call if request is cancelled
+
+
+  fnToCallCancel = function fnToCallCancel() {
+    removeEventListenerAndHide();
+    fn();
+  };
+
+  form.addEventListener('submit', fnToCallForm);
+  closeBtn1 && closeBtn1.addEventListener('click', fnToCallCancel);
+  closeBtn2 && closeBtn2.addEventListener('click', fnToCallCancel); // Add message
+
+  heading.textContent = title;
+  body.textContent = message;
+  textarea.textContent = defaultInput || '';
+  textarea.minLength = minlength;
+  textarea.maxLength = maxlength;
+  container.classList.remove(container.dataset.noneClass);
+};
+
+var _default = promptFunction;
+exports.default = _default;
+},{}],"component-functions/popup/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _alert = _interopRequireDefault(require("./alert"));
+
+var _confirm = _interopRequireDefault(require("./confirm"));
+
+var _prompt = _interopRequireDefault(require("./prompt"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _default = {
+  alert: _alert.default,
+  confirm: _confirm.default,
+  prompt: _prompt.default
+};
+exports.default = _default;
+},{"./alert":"component-functions/popup/alert.js","./confirm":"component-functions/popup/confirm.js","./prompt":"component-functions/popup/prompt.js"}],"component-functions/flash-messages.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2857,7 +2934,7 @@ exports.default = _default;
 
 var _flashMessages = require("../component-functions/flash-messages");
 
-var _alertDialog = _interopRequireDefault(require("../component-functions/alert-dialog"));
+var _index = _interopRequireDefault(require("../component-functions/popup/index"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2879,22 +2956,21 @@ function _default(err) {
   }
 
   if (alert) {
-    (0, _alertDialog.default)('Error', message);
+    _index.default.alert('Error', message);
+
     return;
   }
 
   (0, _flashMessages.addFlashMessage)(type, message);
 }
-},{"../component-functions/flash-messages":"component-functions/flash-messages.js","../component-functions/alert-dialog":"component-functions/alert-dialog.js"}],"ajax/add-to-cart-btn.js":[function(require,module,exports) {
+},{"../component-functions/flash-messages":"component-functions/flash-messages.js","../component-functions/popup/index":"component-functions/popup/index.js"}],"ajax/add-to-cart-btn.js":[function(require,module,exports) {
 "use strict";
 
 require("regenerator-runtime/runtime");
 
 var _axios = _interopRequireDefault(require("axios"));
 
-var _alertDialog = _interopRequireDefault(require("../component-functions/alert-dialog"));
-
-var _confirmDialog = _interopRequireDefault(require("../component-functions/confirm-dialog"));
+var _index = _interopRequireDefault(require("../component-functions/popup/index"));
 
 var _handleError = _interopRequireDefault(require("../utils/handleError"));
 
@@ -2919,7 +2995,7 @@ Array.from(document.getElementsByClassName('js--ajax--add-cart-btn')).forEach(fu
                 break;
               }
 
-              return _context.abrupt("return", (0, _alertDialog.default)('Error', 'Cannot add product, please try again later!'));
+              return _context.abrupt("return", _index.default.alert('Error', 'Cannot add product, please try again later!'));
 
             case 3:
               this.setAttribute('disabled', 'disabled');
@@ -2935,9 +3011,11 @@ Array.from(document.getElementsByClassName('js--ajax--add-cart-btn')).forEach(fu
 
             case 7:
               this.removeAttribute('disabled');
-              (0, _confirmDialog.default)('Redirect to cart', 'Product added to cart successfully. Go to cart page?', undefined, function () {
+
+              _index.default.confirm('Redirect to cart', 'Product added to cart successfully. Go to cart page?', undefined, function () {
                 window.location.href = '/cart';
               });
+
               _context.next = 15;
               break;
 
@@ -2960,7 +3038,7 @@ Array.from(document.getElementsByClassName('js--ajax--add-cart-btn')).forEach(fu
     };
   }());
 });
-},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../component-functions/alert-dialog":"component-functions/alert-dialog.js","../component-functions/confirm-dialog":"component-functions/confirm-dialog.js","../utils/handleError":"utils/handleError.js"}],"ajax/address.js":[function(require,module,exports) {
+},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../component-functions/popup/index":"component-functions/popup/index.js","../utils/handleError":"utils/handleError.js"}],"ajax/address.js":[function(require,module,exports) {
 "use strict";
 
 require("regenerator-runtime/runtime");
@@ -2971,9 +3049,7 @@ var _handleError = _interopRequireDefault(require("../utils/handleError"));
 
 var _flashMessages = require("../component-functions/flash-messages");
 
-var _alertDialog = _interopRequireDefault(require("../component-functions/alert-dialog"));
-
-var _confirmDialog = _interopRequireDefault(require("../component-functions/confirm-dialog"));
+var _index = _interopRequireDefault(require("../component-functions/popup/index"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2996,7 +3072,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context2.prev = _context2.next) {
               case 0:
                 event.preventDefault();
-                (0, _confirmDialog.default)('Confirm changes', 'Are you sure you want to save the changes?', undefined, /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+
+                _index.default.confirm('Confirm changes', 'Are you sure you want to save the changes?', undefined, /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
                   var data, addressId, isNew, res;
                   return regeneratorRuntime.wrap(function _callee$(_context) {
                     while (1) {
@@ -3094,7 +3171,7 @@ Array.from(document.getElementsByClassName('js--ajax--delete-address__btn')).for
       return;
     }
 
-    (0, _confirmDialog.default)('Confirm Delete', 'Are you sure, you want to delete this address?', undefined, /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+    _index.default.confirm('Confirm Delete', 'Are you sure, you want to delete this address?', undefined, /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
       return regeneratorRuntime.wrap(function _callee3$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
@@ -3132,7 +3209,7 @@ Array.from(document.getElementsByClassName('js--ajax--delete-address__btn')).for
     })));
   });
 });
-},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../component-functions/flash-messages":"component-functions/flash-messages.js","../component-functions/alert-dialog":"component-functions/alert-dialog.js","../component-functions/confirm-dialog":"component-functions/confirm-dialog.js"}],"ajax/cart.js":[function(require,module,exports) {
+},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../component-functions/flash-messages":"component-functions/flash-messages.js","../component-functions/popup/index":"component-functions/popup/index.js"}],"ajax/cart.js":[function(require,module,exports) {
 "use strict";
 
 require("regenerator-runtime/runtime");
@@ -3143,7 +3220,7 @@ var _handleError = _interopRequireDefault(require("../utils/handleError"));
 
 var _flashMessages = require("../component-functions/flash-messages");
 
-var _confirmDialog = _interopRequireDefault(require("../component-functions/confirm-dialog"));
+var _index = _interopRequireDefault(require("../component-functions/popup/index"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3194,7 +3271,8 @@ if (form) {
     e.preventDefault();
     (0, _flashMessages.clearFlashMessages)();
     var currentForm = this;
-    (0, _confirmDialog.default)('Confirm changes', 'Are you sure, you want to save the changes?', undefined, /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+
+    _index.default.confirm('Confirm changes', 'Are you sure, you want to save the changes?', undefined, /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
       var data, res;
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
@@ -3239,7 +3317,8 @@ if (form) {
 if (deleteBtn) {
   deleteBtn.addEventListener('click', function (e) {
     (0, _flashMessages.clearFlashMessages)();
-    (0, _confirmDialog.default)('Clear Cart', "Are you sure, you want to clear the cart? Please note that this cannot be undone!", undefined, /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+
+    _index.default.confirm('Clear Cart', "Are you sure, you want to clear the cart? Please note that this cannot be undone!", undefined, /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
       var res;
       return regeneratorRuntime.wrap(function _callee2$(_context2) {
         while (1) {
@@ -3277,7 +3356,7 @@ if (deleteBtn) {
     })));
   });
 }
-},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../component-functions/flash-messages":"component-functions/flash-messages.js","../component-functions/confirm-dialog":"component-functions/confirm-dialog.js"}],"ajax/change-my-email.js":[function(require,module,exports) {
+},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../component-functions/flash-messages":"component-functions/flash-messages.js","../component-functions/popup/index":"component-functions/popup/index.js"}],"ajax/change-my-email.js":[function(require,module,exports) {
 "use strict";
 
 require("regenerator-runtime/runtime");
@@ -3502,7 +3581,7 @@ require("regenerator-runtime/runtime");
 
 var _axios = _interopRequireDefault(require("axios"));
 
-var _alertDialog = _interopRequireDefault(require("../component-functions/alert-dialog"));
+var _index = _interopRequireDefault(require("../component-functions/popup/index"));
 
 var _handleError = _interopRequireDefault(require("../utils/handleError"));
 
@@ -3528,7 +3607,8 @@ var showOrderConfirmation = function showOrderConfirmation(url) {
 
 
   if (!noneClass || !orderConfirmationBtn) {
-    (0, _alertDialog.default)('Sucessful', 'Your order has been placed. You will be receiving a confirmation email with order details', fnToCall);
+    _index.default.alert('Sucessful', 'Your order has been placed. You will be receiving a confirmation email with order details', fnToCall);
+
     return;
   }
 
@@ -3594,7 +3674,7 @@ if (form) {
     };
   }());
 }
-},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../component-functions/alert-dialog":"component-functions/alert-dialog.js","../utils/handleError":"utils/handleError.js","../component-functions/flash-messages":"component-functions/flash-messages.js"}],"ajax/checkout-address.js":[function(require,module,exports) {
+},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../component-functions/popup/index":"component-functions/popup/index.js","../utils/handleError":"utils/handleError.js","../component-functions/flash-messages":"component-functions/flash-messages.js"}],"ajax/checkout-address.js":[function(require,module,exports) {
 "use strict";
 
 require("regenerator-runtime/runtime");
@@ -3605,7 +3685,7 @@ var _handleError = _interopRequireDefault(require("../utils/handleError"));
 
 var _flashMessages = require("../component-functions/flash-messages");
 
-var _confirmDialog = _interopRequireDefault(require("../component-functions/confirm-dialog"));
+var _index = _interopRequireDefault(require("../component-functions/popup/index"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3652,7 +3732,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
     e.preventDefault();
     var data = new FormData(this);
-    (0, _confirmDialog.default)('Confirm', 'Save address and continue to checkcout?', undefined, /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+
+    _index.default.confirm('Confirm', 'Save address and continue to checkcout?', undefined, /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
       var data, res;
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
@@ -3700,7 +3781,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     })));
   });
 })();
-},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../component-functions/flash-messages":"component-functions/flash-messages.js","../component-functions/confirm-dialog":"component-functions/confirm-dialog.js"}],"ajax/forgot-password.js":[function(require,module,exports) {
+},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../component-functions/flash-messages":"component-functions/flash-messages.js","../component-functions/popup/index":"component-functions/popup/index.js"}],"ajax/forgot-password.js":[function(require,module,exports) {
 "use strict";
 
 require("regenerator-runtime/runtime");
@@ -3963,9 +4044,7 @@ var _axios = _interopRequireDefault(require("axios"));
 
 var _handleError = _interopRequireDefault(require("../utils/handleError"));
 
-var _alertDialog = _interopRequireDefault(require("../component-functions/alert-dialog"));
-
-var _confirmDialog = _interopRequireDefault(require("../component-functions/confirm-dialog"));
+var _index = _interopRequireDefault(require("../component-functions/popup/index"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4022,9 +4101,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 12:
                 res = _context.sent;
-                (0, _alertDialog.default)('Success', "".concat(reviewId ? 'Updated your' : 'Posted your', " review successfully! Reload the page to see changes..."), function () {
+
+                _index.default.alert('Success', "".concat(reviewId ? 'Updated your' : 'Posted your', " review successfully! Reload the page to see changes..."), function () {
                   window.location.reload();
                 });
+
                 _context.next = 20;
                 break;
 
@@ -4064,7 +4145,8 @@ Array.from(document.getElementsByClassName('js--ajax--review-each__like-btn')).f
     var likeCountElement = this.getElementsByClassName('js--ajax--review-each__like-btn--count')[0];
 
     if (!reviewId || !productId || !likeCountElement || !likedClass || likeCountElement.dataset.likeCount === undefined) {
-      (0, _alertDialog.default)('Error', 'Cannot like/unlike the post now, please retry later!');
+      _index.default.alert('Error', 'Cannot like/unlike the post now, please retry later!');
+
       return;
     }
 
@@ -4121,11 +4203,12 @@ Array.from(document.getElementsByClassName('js--ajax--review-each--mark-btn')).f
     var card = this.closest('.js--ajax--review-each');
 
     if (!reviewId || !productId || !card) {
-      (0, _alertDialog.default)('Error', 'Cannot mark review as inappropriate now, please try again later!');
+      _index.default.alert('Error', 'Cannot mark review as inappropriate now, please try again later!');
+
       return;
     }
 
-    (0, _confirmDialog.default)('Confirm marking', 'Are you sure you want mark the review as inappropriate? This action cannot be undone and doing so will hide this review for you', undefined, function () {
+    _index.default.confirm('Confirm marking', 'Are you sure you want mark the review as inappropriate? This action cannot be undone and doing so will hide this review for you', undefined, function () {
       card.remove();
 
       _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
@@ -4179,11 +4262,12 @@ Array.from(document.getElementsByClassName('js--ajax--review-delete-btn')).forEa
                 break;
               }
 
-              (0, _alertDialog.default)('Error', 'Cannot delete review now, please try again later!');
+              _index.default.alert('Error', 'Cannot delete review now, please try again later!');
+
               return _context5.abrupt("return");
 
             case 4:
-              (0, _confirmDialog.default)('Confirm delete', 'Are you sure, you want to delete this review? This cannot be undone.', undefined, /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
+              _index.default.confirm('Confirm delete', 'Are you sure, you want to delete this review? This cannot be undone.', undefined, /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
                 return regeneratorRuntime.wrap(function _callee4$(_context4) {
                   while (1) {
                     switch (_context4.prev = _context4.next) {
@@ -4198,9 +4282,10 @@ Array.from(document.getElementsByClassName('js--ajax--review-delete-btn')).forEa
                         });
 
                       case 4:
-                        (0, _alertDialog.default)('Success', 'Deleted your review successfully! Reload the page to see changes...', function () {
+                        _index.default.alert('Success', 'Deleted your review successfully! Reload the page to see changes...', function () {
                           window.location.reload();
                         });
+
                         _context4.next = 11;
                         break;
 
@@ -4234,7 +4319,7 @@ Array.from(document.getElementsByClassName('js--ajax--review-delete-btn')).forEa
     };
   }());
 });
-},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../component-functions/alert-dialog":"component-functions/alert-dialog.js","../component-functions/confirm-dialog":"component-functions/confirm-dialog.js"}],"ajax/signup.js":[function(require,module,exports) {
+},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../component-functions/popup/index":"component-functions/popup/index.js"}],"ajax/signup.js":[function(require,module,exports) {
 "use strict";
 
 require("regenerator-runtime/runtime");
@@ -4590,7 +4675,7 @@ if (form) {
 },{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../component-functions/flash-messages":"component-functions/flash-messages.js"}],"component-functions/btn-confirm-redirect.js":[function(require,module,exports) {
 "use strict";
 
-var _confirmDialog = _interopRequireDefault(require("./confirm-dialog"));
+var _index = _interopRequireDefault(require("./popup/index"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4608,12 +4693,12 @@ Array.from(document.getElementsByClassName('js--components-function--btn-confirm
       return;
     }
 
-    (0, _confirmDialog.default)('Confirm redirect', this.dataset.confirmMessage, undefined, function () {
+    _index.default.confirm('Confirm redirect', this.dataset.confirmMessage, undefined, function () {
       window.location.href = _this.dataset.redirectTo;
     });
   });
 });
-},{"./confirm-dialog":"component-functions/confirm-dialog.js"}],"component-functions/dropdown.js":[function(require,module,exports) {
+},{"./popup/index":"component-functions/popup/index.js"}],"component-functions/dropdown.js":[function(require,module,exports) {
 Array.from(document.getElementsByClassName('js--components-function--dropdown__btn')).forEach(function (btn) {
   btn.addEventListener('click', function () {
     var dropdown = this.closest('.js--components-function--dropdown');
@@ -5989,8 +6074,6 @@ require("./ajax/update-me");
 
 require("./ajax/update-my-password");
 
-require("./component-functions/confirm-dialog");
-
 require("./component-functions/btn-confirm-redirect");
 
 require("./component-functions/dropdown");
@@ -6014,7 +6097,7 @@ require("./component-functions/toggle-on-click");
 require("./component-functions/increment-decrement-input-number");
 
 require("./pages/each-product");
-},{"./ajax/add-to-cart-btn":"ajax/add-to-cart-btn.js","./ajax/address":"ajax/address.js","./ajax/cart":"ajax/cart.js","./ajax/change-my-email":"ajax/change-my-email.js","./ajax/checkout":"ajax/checkout.js","./ajax/checkout-address":"ajax/checkout-address.js","./ajax/forgot-password":"ajax/forgot-password.js","./ajax/login":"ajax/login.js","./ajax/reset-password":"ajax/reset-password.js","./ajax/review":"ajax/review.js","./ajax/signup":"ajax/signup.js","./ajax/signup-complete":"ajax/signup-complete.js","./ajax/update-me":"ajax/update-me.js","./ajax/update-my-password":"ajax/update-my-password.js","./component-functions/confirm-dialog":"component-functions/confirm-dialog.js","./component-functions/btn-confirm-redirect":"component-functions/btn-confirm-redirect.js","./component-functions/dropdown":"component-functions/dropdown.js","./component-functions/flash-messages":"component-functions/flash-messages.js","./component-functions/form-rating":"component-functions/form-rating.js","./component-functions/remove-on-click":"component-functions/remove-on-click.js","./component-functions/search":"component-functions/search.js","./component-functions/sidebar":"component-functions/sidebar.js","./component-functions/sliders":"component-functions/sliders.js","./component-functions/state-district-select":"component-functions/state-district-select.js","./component-functions/toggle-on-click":"component-functions/toggle-on-click.js","./component-functions/increment-decrement-input-number":"component-functions/increment-decrement-input-number.js","./pages/each-product":"pages/each-product.js"}],"../../../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./ajax/add-to-cart-btn":"ajax/add-to-cart-btn.js","./ajax/address":"ajax/address.js","./ajax/cart":"ajax/cart.js","./ajax/change-my-email":"ajax/change-my-email.js","./ajax/checkout":"ajax/checkout.js","./ajax/checkout-address":"ajax/checkout-address.js","./ajax/forgot-password":"ajax/forgot-password.js","./ajax/login":"ajax/login.js","./ajax/reset-password":"ajax/reset-password.js","./ajax/review":"ajax/review.js","./ajax/signup":"ajax/signup.js","./ajax/signup-complete":"ajax/signup-complete.js","./ajax/update-me":"ajax/update-me.js","./ajax/update-my-password":"ajax/update-my-password.js","./component-functions/btn-confirm-redirect":"component-functions/btn-confirm-redirect.js","./component-functions/dropdown":"component-functions/dropdown.js","./component-functions/flash-messages":"component-functions/flash-messages.js","./component-functions/form-rating":"component-functions/form-rating.js","./component-functions/remove-on-click":"component-functions/remove-on-click.js","./component-functions/search":"component-functions/search.js","./component-functions/sidebar":"component-functions/sidebar.js","./component-functions/sliders":"component-functions/sliders.js","./component-functions/state-district-select":"component-functions/state-district-select.js","./component-functions/toggle-on-click":"component-functions/toggle-on-click.js","./component-functions/increment-decrement-input-number":"component-functions/increment-decrement-input-number.js","./pages/each-product":"pages/each-product.js"}],"../../../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -6042,7 +6125,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60304" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63979" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

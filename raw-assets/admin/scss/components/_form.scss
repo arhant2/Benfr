@@ -42,6 +42,10 @@
 
     margin-top: 2rem;
 
+    &--no-margin {
+      margin: 0;
+    }
+
     // &:not(#{&}--normal) * {
     //   display: block;
     //   // display: initial;

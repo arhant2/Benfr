@@ -420,50 +420,6 @@ textarea {
   padding: 0.5rem 1.8rem;
 }
 
-.confirm-dialog {
-  letter-spacing: 0.3px;
-  background-color: var(--color-white);
-  border-radius: 0.4rem;
-  width: 90%;
-  max-width: 40rem;
-}
-.confirm-dialog__container {
-  position: fixed;
-  background-color: rgba(0, 0, 0, 0.6);
-  min-height: 100vh;
-  width: 100vw;
-  z-index: 500;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-.confirm-dialog .confirm-dialog__top-bar {
-  padding: 0.8rem 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: var(--color-grey-light-2);
-  border-bottom: 1px solid var(--color-grey-light-4);
-  border-radius: 0.4rem 0.4rem 0 0;
-}
-.confirm-dialog .confirm-dialog__body {
-  padding: 1.8rem 1rem;
-}
-.confirm-dialog .confirm-dialog__btns {
-  padding: 0.6rem 1rem;
-  background-color: var(--color-grey-light-2);
-  border-top: 1px solid var(--color-grey-light-4);
-  font-size: 1.2rem;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  border-radius: 0 0 0.4rem 0.4rem;
-}
-.confirm-dialog .confirm-dialog__btns > * {
-  margin-left: 0.8rem;
-}
-
 .form__input--textarea, .form__input--single-line, .form__select, .form__input--small {
   padding: 0.5rem 1.2rem;
   border-radius: 0.5rem;
@@ -498,6 +454,9 @@ textarea {
 .form__group label {
   display: flex;
   align-items: flex-end;
+}
+.form__group--no-margin {
+  margin: 0;
 }
 .form__group--partition-half {
   display: grid;
@@ -994,6 +953,50 @@ textarea {
 }
 .menu-dropdown__link:hover {
   color: var(--color-primary);
+}
+
+.popup {
+  letter-spacing: 0.3px;
+  background-color: var(--color-white);
+  border-radius: 0.4rem;
+  width: 90%;
+  max-width: 40rem;
+}
+.popup__container {
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.6);
+  min-height: 100vh;
+  width: 100vw;
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.popup__top-bar {
+  padding: 0.8rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--color-grey-light-2);
+  border-bottom: 1px solid var(--color-grey-light-4);
+  border-radius: 0.4rem 0.4rem 0 0;
+}
+.popup__body {
+  padding: 1.8rem 1rem;
+}
+.popup__btns {
+  padding: 0.6rem 1rem;
+  background-color: var(--color-grey-light-2);
+  border-top: 1px solid var(--color-grey-light-4);
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  border-radius: 0 0 0.4rem 0.4rem;
+}
+.popup__btns > * {
+  margin-left: 0.8rem;
 }
 
 .rotatable-circle {

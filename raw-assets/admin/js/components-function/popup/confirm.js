@@ -1,25 +1,25 @@
 const container = document.getElementsByClassName(
-  'js--components-function--confirm-dialog'
+  'js--components-function--popup-confirm'
 )[0];
 
 const heading = document.getElementsByClassName(
-  'js--components-function--confirm-dialog__heading'
+  'js--components-function--popup-confirm__heading'
 )[0];
 
 const body = document.getElementsByClassName(
-  'js--components-function--confirm-dialog__body'
+  'js--components-function--popup-confirm__body'
 )[0];
 
 const closeBtn1 = document.getElementsByClassName(
-  'js--components-function--confirm-dialog__close-btn-1'
+  'js--components-function--popup-confirm__close-btn-1'
 )[0];
 
 const closeBtn2 = document.getElementsByClassName(
-  'js--components-function--confirm-dialog__close-btn-2'
+  'js--components-function--popup-confirm__close-btn-2'
 )[0];
 
 const confirmBtn = document.getElementsByClassName(
-  'js--components-function--confirm-dialog__confirm-btn'
+  'js--components-function--popup-confirm__confirm-btn'
 )[0];
 
 const confirmFunction = (title, message, noFn, yesFn) => {
@@ -33,11 +33,9 @@ const confirmFunction = (title, message, noFn, yesFn) => {
     !container.dataset.noneClass
   ) {
     if (window.confirm(message)) {
-      yesFn();
+      yesFn && yesFn();
     } else {
-      if (noFn) {
-        noFn();
-      }
+      noFn && noFn();
     }
     return;
   }
@@ -45,7 +43,7 @@ const confirmFunction = (title, message, noFn, yesFn) => {
   let noFnToCall, yesFnToCall;
 
   // Remove listeners and hide the dialog when work is done
-  const removeEventListener = () => {
+  const removeEventListenerAndHide = () => {
     container.classList.add(container.dataset.noneClass);
     confirmBtn.removeEventListener('click', yesFnToCall);
     if (closeBtn1) {
@@ -57,15 +55,13 @@ const confirmFunction = (title, message, noFn, yesFn) => {
   };
 
   yesFnToCall = () => {
-    removeEventListener();
-    yesFn();
+    removeEventListenerAndHide();
+    yesFn && yesFn();
   };
 
   noFnToCall = () => {
-    removeEventListener();
-    if (noFn) {
-      noFn();
-    }
+    removeEventListenerAndHide();
+    noFn && noFn();
   };
 
   confirmBtn.addEventListener('click', yesFnToCall);

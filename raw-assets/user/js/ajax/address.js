@@ -8,8 +8,7 @@ import {
   clearFlashMessages,
 } from '../component-functions/flash-messages';
 
-import alertDialog from '../component-functions/alert-dialog';
-import confirmDialog from '../component-functions/confirm-dialog';
+import popup from '../component-functions/popup/index';
 
 // Update/create address
 (() => {
@@ -20,7 +19,7 @@ import confirmDialog from '../component-functions/confirm-dialog';
     form.addEventListener('submit', async function (event) {
       event.preventDefault();
 
-      confirmDialog(
+      popup.confirm(
         'Confirm changes',
         'Are you sure you want to save the changes?',
         undefined,
@@ -95,7 +94,7 @@ Array.from(
       return;
     }
 
-    confirmDialog(
+    popup.confirm(
       'Confirm Delete',
       'Are you sure, you want to delete this address?',
       undefined,

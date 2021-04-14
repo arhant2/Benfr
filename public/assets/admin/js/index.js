@@ -2756,30 +2756,68 @@ function _default(err) {
 
   (0, _flashMessages.addFlashMessage)(type, message);
 }
-},{"../components-function/flash-messages":"components-function/flash-messages.js"}],"components-function/confirm-dialog.js":[function(require,module,exports) {
+},{"../components-function/flash-messages":"components-function/flash-messages.js"}],"components-function/popup/alert.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var container = document.getElementsByClassName('js--components-function--confirm-dialog')[0];
-var heading = document.getElementsByClassName('js--components-function--confirm-dialog__heading')[0];
-var body = document.getElementsByClassName('js--components-function--confirm-dialog__body')[0];
-var closeBtn1 = document.getElementsByClassName('js--components-function--confirm-dialog__close-btn-1')[0];
-var closeBtn2 = document.getElementsByClassName('js--components-function--confirm-dialog__close-btn-2')[0];
-var confirmBtn = document.getElementsByClassName('js--components-function--confirm-dialog__confirm-btn')[0];
-var noneClass;
+var container = document.getElementsByClassName('js--components-function--popup-alert')[0];
+var heading = document.getElementsByClassName('js--components-function--popup-alert__heading')[0];
+var body = document.getElementsByClassName('js--components-function--popup-alert__body')[0];
+var confirmBtn = document.getElementsByClassName('js--components-function--popup-alert__confirm-btn')[0];
+
+var alertFunction = function alertFunction(title, message, fn) {
+  // Call the default one if the custom one cannot be called
+  if (!container || !heading || !body || !confirmBtn || !container.dataset.noneClass) {
+    alert(message);
+    fn && fn();
+    return;
+  }
+
+  var fnToCall; // Remove listeners and hide the dialog when work is done
+
+  var removeEventListenerAndHide = function removeEventListenerAndHide() {
+    container.classList.add(container.dataset.noneClass);
+    confirmBtn.removeEventListener('click', fnToCall);
+  };
+
+  fnToCall = function fnToCall() {
+    removeEventListenerAndHide();
+    fn && fn();
+  };
+
+  confirmBtn.addEventListener('click', fnToCall); // Add message
+
+  heading.textContent = title;
+  body.textContent = message;
+  container.classList.remove(container.dataset.noneClass);
+};
+
+var _default = alertFunction;
+exports.default = _default;
+},{}],"components-function/popup/confirm.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var container = document.getElementsByClassName('js--components-function--popup-confirm')[0];
+var heading = document.getElementsByClassName('js--components-function--popup-confirm__heading')[0];
+var body = document.getElementsByClassName('js--components-function--popup-confirm__body')[0];
+var closeBtn1 = document.getElementsByClassName('js--components-function--popup-confirm__close-btn-1')[0];
+var closeBtn2 = document.getElementsByClassName('js--components-function--popup-confirm__close-btn-2')[0];
+var confirmBtn = document.getElementsByClassName('js--components-function--popup-confirm__confirm-btn')[0];
 
 var confirmFunction = function confirmFunction(title, message, noFn, yesFn) {
   // Call the default one if the custom one cannot be called
   if (!container || !heading || !body || !(closeBtn1 || closeBtn2) || !confirmBtn || !container.dataset.noneClass) {
     if (window.confirm(message)) {
-      yesFn();
+      yesFn && yesFn();
     } else {
-      if (noFn) {
-        noFn();
-      }
+      noFn && noFn();
     }
 
     return;
@@ -2787,7 +2825,7 @@ var confirmFunction = function confirmFunction(title, message, noFn, yesFn) {
 
   var noFnToCall, yesFnToCall; // Remove listeners and hide the dialog when work is done
 
-  var removeEventListener = function removeEventListener() {
+  var removeEventListenerAndHide = function removeEventListenerAndHide() {
     container.classList.add(container.dataset.noneClass);
     confirmBtn.removeEventListener('click', yesFnToCall);
 
@@ -2801,16 +2839,13 @@ var confirmFunction = function confirmFunction(title, message, noFn, yesFn) {
   };
 
   yesFnToCall = function yesFnToCall() {
-    removeEventListener();
-    yesFn();
+    removeEventListenerAndHide();
+    yesFn && yesFn();
   };
 
   noFnToCall = function noFnToCall() {
-    removeEventListener();
-
-    if (noFn) {
-      noFn();
-    }
+    removeEventListenerAndHide();
+    noFn && noFn();
   };
 
   confirmBtn.addEventListener('click', yesFnToCall);
@@ -2831,7 +2866,92 @@ var confirmFunction = function confirmFunction(title, message, noFn, yesFn) {
 
 var _default = confirmFunction;
 exports.default = _default;
-},{}],"utils/btnsStatesClass.js":[function(require,module,exports) {
+},{}],"components-function/popup/prompt.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var container = document.getElementsByClassName('js--components-function--popup-prompt')[0];
+var form = document.getElementsByClassName('js--components-function--popup-prompt__form')[0];
+var heading = document.getElementsByClassName('js--components-function--popup-prompt__heading')[0];
+var body = document.getElementsByClassName('js--components-function--popup-prompt__body')[0];
+var textarea = document.getElementsByClassName('js--components-function--popup-prompt__textarea')[0];
+var closeBtn1 = document.getElementsByClassName('js--components-function--popup-prompt__close-btn-1')[0];
+var closeBtn2 = document.getElementsByClassName('js--components-function--popup-prompt__close-btn-2')[0];
+
+var promptFunction = function promptFunction(title, message, fn, defaultInput) {
+  var minlength = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 1;
+  var maxlength = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 10;
+
+  // Call the default one if the custom one cannot be called
+  if (!container || !form || !heading || !body || !(closeBtn1 || closeBtn2) || !container.dataset.noneClass) {
+    var ans = prompt(message, defaultInput);
+    fn(ans);
+    return;
+  }
+
+  var fnToCallForm, fnToCallCancel; // Remove listeners and hide the dialog when work is done
+
+  var removeEventListenerAndHide = function removeEventListenerAndHide() {
+    container.classList.add(container.dataset.noneClass);
+    form.removeEventListener('submit', fnToCallForm);
+    closeBtn1 && closeBtn1.removeEventListener('click', fnToCallCancel);
+    closeBtn2 && closeBtn2.removeEventListener('click', fnToCallCancel);
+  }; // Function to call while submitting form
+
+
+  fnToCallForm = function fnToCallForm(e) {
+    e.preventDefault();
+    var ans = textarea.value || undefined;
+    removeEventListenerAndHide();
+    fn(ans);
+  }; // Function to call if request is cancelled
+
+
+  fnToCallCancel = function fnToCallCancel() {
+    removeEventListenerAndHide();
+    fn();
+  };
+
+  form.addEventListener('submit', fnToCallForm);
+  closeBtn1 && closeBtn1.addEventListener('click', fnToCallCancel);
+  closeBtn2 && closeBtn2.addEventListener('click', fnToCallCancel); // Add message
+
+  heading.textContent = title;
+  body.textContent = message;
+  textarea.textContent = defaultInput || '';
+  textarea.minLength = minlength;
+  textarea.maxLength = maxlength;
+  container.classList.remove(container.dataset.noneClass);
+};
+
+var _default = promptFunction;
+exports.default = _default;
+},{}],"components-function/popup/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _alert = _interopRequireDefault(require("./alert"));
+
+var _confirm = _interopRequireDefault(require("./confirm"));
+
+var _prompt = _interopRequireDefault(require("./prompt"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _default = {
+  alert: _alert.default,
+  confirm: _confirm.default,
+  prompt: _prompt.default
+};
+exports.default = _default;
+},{"./alert":"components-function/popup/alert.js","./confirm":"components-function/popup/confirm.js","./prompt":"components-function/popup/prompt.js"}],"utils/btnsStatesClass.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3020,7 +3140,7 @@ var _axios = _interopRequireDefault(require("axios"));
 
 var _handleError = _interopRequireDefault(require("../utils/handleError"));
 
-var _confirmDialog = _interopRequireDefault(require("../components-function/confirm-dialog"));
+var _index = _interopRequireDefault(require("../components-function/popup/index"));
 
 var _flashMessages = require("../components-function/flash-messages");
 
@@ -3060,7 +3180,8 @@ var submitForm = function submitForm() {
     e.preventDefault();
     (0, _flashMessages.clearFlashMessages)();
     var currentForm = this;
-    (0, _confirmDialog.default)('Confirm changes', 'Are you sure, you want to save the changes?', undefined, /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+
+    _index.default.confirm('Confirm changes', 'Are you sure, you want to save the changes?', undefined, /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
       var data, obj, res;
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
@@ -3128,7 +3249,8 @@ var submitForm = function submitForm() {
 var deleteFunction = function deleteFunction() {
   deleteBtn.addEventListener('click', function () {
     (0, _flashMessages.clearFlashMessages)();
-    (0, _confirmDialog.default)("Delete ".concat(singularName.capital), "Are you sure, you want to delete this ".concat(singularName.capital, "? Please note that this cannot be undone!"), undefined, /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+
+    _index.default.confirm("Delete ".concat(singularName.capital), "Are you sure, you want to delete this ".concat(singularName.capital, "? Please note that this cannot be undone!"), undefined, /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
       var res;
       return regeneratorRuntime.wrap(function _callee2$(_context2) {
         while (1) {
@@ -3183,7 +3305,7 @@ if (form) {
     deleteFunction();
   }
 }
-},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../components-function/confirm-dialog":"components-function/confirm-dialog.js","../components-function/flash-messages":"components-function/flash-messages.js","../utils/btnsStatesClass":"utils/btnsStatesClass.js","../../../../utils/singularPluralManager":"../../../utils/singularPluralManager.js","../pages/each-product":"pages/each-product.js"}],"ajax/order-one.js":[function(require,module,exports) {
+},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../components-function/popup/index":"components-function/popup/index.js","../components-function/flash-messages":"components-function/flash-messages.js","../utils/btnsStatesClass":"utils/btnsStatesClass.js","../../../../utils/singularPluralManager":"../../../utils/singularPluralManager.js","../pages/each-product":"pages/each-product.js"}],"ajax/order-one.js":[function(require,module,exports) {
 "use strict";
 
 require("regenerator-runtime/runtime");
@@ -3194,7 +3316,7 @@ var _handleError = _interopRequireDefault(require("../utils/handleError"));
 
 var _flashMessages = require("../components-function/flash-messages");
 
-var _confirmDialog = _interopRequireDefault(require("../components-function/confirm-dialog"));
+var _index = _interopRequireDefault(require("../components-function/popup/index"));
 
 var _btnsStatesClass = _interopRequireDefault(require("../utils/btnsStatesClass"));
 
@@ -3231,7 +3353,8 @@ if (form && id) {
     var _this = this;
 
     e.preventDefault();
-    (0, _confirmDialog.default)('Confirm changes', 'Confirm changes and move to next stage?', undefined, /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+
+    _index.default.confirm('Confirm changes', 'Confirm changes and move to next stage?', undefined, /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
       var data;
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
@@ -3271,10 +3394,10 @@ if (form && id) {
     })));
   });
 }
-},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../components-function/flash-messages":"components-function/flash-messages.js","../components-function/confirm-dialog":"components-function/confirm-dialog.js","../utils/btnsStatesClass":"utils/btnsStatesClass.js"}],"components-function/btn-confirm-redirect.js":[function(require,module,exports) {
+},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../components-function/flash-messages":"components-function/flash-messages.js","../components-function/popup/index":"components-function/popup/index.js","../utils/btnsStatesClass":"utils/btnsStatesClass.js"}],"components-function/btn-confirm-redirect.js":[function(require,module,exports) {
 "use strict";
 
-var _confirmDialog = _interopRequireDefault(require("./confirm-dialog"));
+var _index = _interopRequireDefault(require("./popup/index"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3292,12 +3415,12 @@ Array.from(document.getElementsByClassName('js--components-function--btn-confirm
       return;
     }
 
-    (0, _confirmDialog.default)('Confirm redirect', this.dataset.confirmMessage, undefined, function () {
+    _index.default.confirm('Confirm redirect', this.dataset.confirmMessage, undefined, function () {
       window.location.href = _this.dataset.redirectTo;
     });
   });
 });
-},{"./confirm-dialog":"components-function/confirm-dialog.js"}],"../../../node_modules/moment/moment.js":[function(require,module,exports) {
+},{"./popup/index":"components-function/popup/index.js"}],"../../../node_modules/moment/moment.js":[function(require,module,exports) {
 var define;
 var global = arguments[3];
 //! moment.js
@@ -25830,7 +25953,7 @@ require("./components-function/btn-confirm-redirect");
 
 require("./components-function/chart");
 
-require("./components-function/confirm-dialog");
+require("./components-function/popup");
 
 require("./components-function/dropdown");
 
@@ -25839,7 +25962,7 @@ require("./components-function/flash-messages");
 require("./components-function/form-image");
 
 require("./pages/each-product");
-},{"./ajax/generic-form":"ajax/generic-form.js","./ajax/order-one":"ajax/order-one.js","./components-function/btn-confirm-redirect":"components-function/btn-confirm-redirect.js","./components-function/chart":"components-function/chart.js","./components-function/confirm-dialog":"components-function/confirm-dialog.js","./components-function/dropdown":"components-function/dropdown.js","./components-function/flash-messages":"components-function/flash-messages.js","./components-function/form-image":"components-function/form-image.js","./pages/each-product":"pages/each-product.js"}],"../../../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./ajax/generic-form":"ajax/generic-form.js","./ajax/order-one":"ajax/order-one.js","./components-function/btn-confirm-redirect":"components-function/btn-confirm-redirect.js","./components-function/chart":"components-function/chart.js","./components-function/popup":"components-function/popup/index.js","./components-function/dropdown":"components-function/dropdown.js","./components-function/flash-messages":"components-function/flash-messages.js","./components-function/form-image":"components-function/form-image.js","./pages/each-product":"pages/each-product.js"}],"../../../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -25867,7 +25990,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60301" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63981" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -8,7 +8,7 @@ import {
   clearFlashMessages,
 } from '../component-functions/flash-messages';
 
-import confirmDialog from '../component-functions/confirm-dialog';
+import popup from '../component-functions/popup/index';
 
 const form = document.getElementById('cart-form');
 const saveBtn = document.getElementById('cart-save-btn');
@@ -51,7 +51,7 @@ if (form) {
 
     const currentForm = this;
 
-    confirmDialog(
+    popup.confirm(
       'Confirm changes',
       'Are you sure, you want to save the changes?',
       undefined,
@@ -86,7 +86,7 @@ if (deleteBtn) {
   deleteBtn.addEventListener('click', function (e) {
     clearFlashMessages();
 
-    confirmDialog(
+    popup.confirm(
       'Clear Cart',
       `Are you sure, you want to clear the cart? Please note that this cannot be undone!`,
       undefined,

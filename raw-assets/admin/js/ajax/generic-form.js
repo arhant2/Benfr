@@ -2,7 +2,7 @@ import 'regenerator-runtime/runtime';
 import axios from 'axios';
 
 import handleError from '../utils/handleError';
-import confirmDialog from '../components-function/confirm-dialog';
+import popup from '../components-function/popup/index';
 
 import {
   addFlashMessage,
@@ -45,7 +45,7 @@ const submitForm = () => {
     clearFlashMessages();
     const currentForm = this;
 
-    confirmDialog(
+    popup.confirm(
       'Confirm changes',
       'Are you sure, you want to save the changes?',
       undefined,
@@ -106,7 +106,7 @@ const deleteFunction = () => {
   deleteBtn.addEventListener('click', function () {
     clearFlashMessages();
 
-    confirmDialog(
+    popup.confirm(
       `Delete ${singularName.capital}`,
       `Are you sure, you want to delete this ${singularName.capital}? Please note that this cannot be undone!`,
       undefined,
