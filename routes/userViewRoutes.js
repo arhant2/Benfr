@@ -32,6 +32,7 @@ router.get(
   '/',
   userViewController.setSidebarItems,
   authController.isLoggedIn,
+  userViewController.setFeaturedCategories,
   userViewController.getIndex
 );
 

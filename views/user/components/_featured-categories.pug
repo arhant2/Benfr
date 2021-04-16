@@ -1,28 +1,11 @@
-
-- 
-  var categories = [{
-      name: 'Bluetooth Speaker',
-      type: 'New Collection',
-      link: '#',
-      img: '/assets/user/img/category1.png'
-    }, {
-      name: 'Smart Watch',
-      type: 'Popular',
-      link: '#',
-      img: '/assets/user/img/category2.png'
-    }, {
-      name: 'DSLR Camera',
-      type: 'New Collection',
-      link: '#',
-      img: '/assets/user/img/category3.png'
-    }]
-
-
-section.featured-categories
-  each category in categories
-    .featured-categories__box 
-      img.featured-categories__img(src=category.img alt=category.name)
-      .featured-categories__content
-        h3.heading-quadinary= category.name
-        .featured-categories__type.typography-small-text= category.type
-        a.featured-categories__btn.btn.btn--main-color.btn--round.btn--dark-text(href=link) Explore Now
+if featuredCategories
+  section.featured-categories
+    each obj in featuredCategories
+      - const {category, type} = obj;
+      .featured-categories__box 
+        .featured-categories__img-box
+          img.featured-categories__img(src=category && category.images && category.images[0] &&category.images[0].path  alt=category.name)
+        .featured-categories__content
+          h3.heading-quadinary= category.name
+          .featured-categories__type.typography-small-text= type
+          a.featured-categories__btn.btn.btn--main-color.btn--round.btn--dark-text(href=`/categories/${category.nameNormalized}/${category.id}`) Explore Now

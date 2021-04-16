@@ -57,6 +57,59 @@ exports.setSidebarItems = catchAsync(async (req, res, next) => {
   next();
 });
 
+exports.setFeaturedCategories = catchAsync(async (req, res, next) => {
+  const category1 = await Category.findOne({
+    images: {
+      $exists: true,
+      $type: 'array',
+      $ne: [],
+    },
+  }).sort({
+    productsCount: -1,
+    createdAt: -1,
+  });
+
+  if (!category1) {
+    return next();
+  }
+
+  const [category0, category2] = await Category.find({
+    _id: {
+      $ne: category1.id,
+    },
+    images: {
+      $exists: true,
+      $type: 'array',
+      $ne: [],
+    },
+  }).sort({
+    score: -1,
+    productsCount: -1,
+    createdAt: -1,
+  });
+
+  if (!category0 || !category2) {
+    return next();
+  }
+
+  res.locals.featuredCategories = [
+    {
+      type: 'Featured',
+      category: category0,
+    },
+    {
+      type: 'Colossal',
+      category: category1,
+    },
+    {
+      type: 'Featured',
+      category: category2,
+    },
+  ];
+
+  next();
+});
+
 exports.getIndex = (req, res, next) => {
   res.render('user/index');
 };
