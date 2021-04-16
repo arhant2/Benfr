@@ -1,5 +1,5 @@
 {
-  "name": "my_electronics",
+  "name": "benfr",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
@@ -26,11 +26,9 @@
   "author": "Arhant Jain",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
     "chart.js": "^2.9.4",
     "cloudinary": "^1.25.0",
-    "color-alpha": "^1.1.2",
     "cookie-parser": "^1.4.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
@@ -43,11 +41,14 @@
     "natural": "^4.0.2",
     "nodemailer": "^6.4.16",
     "pug": "^3.0.0",
+    "puppeteer": "^8.0.0",
     "qs": "^6.7.0",
     "slugify": "^1.4.6",
     "validator": "^13.1.17"
   },
   "devDependencies": {
+    "axios": "^0.21.1",
+    "color-alpha": "^1.1.2",
     "eslint": "^7.13.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "^6.15.0",
@@ -58,7 +59,7 @@
     "eslint-plugin-react": "^7.21.5",
     "nodemon": "^2.0.6",
     "npm-run-all": "^4.1.5",
-    "parcel": "^1.12.4",
+    "parcel": "^2.0.0-beta.2",
     "prettier": "^2.1.2",
     "sass": "^1.32.8"
   },

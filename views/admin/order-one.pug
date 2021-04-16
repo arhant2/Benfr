@@ -108,7 +108,7 @@ block content
 
         if document.status.name !== 'cancelled'
           // Download invoice button
-          button#order-one-invoice-btn.btn.btn--green(type='button' data-load-class='btn--load')
+          a#order-one-invoice-btn.btn.btn--green(type='button' data-load-class='btn--load' target='_blank' href=`/orders/${document.id}/invoice`)
             span.btn--load__content
               i.fas.fa-download
               | &nbsp;Download Invoice

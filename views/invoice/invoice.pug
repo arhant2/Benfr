@@ -1,0 +1,94 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+    title Invoice
+  
+    link(rel='stylesheet' href=`${baseUrl}/assets/invoice/css/font.css`)
+    link(rel="stylesheet", href=`${baseUrl}/assets/invoice/css/style.css`)
+
+  body: #container
+    .invoice-top
+      section#memo
+        .logo
+          img(src=`${baseUrl}/assets/invoice/img/logo.png`)
+        .company-info
+          span.company-name Benfr
+          span.spacer
+          div Dwarka Delhi - 110075
+          span.clearfix
+          div +91 8527401436
+          div |
+          div arhantjain2@gmail.com
+      section#invoice-info
+        div
+          span Order:
+          span Booking Date:
+          span Status:
+          span Customer:
+        div
+          span= document.id
+          span= dateFormator.dateFormatted(document.createdAt)
+          - 
+            const statusOptions = {
+              booked: 'Booked',
+              confirmed: 'Confirmed',
+              packed: 'Packed',
+              inTransit: 'In-Transit',
+              delivered: 'Delivered',
+              cancelled: 'Cancelled',
+            };
+          span= statusOptions[document.status.name]
+          span= document.user.email
+        span.clearfix
+        section#invoice-title-number
+          span#title INVOICE
+      section#client-info
+        span Bill to:
+        div: span.bold= document.address.name
+        div: span #{document.address.address.flat},
+        div: span #{document.address.address.area},
+        if document.address.address.landmark 
+          div: span #{document.address.address.landmark},
+        div: span #{document.address.address.district}, #{document.address.address.state} - #{document.address.address.pincode}
+        div: span +91 #{document.address.mobile}
+      .clearfix
+    .clearfix
+    .invoice-body
+      section#items
+        table(cellpadding='0' cellspacing='0')
+          tr
+            th
+            th ITEM
+            th QUANTITY
+            th PRICE
+            th TOTAL
+          each product, i in document.products
+            tr
+              td= i+1
+              td= product.name
+              td= product.quantity.now
+              td ₹#{Number(product.discountedPrice).toLocaleString('en-IN', {maximumFractionDigits: 2})}
+              td ₹#{Number(product.totalEach).toLocaleString('en-IN', {maximumFractionDigits: 2})}
+      section#sums
+        table(cellpadding='0' cellspacing='0')
+          tr
+            th Subtotal
+            td ₹#{Number(document.subTotal).toLocaleString('en-IN', {maximumFractionDigits: 2})}
+            td
+          tr
+            th Delivery Charges
+            td ₹#{Number(document.deliveryCharge).toLocaleString('en-IN', {maximumFractionDigits: 2})}
+            td
+          tr.amount-total
+            th Total
+            td ₹#{Number(document.grandTotal).toLocaleString('en-IN', {maximumFractionDigits: 2})}
+            td
+              .currency
+                span * All prices are in INR
+      .clearfix
+      section#terms
+        div All payments are done using Cash on Delivery
+      .payment-info
+        div Agreed to terms and conditions of Benfr

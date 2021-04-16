@@ -1,9 +1,18 @@
+const path = require('path');
+
 const mongoose = require('mongoose');
 
 const Product = require('./productModel');
 const AppError = require('../utils/AppError');
+const pug = require('pug');
+const generatePdf = require('../utils/generatePdf');
+const dateFormator = require('../utils/dateFormator');
 
 const { uploadThubmnail } = require('../cloudinary');
+
+const invoiceCompile = pug.compileFile(
+  path.join(__dirname, '../views/invoice/invoice.pug')
+);
 
 // VariationSchema to use virtuals
 const variationSchema = new mongoose.Schema(
@@ -413,6 +422,33 @@ orderSchema.methods.cancelOrder = async function (user, reason) {
   if (mongooseQueries.length > 0) {
     await Promise.allSettled(mongooseQueries);
   }
+};
+
+//////////////////////////////////////////
+// Generate pdf invoice
+//////////////////////////////////////////
+orderSchema.methods.pdfInvoice = async function (baseUrl) {
+  if (this.status.name === 'cancelled') {
+    throw new AppError('Order is cancelled, cannot get invoice', 400);
+  }
+
+  const user = this.user;
+
+  if (!this.populated('user')) {
+    await this.populate('user').execPopulate();
+  }
+
+  const invoiceHtml = invoiceCompile({
+    baseUrl,
+    document: this,
+    dateFormator,
+  });
+
+  const pdf = await generatePdf(invoiceHtml);
+
+  this.user = user;
+
+  return pdf;
 };
 
 const Order = mongoose.model('Order', orderSchema);

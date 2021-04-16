@@ -211,4 +211,11 @@ router.get(
   userViewController.getAllOrders
 );
 
+router.get(
+  '/orders/:id/invoice',
+  authController.protect,
+  orderController.orderExistsAndHavePriviliges,
+  orderController.getInvoice
+);
+
 module.exports = router;

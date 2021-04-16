@@ -41,4 +41,11 @@ router.delete(
   orderController.cancelOrder
 );
 
+router.get(
+  '/:id/invoice',
+  authController.protect,
+  orderController.orderExistsAndHavePriviliges,
+  orderController.getInvoice
+);
+
 module.exports = router;

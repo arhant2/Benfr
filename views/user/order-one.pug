@@ -55,7 +55,14 @@ block accountContent
             // Id of product to entertain
             .u-display-none
               input#id(type='text' value=document.id readonly)
+
+            if document.status.name !== 'cancelled'      
+              a.btn.btn--green.btn--round(target='_blank' href=`/orders/${document.id}/invoice`)
+                i.fas.fa-download
+                | &nbsp;Get Invoice
+
             if document.status.name !== 'cancelled' && document.status.name !== 'delivered'
+              | &nbsp;
               button#order-one-cancel-btn.btn.btn--red.btn--round.btn--load(type='button')
                 span.btn--load__content Cancel Order
                 span.btn--load__load-content
@@ -77,8 +84,8 @@ block accountContent
               if document.address.address.landmark 
                 p #{document.address.address.landmark},
               p #{document.address.address.district}, 
-              p #{document.address.address.state} - 110059
-              p +91 9999 999 999
+              p #{document.address.address.state} - #{document.address.address.pincode}
+              p #{`+91 ${document.address.mobile.substr(0, 4)} ${document.address.mobile.substr(4, 3)} ${document.address.mobile.substr(7, 3)}`}
 
           .my-order-one-billing__each 
             .my-order-one-billing__each-heading.light-text.smaller-text Shipping method

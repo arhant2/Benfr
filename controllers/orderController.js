@@ -117,6 +117,18 @@ exports.checkIfOrderBelongsTouser = catchAsync(async (req, res, next) => {
   next();
 });
 
+exports.getInvoice = catchAsync(async (req, res, next) => {
+  const order = req.customs.document;
+
+  const baseUrl = `${req.protocol}://${req.get('host')}`;
+
+  const pdf = await order.pdfInvoice(baseUrl);
+
+  res.set({ 'Content-Type': 'application/pdf', 'Content-Length': pdf.length });
+
+  res.status(200).send(pdf);
+});
+
 //////////////////////////////////////////
 // Getting
 //////////////////////////////////////////
