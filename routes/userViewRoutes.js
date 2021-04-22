@@ -33,6 +33,16 @@ router.get(
   userViewController.setSidebarItems,
   authController.isLoggedIn,
   userViewController.setFeaturedCategories,
+  userViewController.setProducts(
+    'popularProducts',
+    '-quantitySold -review.averageNormalized -createdAt',
+    8
+  ),
+  userViewController.setProducts(
+    'mostRatedProducts',
+    '-review.averageNormalized -quantitySold -createdAt',
+    4
+  ),
   userViewController.getIndex
 );
 

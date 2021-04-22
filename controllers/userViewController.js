@@ -110,6 +110,18 @@ exports.setFeaturedCategories = catchAsync(async (req, res, next) => {
   next();
 });
 
+exports.setProducts = (name, sortBy, limit) => {
+  return catchAsync(async (req, res, next) => {
+    res.locals[name] = await Product.find({
+      published: true,
+      currentStock: { $gt: 0 },
+    })
+      .sort(sortBy)
+      .limit(limit);
+    next();
+  });
+};
+
 exports.getIndex = (req, res, next) => {
   res.render('user/index');
 };

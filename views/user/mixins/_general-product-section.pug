@@ -1,0 +1,11 @@
+include _products-box-content
+
+mixin generalProductSection(heading, products)
+  if products && products.length > 0
+    section.products
+
+      // Heading
+      h2.heading-secondary= heading
+
+      // Content
+      +productsBoxContent(products)

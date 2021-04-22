@@ -1488,7 +1488,7 @@ textarea {
   margin-top: 0;
   display: grid;
   grid-template-rows: repeat(2, max-content);
-  grid-template-columns: max-content 1fr;
+  grid-template-columns: 1fr max-content;
   grid-template-areas: "heading features" "path features";
   align-items: end;
 }
@@ -1500,6 +1500,9 @@ textarea {
 }
 .header__heading {
   grid-area: heading;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 .header__path {
   grid-area: path;

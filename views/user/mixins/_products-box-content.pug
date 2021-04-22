@@ -11,5 +11,5 @@ mixin productsBoxContent(products)
     else
       each product in products || []
         a.reset-anchor.products__box(href=`/products/${product.nameNormalized}/${product.id}`)
-          img.products__img(src=product.images && product.images[0] && product.images[0].path || '/assets/user/img/no-image.jpg')
+          .products__img-outer: img.products__img(src=product.images && product.images[0] && product.images[0].path || '/assets/user/img/no-image.jpg')
           +productDesc(product, true, false)

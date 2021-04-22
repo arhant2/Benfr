@@ -576,6 +576,7 @@ Featured Categories
 .featured-categories__box {
   border-radius: 0.5rem;
   padding: 1rem 3rem;
+  max-height: 20rem;
   display: grid;
   align-items: center;
   grid-template-columns: auto auto;
@@ -587,7 +588,9 @@ Featured Categories
   background-color: var(--color-featured-categories-2);
 }
 .featured-categories__img {
-  width: 90%;
+  width: 100%;
+  max-height: 18rem;
+  object-fit: contain;
 }
 .featured-categories__content {
   text-align: right;
@@ -1475,6 +1478,9 @@ Navbar
 .product-desc__name {
   font-size: 1.75rem;
   font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 .product-desc__price > * {
   display: inline-block;
@@ -1640,8 +1646,18 @@ Navbar
   text-decoration: underline;
   text-decoration-style: dotted;
 }
-.products__img {
+.products__img-outer {
   width: 100%;
+  padding-top: 100%;
+  position: relative;
+}
+.products__img {
+  top: 0;
+  left: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .progress {

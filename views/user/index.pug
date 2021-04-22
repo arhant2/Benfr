@@ -1,7 +1,23 @@
 extends base/_base
 
+include mixins/_general-product-section
+
 block top
+  //- Top Container
   include components/_home-top-container
 
 block content
+  //- Featured Categories
   include components/_featured-categories
+
+  //- Popular Products
+  +generalProductSection('Popular Products', popularProducts)
+
+  //- Most rated Products
+  +generalProductSection('Most Rated', mostRatedProducts)
+
+  //- Subscribe
+  include components/_subscribe
+
+  //- Brands ad
+  include components/_brands-ad
