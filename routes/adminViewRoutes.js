@@ -46,4 +46,18 @@ router.get(
   adminViewController.getOneOrder
 );
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Users
+router.get(
+  '/users',
+  adminViewController.getUsersMiddleware,
+  adminViewController.getUsers
+);
+
+router.get(
+  '/users/:id',
+  adminViewController.getOneUserMiddleware,
+  adminViewController.getOneUser
+);
+
 module.exports = router;

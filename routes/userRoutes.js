@@ -76,4 +76,20 @@ router.patch(
   userController.updateMe
 );
 
+router.patch(
+  '/:id/makeActive',
+  userFilters.makeUserActive,
+  authController.protect,
+  authController.restrictTo('admin'),
+  userController.makeUserActive
+);
+
+router.patch(
+  '/:id/makeInactive',
+  userFilters.makeUserInactive,
+  authController.protect,
+  authController.restrictTo('admin'),
+  userController.makeUserInactive
+);
+
 module.exports = router;

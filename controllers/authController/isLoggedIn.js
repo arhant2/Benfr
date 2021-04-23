@@ -17,7 +17,7 @@ exports.isLoggedIn = catchAsync(async (req, res, next) => {
 
     const user = await User.findById(decoded.id).select('+role');
 
-    if (!user || user.hasChangedPasswordAfter(decoded.iat)) {
+    if (!user || !user.active || user.hasChangedPasswordAfter(decoded.iat)) {
       res.clearCookie('jwt');
       return next();
     }

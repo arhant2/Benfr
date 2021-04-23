@@ -9,7 +9,7 @@ block content
   +header('Products', [['/a/products', 'Products']])
 
     - 
-      const linkCreator = (query) => `/a/products` + (queryObjParsed.limit ? `?limit=${queryObjParsed.limit}&` : '?') + (queryObjParsed.sort ? `&sort=${queryObjParsed.sort}`: '') + (query ? `&${query}`: '');
+      const linkCreator = (query) => `/a/products` + (queryObjParsed.limit ? `?limit=${queryObjParsed.limit}` : '?') + (queryObjParsed.sort ? `&sort=${queryObjParsed.sort}`: '') + (query ? `&${query}`: '');
 
       const types = [
         [linkCreator(''), 'All'],

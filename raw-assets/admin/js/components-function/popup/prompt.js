@@ -32,7 +32,7 @@ const promptFunction = (
   fn,
   defaultInput,
   minlength = 1,
-  maxlength = 10
+  maxlength = undefined
 ) => {
   // Call the default one if the custom one cannot be called
   if (
@@ -81,8 +81,13 @@ const promptFunction = (
   body.textContent = message;
   textarea.textContent = defaultInput || '';
   textarea.value = defaultInput || '';
-  textarea.minLength = minlength;
-  textarea.maxLength = maxlength;
+
+  if (minlength) {
+    textarea.minLength = minlength;
+  }
+  if (maxlength) {
+    textarea.maxLength = maxlength;
+  }
   container.classList.remove(container.dataset.noneClass);
 };
 

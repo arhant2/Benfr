@@ -25,6 +25,10 @@ module.exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError('Incorrect email or password', 401));
   }
 
+  if (!user.active) {
+    return next(new AppError('User is not active, cannot login!', 401));
+  }
+
   if (user.failedLoginAttemptsExceeded()) {
     return next(
       new AppError('Too many login attempts! Please try again later', 429)

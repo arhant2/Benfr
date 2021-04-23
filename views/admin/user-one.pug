@@ -1,0 +1,146 @@
+extends base/_base
+
+block append variables
+  - 
+    sidebarActive = 'Users';
+
+
+mixin rotatableCircle(color, number, name)
+  .rotatable-circle(class=`rotatable-circle--${color}`)
+    .rotatable-circle__side.rotatable-circle__side--front
+      .rotatable-circle__quantity-number= number
+      .rotatable-circle__quantity-name= name 
+    .rotatable-circle__side.rotatable-circle__side--back
+      block
+
+
+mixin addressEachLine(value, comma=false)
+  if value 
+    p.small-text.small-text--light= `${value}${comma?',':''}`
+
+
+mixin address(address)
+  .customer-contact__box.u-margin-bottom-small
+    .customer-contact__icon A
+    div
+      +addressEachLine(address.name)
+      +addressEachLine(address.address.flat, true)
+      +addressEachLine(address.address.area, true)
+      +addressEachLine(address.address.landmark, true)
+      +addressEachLine(address.address.district, true)
+      +addressEachLine(`${address.address.state} - ${address.address.pincode}`)
+
+
+
+block content 
+  +headerOne('User', 'Users', false)
+
+  main.main.main--small-layout.divided-main
+
+    -
+      let status, color, icon;
+      if(document.role === 'admin'){
+        status = 'Is admin';
+        color = 'yellow';
+        icon = 'fas fa-user-secret';
+      }else if(!document.active){
+        status = 'Currently inactive';
+        color = 'red';
+        icon = 'fas fa-times';
+      }else{
+        status = 'Currently active';
+        color = 'green';
+        icon = 'fas fa-check-double';
+      }
+    
+    // ========== Left part ==========
+    .divided-main__left
+        
+      // Basic details  
+      .card.card--partition
+
+        div 
+          .customer-imp
+            //- .customer-imp__img.icon-round(class=`icon-round--${color}`): i(class=icon)
+            img.customer-imp__img.icon-round(src=`/assets/admin/img/avatar/${Math.floor(Math.random()*16)}.png`)
+            h2.heading-secondary.customer-imp__heading= document.name
+            .small-text.small-text--light.customer-imp__heading-base= helpers.timeSince(document.createdAt, true, 'Customer for {time}')
+
+        div 
+          h2.card__heading.heading-secondary Contact Information
+          .customer-contact
+            .customer-contact__box
+              .customer-contact__icon: i.fas.fa-envelope
+              .customer-contact__information= document.email 
+            .customer-contact__box
+              .customer-contact__icon: i.fas.fa-phone-alt
+              .customer-contact__information= document.mobile 
+
+
+      // Features
+      .customer-features
+        +rotatableCircle('red', ordersCount, 'Orders')
+          p View Orders
+          a.btn.btn--small-cta.u-margin-top-smaller(href=`/a/orders?user=${document.id}`) Click Here!
+        +rotatableCircle('green', reviewsCount, 'Reviews')
+          p Written
+          h3.heading-secondary #{reviewsCount} Reviews
+        +rotatableCircle('blue', helpers.timeSince(document.createdAt, false, '{time}'), 'Since')
+          p Registered On
+          h3.heading-secondary= helpers.dateFormator.generalDateTimeFormatted(document.createdAt, 'Do MMM, YYYY')
+
+
+    // ========== Right part ==========
+    .divided-main__right
+
+      // Status
+      .card.card--partition.u-margin-bottom-main
+        div 
+          h3.card__heading.heading-secondary Status 
+          .customer-status
+            .icon-round.customer-status__icon(class=`icon-round--${color}`): i(class=icon)
+            .customer-status__name(class=`customer-status__name--${color}`)= status
+          
+          if !document.active && document.inActiveReason
+            p.small-text.u-margin-top-small Inactive Reason: #{document.inActiveReason}
+
+        div
+          if status === 'Is admin'
+            .btn.btn--red.tooltip.btn--disabled
+              | Make inactive
+              .tooltip__element.tooltip__element--right Cannot revoke access
+          
+          else if status === 'Currently active'
+            button.btn.btn--red.tooltip.btn--load.js--ajax--review-each__make-inactive(data-user-id=document.id)
+              .btn--load__content
+                | Make inactive
+                .tooltip__element.tooltip__element--right Revoke user access
+              span.btn--load__load-content
+                i.fa.fa-circle-o-notch.fa-spin
+                | &nbsp;&nbsp;Loading
+              
+
+          else 
+            button.btn.btn--red.tooltip.js--ajax--review-each__make-active(data-user-id=document.id)
+              | Make active
+              .tooltip__element.tooltip__element--right Re-grant user access
+
+
+      // Addresses
+      .card.card--partition
+        div 
+          h3.card__heading.heading-secondary Addresses 
+        div
+          if !addresses || addresses.length === 0
+            p.small-text No addresses
+          else 
+            +address(addresses[0])
+
+            if addresses.length > 1
+              div#user-one-extra-addresses.u-display-none
+                - for(let i=1; i<addresses.length; ++i)
+                  +address(addresses[i])
+
+              button.btn.btn--text.js--components-function--toggle-on-click(data-toggle-element-id='user-one-extra-addresses' data-toggle-class='u-display-none')
+                i.fas.fa-location-arrow
+                | &nbsp;See more/less

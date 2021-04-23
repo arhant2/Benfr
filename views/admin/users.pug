@@ -1,0 +1,80 @@
+extends base/_base
+
+block append variables
+  - 
+    sidebarActive = 'Users';
+
+
+block content
+  +header('Users', [['/a/users', 'Users']])
+
+    - 
+      const linkCreator = (query) => `/a/users` + (queryObjParsed.limit ? `?limit=${queryObjParsed.limit}` : '?') + (queryObjParsed.sort ? `&sort=${queryObjParsed.sort}`: '') + (query ? `&${query}`: '');
+
+      const types = [
+        [linkCreator(''), 'All'],
+        [linkCreator('active=true&role=user'), 'Active'],
+        [linkCreator('active=false&role=user'), 'Inactive'],
+        [linkCreator('role=admin'), 'Admin']
+      ];
+
+      let currentActive = 0;
+
+      if(queryObjParsed.filter.role === 'admin'){
+        currentActive = 3;
+      }else if(queryObjParsed.filter.active === 'false'){
+        currentActive = 2;
+      }else if(queryObjParsed.filter.active === 'true'){
+        currentActive = 1;
+      }
+
+    +menuBtnCollection(types, currentActive)
+
+    +menuSort([
+      ['name', 'Name [A-Z]'],
+      ['-name', 'Name [Z-A]'],
+      ['-createdAt', 'Created (Newest First)'],
+      ['createdAt', 'Created (Oldest First)'],
+      ['-updatedAt', 'Updated (Newest First)'],
+      ['updatedAt', 'Updated (Oldest First)']
+    ])
+
+    +menuLimit
+    +menuPagination
+
+  
+  main.main
+    .main-table 
+      .main-table__heading-container 
+        .main-table__heading User 
+        .main-table__heading.main-table__heading--status Status
+        .main-table__heading.main-table__heading--important Since
+
+      each user in documents
+        -
+          let status, color, icon;
+          if(user.role === 'admin'){
+            status = 'Admin';
+            color = 'yellow';
+            icon = 'fas fa-user-secret';
+          }else if(!user.active){
+            status = 'Inactive';
+            color = 'red';
+            icon = 'fas fa-user-times';
+          }else{
+            status = 'Active';
+            color = 'green';
+            icon = 'fas fa-user-tie';
+          }
+
+
+        a.main-table__row.reset-anchor(href=`/a/users/${user.id}`)
+          .main-table__item.main-table__item--first
+            .main-table__item-img.icon-round.icon-round(class=`icon-round--${color}`): i(class=icon)
+            //- img.main-table__item-img.icon-round(src=`/assets/admin/img/avatar/${Math.floor(Math.random()*16)}.png`)
+
+            .main-table__item-first-text= `${user.name.split(' ')[0]} (${user.email})`
+          
+          .main-table__item.main-table_item--status(class=`main-table_item--status-${color}`): span= status
+
+          .main-table__item.main-table__item--important= helpers.dateFormator.dateFormatted(user.createdAt)

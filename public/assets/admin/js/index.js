@@ -2883,7 +2883,7 @@ var closeBtn2 = document.getElementsByClassName('js--components-function--popup-
 
 var promptFunction = function promptFunction(title, message, fn, defaultInput) {
   var minlength = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 1;
-  var maxlength = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 10;
+  var maxlength = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : undefined;
 
   // Call the default one if the custom one cannot be called
   if (!container || !form || !heading || !body || !(closeBtn1 || closeBtn2) || !container.dataset.noneClass) {
@@ -2923,8 +2923,15 @@ var promptFunction = function promptFunction(title, message, fn, defaultInput) {
   body.textContent = message;
   textarea.textContent = defaultInput || '';
   textarea.value = defaultInput || '';
-  textarea.minLength = minlength;
-  textarea.maxLength = maxlength;
+
+  if (minlength) {
+    textarea.minLength = minlength;
+  }
+
+  if (maxlength) {
+    textarea.maxLength = maxlength;
+  }
+
   container.classList.remove(container.dataset.noneClass);
 };
 
@@ -3458,7 +3465,157 @@ if (cancelBtn && id) {
     _index.default.prompt('Cancel order', 'Please enter a reason for order cancellation', cancelOrder, 'Cannot fulfill order', 4, 200);
   });
 }
-},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../components-function/flash-messages":"components-function/flash-messages.js","../components-function/popup/index":"components-function/popup/index.js","../utils/btnsStatesClass":"utils/btnsStatesClass.js"}],"components-function/btn-confirm-redirect.js":[function(require,module,exports) {
+},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../components-function/flash-messages":"components-function/flash-messages.js","../components-function/popup/index":"components-function/popup/index.js","../utils/btnsStatesClass":"utils/btnsStatesClass.js"}],"ajax/user-one.js":[function(require,module,exports) {
+"use strict";
+
+require("regenerator-runtime/runtime");
+
+var _axios = _interopRequireDefault(require("axios"));
+
+var _handleError = _interopRequireDefault(require("../utils/handleError"));
+
+var _flashMessages = require("../components-function/flash-messages");
+
+var _index = _interopRequireDefault(require("../components-function/popup/index"));
+
+var _document$getElements, _document$getElements2;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+////////////////////////////////
+// Making user inactive
+////////////////////////////////
+(_document$getElements = document.getElementsByClassName('js--ajax--review-each__make-inactive')[0]) === null || _document$getElements === void 0 ? void 0 : _document$getElements.addEventListener('click', function (e) {
+  var _this = this;
+
+  var userId = this.dataset.userId;
+
+  if (!userId) {
+    return;
+  }
+
+  var makeUserInactive = /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(reason) {
+      return regeneratorRuntime.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              if (reason) {
+                _context.next = 2;
+                break;
+              }
+
+              return _context.abrupt("return");
+
+            case 2:
+              _context.prev = 2;
+
+              _this.setAttribute('disabled', 'disabled');
+
+              _context.next = 6;
+              return (0, _axios.default)({
+                method: 'PATCH',
+                url: "/api/v1/users/".concat(userId, "/makeInactive"),
+                data: {
+                  inActiveReason: reason
+                }
+              });
+
+            case 6:
+              (0, _flashMessages.clearFlashMessages)();
+              (0, _flashMessages.addFlashMessage)('success', 'Made user inactive succesfully! Redirecting...');
+              setTimeout(function () {
+                window.location.reload();
+              }, 2000);
+              _context.next = 15;
+              break;
+
+            case 11:
+              _context.prev = 11;
+              _context.t0 = _context["catch"](2);
+              (0, _handleError.default)(_context.t0, true);
+
+              _this.removeAttribute('disabled');
+
+            case 15:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee, null, [[2, 11]]);
+    }));
+
+    return function makeUserInactive(_x) {
+      return _ref.apply(this, arguments);
+    };
+  }();
+
+  _index.default.prompt('Make user inactive', 'Enter reason for making user inactive', makeUserInactive, undefined, 5, 120);
+}); ////////////////////////////////
+// Making user active
+////////////////////////////////
+
+(_document$getElements2 = document.getElementsByClassName('js--ajax--review-each__make-active')[0]) === null || _document$getElements2 === void 0 ? void 0 : _document$getElements2.addEventListener('click', function (e) {
+  var _this2 = this;
+
+  var userId = this.dataset.userId;
+
+  if (!userId) {
+    return;
+  }
+
+  var makeUserActive = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+      return regeneratorRuntime.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.prev = 0;
+
+              _this2.setAttribute('disabled', 'disabled');
+
+              _context2.next = 4;
+              return (0, _axios.default)({
+                method: 'PATCH',
+                url: "/api/v1/users/".concat(userId, "/makeActive")
+              });
+
+            case 4:
+              (0, _flashMessages.clearFlashMessages)();
+              (0, _flashMessages.addFlashMessage)('success', 'Made user active succesfully! Redirecting...');
+              setTimeout(function () {
+                window.location.reload();
+              }, 2000);
+              _context2.next = 13;
+              break;
+
+            case 9:
+              _context2.prev = 9;
+              _context2.t0 = _context2["catch"](0);
+              (0, _handleError.default)(_context2.t0, true);
+
+              _this2.removeAttribute('disabled');
+
+            case 13:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2, null, [[0, 9]]);
+    }));
+
+    return function makeUserActive() {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+
+  _index.default.confirm('Make user active', 'Re-grant user access to Benfr?', undefined, makeUserActive);
+});
+},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../components-function/flash-messages":"components-function/flash-messages.js","../components-function/popup/index":"components-function/popup/index.js"}],"components-function/btn-confirm-redirect.js":[function(require,module,exports) {
 "use strict";
 
 var _index = _interopRequireDefault(require("./popup/index"));
@@ -26006,12 +26163,34 @@ Array.from(imageOuters).forEach(function (imageOuter) {
     changeImageHandler(fileInput);
   });
 });
+},{}],"components-function/toggle-on-click.js":[function(require,module,exports) {
+Array.from(document.getElementsByClassName('js--components-function--toggle-on-click')).forEach(function (el) {
+  el.addEventListener('click', function (e) {
+    var _this$dataset = this.dataset,
+        toggleClass = _this$dataset.toggleClass,
+        toggleElementId = _this$dataset.toggleElementId;
+
+    if (!toggleClass) {
+      return;
+    }
+
+    var element = document.getElementById(toggleElementId);
+
+    if (!element) {
+      return;
+    }
+
+    element.classList.toggle(toggleClass);
+  });
+});
 },{}],"index.js":[function(require,module,exports) {
 "use strict";
 
 require("./ajax/generic-form");
 
 require("./ajax/order-one");
+
+require("./ajax/user-one");
 
 require("./components-function/btn-confirm-redirect");
 
@@ -26025,8 +26204,10 @@ require("./components-function/flash-messages");
 
 require("./components-function/form-image");
 
+require("./components-function/toggle-on-click");
+
 require("./pages/each-product");
-},{"./ajax/generic-form":"ajax/generic-form.js","./ajax/order-one":"ajax/order-one.js","./components-function/btn-confirm-redirect":"components-function/btn-confirm-redirect.js","./components-function/chart":"components-function/chart.js","./components-function/popup":"components-function/popup/index.js","./components-function/dropdown":"components-function/dropdown.js","./components-function/flash-messages":"components-function/flash-messages.js","./components-function/form-image":"components-function/form-image.js","./pages/each-product":"pages/each-product.js"}],"../../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./ajax/generic-form":"ajax/generic-form.js","./ajax/order-one":"ajax/order-one.js","./ajax/user-one":"ajax/user-one.js","./components-function/btn-confirm-redirect":"components-function/btn-confirm-redirect.js","./components-function/chart":"components-function/chart.js","./components-function/popup":"components-function/popup/index.js","./components-function/dropdown":"components-function/dropdown.js","./components-function/flash-messages":"components-function/flash-messages.js","./components-function/form-image":"components-function/form-image.js","./components-function/toggle-on-click":"components-function/toggle-on-click.js","./pages/each-product":"pages/each-product.js"}],"../../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -26054,7 +26235,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52932" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61609" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

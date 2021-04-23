@@ -4,6 +4,7 @@ const express = require('express');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 
+const timeSince = require('./utils/timeSince');
 const AppError = require('./utils/AppError');
 const dateFormator = require('./utils/dateFormator');
 const errorContoller = require('./controllers/errorController');
@@ -42,6 +43,7 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
   res.locals.helpers = {
     dateFormator,
+    timeSince,
     // qs,
   };
   next();

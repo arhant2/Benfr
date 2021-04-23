@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const brcypt = require('bcryptjs');
 const ms = require('ms');
-const sendEmail = require('../utils/sendEmail');
 
-// const AppError = require('../utils/AppError');
+const sendEmail = require('../utils/sendEmail');
+const AppError = require('../utils/AppError');
 const otpGenerate = require('../utils/otpGenerate');
 const userDetailsOptions = require('./helpers/userDetailsOptions')(
   'user',
@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema(
     mobile: userDetailsOptions.mobile(),
     role: {
       type: String,
-      enum: ['user'],
+      enum: ['user', 'admin'],
       default: 'user',
     },
     password: {
@@ -111,11 +111,42 @@ userSchema.index({
   passwordResetToken: 1,
 });
 
-// hide inactive users from  output and normalizeEmail
-userSchema.pre(/^find/, function (next) {
-  if (this.getFilter().active === undefined) {
-    this.find({ active: true });
+// If the role is tried to be modified, always make it user
+userSchema.pre('save', function (next) {
+  if (this.isModified('role')) {
+    this.role = 'user';
   }
+  next();
+});
+
+// hide inactive users from  output and normalizeEmail
+// userSchema.pre(/^find/, function (next) {
+//   if (this.getFilter().active === undefined) {
+//     this.find({ active: true });
+//   }
+
+//   next();
+// });
+
+// If admin is there, it should be always active, active user should not have inActiveReason
+userSchema.pre('save', function (next) {
+  if (!this.isModified('active')) {
+    return next();
+  }
+
+  if (this.role === 'admin') {
+    this.active = true;
+  }
+
+  if (this.active === true) {
+    this.inActiveReason = undefined;
+  } else if (!this.inActiveReason) {
+    throw new AppError(
+      'There must be some reason for making user inactive',
+      400
+    );
+  }
+
   next();
 });
 

@@ -19,8 +19,8 @@ module.exports.protect = catchAsync(async (req, res, next) => {
 
   const user = await User.findById(decoded.id).select('+role');
 
-  if (!user || user.hasChangedPasswordAfter(decoded.iat)) {
-    console.log('No user or password changed recently');
+  if (!user || !user.active || user.hasChangedPasswordAfter(decoded.iat)) {
+    console.log('No user or password changed recently or is inactive');
     res.clearCookie('jwt');
     return next(error);
   }
