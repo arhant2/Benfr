@@ -2788,7 +2788,14 @@ var alertFunction = function alertFunction(title, message, fn) {
     fn && fn();
   };
 
-  confirmBtn.addEventListener('click', fnToCall); // Add message
+  confirmBtn.addEventListener('click', fnToCall);
+  container.addEventListener('click', function (e) {
+    if (e.target !== this) {
+      return;
+    }
+
+    fnToCall();
+  }); // Add message
 
   heading.textContent = title;
   body.textContent = message;
@@ -2856,8 +2863,15 @@ var confirmFunction = function confirmFunction(title, message, noFn, yesFn) {
 
   if (closeBtn2) {
     closeBtn2.addEventListener('click', noFnToCall);
-  } // Add message
+  }
 
+  container.addEventListener('click', function (e) {
+    if (e.target !== this) {
+      return;
+    }
+
+    noFnToCall();
+  }); // Add message
 
   heading.textContent = title;
   body.textContent = message;
@@ -2917,7 +2931,14 @@ var promptFunction = function promptFunction(title, message, fn, defaultInput) {
 
   form.addEventListener('submit', fnToCallForm);
   closeBtn1 && closeBtn1.addEventListener('click', fnToCallCancel);
-  closeBtn2 && closeBtn2.addEventListener('click', fnToCallCancel); // Add message
+  closeBtn2 && closeBtn2.addEventListener('click', fnToCallCancel);
+  container.addEventListener('click', function (e) {
+    if (e.target !== this) {
+      return;
+    }
+
+    fnToCallCancel();
+  }); // Add message
 
   heading.textContent = title;
   body.textContent = message;
@@ -26235,7 +26256,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61609" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59116" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

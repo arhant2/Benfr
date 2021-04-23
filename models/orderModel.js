@@ -1,10 +1,10 @@
 const path = require('path');
 
 const mongoose = require('mongoose');
+const pug = require('pug');
 
 const Product = require('./productModel');
 const AppError = require('../utils/AppError');
-const pug = require('pug');
 const generatePdf = require('../utils/generatePdf');
 const dateFormator = require('../utils/dateFormator');
 
@@ -432,7 +432,7 @@ orderSchema.methods.pdfInvoice = async function (baseUrl) {
     throw new AppError('Order is cancelled, cannot get invoice', 400);
   }
 
-  const user = this.user;
+  const { user } = this;
 
   if (!this.populated('user')) {
     await this.populate('user').execPopulate();

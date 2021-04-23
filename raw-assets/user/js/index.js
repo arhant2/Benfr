@@ -1,6 +1,7 @@
 // Build main.scss along
 
 import './ajax/add-to-cart-btn';
+import './ajax/add-to-wishlist-btn';
 import './ajax/address';
 import './ajax/cart';
 import './ajax/change-my-email';
@@ -15,6 +16,7 @@ import './ajax/signup';
 import './ajax/signup-complete';
 import './ajax/update-me';
 import './ajax/update-my-password';
+import './ajax/wishlist';
 
 import './component-functions/btn-confirm-redirect';
 import './component-functions/dropdown';

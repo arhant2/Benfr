@@ -43,6 +43,13 @@ const alertFunction = (title, message, fn) => {
 
   confirmBtn.addEventListener('click', fnToCall);
 
+  container.addEventListener('click', function (e) {
+    if (e.target !== this) {
+      return;
+    }
+    fnToCall();
+  });
+
   // Add message
   heading.textContent = title;
   body.textContent = message;

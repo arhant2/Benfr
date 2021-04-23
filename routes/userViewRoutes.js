@@ -203,6 +203,15 @@ router.get(
   userViewController.getCheckout
 );
 
+//// Wishlist
+router.get(
+  '/wishlist',
+  userViewController.setSidebarItems,
+  authController.isLoggedIn,
+  authController.protectView,
+  userViewController.getWishlist
+);
+
 //// Orders
 router.get(
   '/orders/:id',

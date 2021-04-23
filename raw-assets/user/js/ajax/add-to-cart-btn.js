@@ -13,7 +13,7 @@ Array.from(document.getElementsByClassName('js--ajax--add-cart-btn')).forEach(
       if (!product) {
         return popup.alert(
           'Error',
-          'Cannot add product, please try again later!'
+          'Cannot add product to cart, please try again later!'
         );
       }
 

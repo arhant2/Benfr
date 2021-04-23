@@ -72,6 +72,13 @@ const confirmFunction = (title, message, noFn, yesFn) => {
     closeBtn2.addEventListener('click', noFnToCall);
   }
 
+  container.addEventListener('click', function (e) {
+    if (e.target !== this) {
+      return;
+    }
+    noFnToCall();
+  });
+
   // Add message
   heading.textContent = title;
   body.textContent = message;

@@ -15,6 +15,7 @@ const categoryRouter = require('./routes/categoryRoutes');
 const addressRouter = require('./routes/addressRoutes');
 const cartRouter = require('./routes/cartRoutes');
 const orderRouter = require('./routes/orderRoutes');
+const wishlistRouter = require('./routes/wishlistRoutes');
 const userViewRouter = require('./routes/userViewRoutes');
 const adminViewRouter = require('./routes/adminViewRoutes');
 
@@ -71,6 +72,7 @@ app.use('/api/v1/categories', categoryRouter);
 app.use('/api/v1/addresses', addressRouter);
 app.use('/api/v1/cart', cartRouter);
 app.use('/api/v1/orders', orderRouter);
+app.use('/api/v1/wishlist', wishlistRouter);
 app.use('/a', adminViewRouter);
 app.use('/', userViewRouter);
 

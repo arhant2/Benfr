@@ -34,7 +34,16 @@ block content
 
         .each-product-main__content-each
           .each-product-main__brand= document.brand.name 
-          h1.each-product-main__heading= document.name
+          h1.each-product-main__heading
+            | #{document.name}
+            | &nbsp;
+
+            //- Wishlist button
+            button.btn.btn--round-inline.btn--red.btn--load.js--ajax--add-wishlist-btn(data-product=document.id)
+              span.btn--load__content: i.far.fa-heart
+              span.btn--load__load-content
+                i.fa.fa-circle-o-notch.fa-spin
+
           .each-product-main__ratings
             span.each-product-main__ratings-star
               +ratingStar(document.review.average)

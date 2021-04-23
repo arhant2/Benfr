@@ -152,4 +152,15 @@
     --current-color-dark: var(--color-main-btn-dark);
     --current-color-darker: var(--color-main-btn-dark);
   }
+
+  &--round-inline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 1.6em;
+    height: 1.6em;
+    font-size: 0.625em;
+    border-radius: 50%;
+  }
 }

@@ -2700,7 +2700,14 @@ var alertFunction = function alertFunction(title, message, fn) {
     fn && fn();
   };
 
-  confirmBtn.addEventListener('click', fnToCall); // Add message
+  confirmBtn.addEventListener('click', fnToCall);
+  container.addEventListener('click', function (e) {
+    if (e.target !== this) {
+      return;
+    }
+
+    fnToCall();
+  }); // Add message
 
   heading.textContent = title;
   body.textContent = message;
@@ -2768,8 +2775,15 @@ var confirmFunction = function confirmFunction(title, message, noFn, yesFn) {
 
   if (closeBtn2) {
     closeBtn2.addEventListener('click', noFnToCall);
-  } // Add message
+  }
 
+  container.addEventListener('click', function (e) {
+    if (e.target !== this) {
+      return;
+    }
+
+    noFnToCall();
+  }); // Add message
 
   heading.textContent = title;
   body.textContent = message;
@@ -2829,7 +2843,14 @@ var promptFunction = function promptFunction(title, message, fn, defaultInput) {
 
   form.addEventListener('submit', fnToCallForm);
   closeBtn1 && closeBtn1.addEventListener('click', fnToCallCancel);
-  closeBtn2 && closeBtn2.addEventListener('click', fnToCallCancel); // Add message
+  closeBtn2 && closeBtn2.addEventListener('click', fnToCallCancel);
+  container.addEventListener('click', function (e) {
+    if (e.target !== this) {
+      return;
+    }
+
+    fnToCallCancel();
+  }); // Add message
 
   heading.textContent = title;
   body.textContent = message;
@@ -2996,7 +3017,7 @@ Array.from(document.getElementsByClassName('js--ajax--add-cart-btn')).forEach(fu
                 break;
               }
 
-              return _context.abrupt("return", _index.default.alert('Error', 'Cannot add product, please try again later!'));
+              return _context.abrupt("return", _index.default.alert('Error', 'Cannot add product to cart, please try again later!'));
 
             case 3:
               this.setAttribute('disabled', 'disabled');
@@ -3039,7 +3060,78 @@ Array.from(document.getElementsByClassName('js--ajax--add-cart-btn')).forEach(fu
     };
   }());
 });
-},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../component-functions/popup/index":"component-functions/popup/index.js","../utils/handleError":"utils/handleError.js"}],"ajax/address.js":[function(require,module,exports) {
+},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../component-functions/popup/index":"component-functions/popup/index.js","../utils/handleError":"utils/handleError.js"}],"ajax/add-to-wishlist-btn.js":[function(require,module,exports) {
+"use strict";
+
+require("regenerator-runtime/runtime");
+
+var _axios = _interopRequireDefault(require("axios"));
+
+var _handleError = _interopRequireDefault(require("../utils/handleError"));
+
+var _flashMessages = require("../component-functions/flash-messages");
+
+var _popup = _interopRequireDefault(require("../component-functions/popup"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+Array.from(document.getElementsByClassName('js--ajax--add-wishlist-btn')).forEach(function (btn) {
+  btn.addEventListener('click', /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
+      var product;
+      return regeneratorRuntime.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              product = this.dataset.product;
+
+              if (product) {
+                _context.next = 3;
+                break;
+              }
+
+              throw 'Cannot add product, please try again later!';
+
+            case 3:
+              this.setAttribute('disabled', 'disabled');
+              _context.prev = 4;
+              _context.next = 7;
+              return (0, _axios.default)({
+                method: 'POST',
+                url: "/api/v1/wishlist/add/".concat(product)
+              });
+
+            case 7:
+              (0, _flashMessages.clearFlashMessages)();
+              (0, _flashMessages.addFlashMessage)('success', 'Added product to wishlist successfully!');
+              this.removeAttribute('disabled');
+              _context.next = 16;
+              break;
+
+            case 12:
+              _context.prev = 12;
+              _context.t0 = _context["catch"](4);
+              (0, _handleError.default)(_context.t0);
+              this.removeAttribute('disabled');
+
+            case 16:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee, this, [[4, 12]]);
+    }));
+
+    return function (_x) {
+      return _ref.apply(this, arguments);
+    };
+  }());
+});
+},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../component-functions/flash-messages":"component-functions/flash-messages.js","../component-functions/popup":"component-functions/popup/index.js"}],"ajax/address.js":[function(require,module,exports) {
 "use strict";
 
 require("regenerator-runtime/runtime");
@@ -4758,7 +4850,73 @@ if (form) {
     };
   }());
 }
-},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../component-functions/flash-messages":"component-functions/flash-messages.js"}],"component-functions/btn-confirm-redirect.js":[function(require,module,exports) {
+},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../component-functions/flash-messages":"component-functions/flash-messages.js"}],"ajax/wishlist.js":[function(require,module,exports) {
+"use strict";
+
+require("regenerator-runtime/runtime");
+
+var _axios = _interopRequireDefault(require("axios"));
+
+var _handleError = _interopRequireDefault(require("../utils/handleError"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+Array.from(document.getElementsByClassName('js--ajax--wishlist-each__remove-btn')).forEach(function (btn) {
+  btn.addEventListener('click', /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
+      var product, item;
+      return regeneratorRuntime.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              product = this.dataset.product;
+              item = this.closest('.js--ajax--wishlist-each');
+
+              if (!(!product || !item)) {
+                _context.next = 4;
+                break;
+              }
+
+              throw 'Cannot remove product, please try again later!';
+
+            case 4:
+              this.setAttribute('disabled', 'disabled');
+              _context.prev = 5;
+              _context.next = 8;
+              return (0, _axios.default)({
+                method: 'DELETE',
+                url: "/api/v1/wishlist/remove/".concat(product)
+              });
+
+            case 8:
+              item.remove();
+              _context.next = 15;
+              break;
+
+            case 11:
+              _context.prev = 11;
+              _context.t0 = _context["catch"](5);
+              (0, _handleError.default)(_context.t0, true);
+              this.removeAttribute('disabled');
+
+            case 15:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee, this, [[5, 11]]);
+    }));
+
+    return function (_x) {
+      return _ref.apply(this, arguments);
+    };
+  }());
+});
+},{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js"}],"component-functions/btn-confirm-redirect.js":[function(require,module,exports) {
 "use strict";
 
 var _index = _interopRequireDefault(require("./popup/index"));
@@ -6056,13 +6214,13 @@ Array.from(imgs).forEach(function (img) {
     }
 
     bigImg.src = this.src;
-    zoomedImg.style.backgroundImage = "url(\"".concat(bigImg.src, "\")");
+    zoomedImg.style.background = "url(\"".concat(bigImg.src, "\"), #fff");
   });
 });
 
 if (lens && zoomedImg && toZoom && bigImg) {
   var ratioX, ratioY;
-  zoomedImg.style.backgroundImage = "url(\"".concat(bigImg.src, "\")");
+  zoomedImg.style.background = "url(\"".concat(bigImg.src, "\"), #fff");
   /*execute a function when someone moves the cursor over the image, or the lens:*/
 
   lens.addEventListener('mousemove', moveLens);
@@ -6134,6 +6292,8 @@ if (lens && zoomedImg && toZoom && bigImg) {
 
 require("./ajax/add-to-cart-btn");
 
+require("./ajax/add-to-wishlist-btn");
+
 require("./ajax/address");
 
 require("./ajax/cart");
@@ -6162,6 +6322,8 @@ require("./ajax/update-me");
 
 require("./ajax/update-my-password");
 
+require("./ajax/wishlist");
+
 require("./component-functions/btn-confirm-redirect");
 
 require("./component-functions/dropdown");
@@ -6185,7 +6347,7 @@ require("./component-functions/toggle-on-click");
 require("./component-functions/increment-decrement-input-number");
 
 require("./pages/each-product");
-},{"./ajax/add-to-cart-btn":"ajax/add-to-cart-btn.js","./ajax/address":"ajax/address.js","./ajax/cart":"ajax/cart.js","./ajax/change-my-email":"ajax/change-my-email.js","./ajax/checkout":"ajax/checkout.js","./ajax/checkout-address":"ajax/checkout-address.js","./ajax/forgot-password":"ajax/forgot-password.js","./ajax/login":"ajax/login.js","./ajax/order-one":"ajax/order-one.js","./ajax/reset-password":"ajax/reset-password.js","./ajax/review":"ajax/review.js","./ajax/signup":"ajax/signup.js","./ajax/signup-complete":"ajax/signup-complete.js","./ajax/update-me":"ajax/update-me.js","./ajax/update-my-password":"ajax/update-my-password.js","./component-functions/btn-confirm-redirect":"component-functions/btn-confirm-redirect.js","./component-functions/dropdown":"component-functions/dropdown.js","./component-functions/flash-messages":"component-functions/flash-messages.js","./component-functions/form-rating":"component-functions/form-rating.js","./component-functions/remove-on-click":"component-functions/remove-on-click.js","./component-functions/search":"component-functions/search.js","./component-functions/sidebar":"component-functions/sidebar.js","./component-functions/sliders":"component-functions/sliders.js","./component-functions/state-district-select":"component-functions/state-district-select.js","./component-functions/toggle-on-click":"component-functions/toggle-on-click.js","./component-functions/increment-decrement-input-number":"component-functions/increment-decrement-input-number.js","./pages/each-product":"pages/each-product.js"}],"../../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./ajax/add-to-cart-btn":"ajax/add-to-cart-btn.js","./ajax/add-to-wishlist-btn":"ajax/add-to-wishlist-btn.js","./ajax/address":"ajax/address.js","./ajax/cart":"ajax/cart.js","./ajax/change-my-email":"ajax/change-my-email.js","./ajax/checkout":"ajax/checkout.js","./ajax/checkout-address":"ajax/checkout-address.js","./ajax/forgot-password":"ajax/forgot-password.js","./ajax/login":"ajax/login.js","./ajax/order-one":"ajax/order-one.js","./ajax/reset-password":"ajax/reset-password.js","./ajax/review":"ajax/review.js","./ajax/signup":"ajax/signup.js","./ajax/signup-complete":"ajax/signup-complete.js","./ajax/update-me":"ajax/update-me.js","./ajax/update-my-password":"ajax/update-my-password.js","./ajax/wishlist":"ajax/wishlist.js","./component-functions/btn-confirm-redirect":"component-functions/btn-confirm-redirect.js","./component-functions/dropdown":"component-functions/dropdown.js","./component-functions/flash-messages":"component-functions/flash-messages.js","./component-functions/form-rating":"component-functions/form-rating.js","./component-functions/remove-on-click":"component-functions/remove-on-click.js","./component-functions/search":"component-functions/search.js","./component-functions/sidebar":"component-functions/sidebar.js","./component-functions/sliders":"component-functions/sliders.js","./component-functions/state-district-select":"component-functions/state-district-select.js","./component-functions/toggle-on-click":"component-functions/toggle-on-click.js","./component-functions/increment-decrement-input-number":"component-functions/increment-decrement-input-number.js","./pages/each-product":"pages/each-product.js"}],"../../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -6213,7 +6375,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59815" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59111" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

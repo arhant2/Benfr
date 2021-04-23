@@ -20,5 +20,8 @@
       { "allowShortCircuit": true, "allowTernary": true }
     ]
   },
-  "ignorePatterns": ["raw-assets/*"]
+  "ignorePatterns": ["raw-assets/*"],
+  "parserOptions": {
+    "ecmaVersion": 2020
+  }
 }

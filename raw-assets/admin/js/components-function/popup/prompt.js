@@ -76,6 +76,13 @@ const promptFunction = (
   closeBtn1 && closeBtn1.addEventListener('click', fnToCallCancel);
   closeBtn2 && closeBtn2.addEventListener('click', fnToCallCancel);
 
+  container.addEventListener('click', function (e) {
+    if (e.target !== this) {
+      return;
+    }
+    fnToCallCancel();
+  });
+
   // Add message
   heading.textContent = title;
   body.textContent = message;

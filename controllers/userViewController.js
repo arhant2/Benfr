@@ -12,6 +12,7 @@ const Address = require('../models/addressModel');
 const Cart = require('../models/cartModel');
 const Review = require('../models/reviewModel');
 const Order = require('../models/orderModel');
+const Wishlist = require('../models/wishlistModel');
 const handlerFactoryUserViews = require('./handlerFactoryUserViews');
 
 const gramsGenerator = require('../utils/gramsGenerator');
@@ -374,7 +375,10 @@ exports.getAllProductsBySearch = catchAsync(async (req, res, next) => {
 
 // exports.getOneProduct = handlerFactoryProduct.getOne;
 exports.getOneProduct = catchAsync(async (req, res, next) => {
-  const document = await Product.findById(req.params.id);
+  const document = await Product.findOne({
+    _id: req.params.id,
+    published: true,
+  });
 
   if (!document) {
     return next(new AppError('No product found with with that ID', 404));
@@ -521,6 +525,16 @@ exports.getCheckoutMiddlewareChangeDocumentToAddressAndAttach = (
 exports.getCheckout = catchAsync(async (req, res, next) => {
   res.render('user/checkout', {
     document: req.customs.document,
+  });
+});
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Wishlist
+exports.getWishlist = catchAsync(async (req, res, next) => {
+  const wishlist = await Wishlist.findOne({ user: req.customs.user.id });
+
+  res.render('user/wishlist', {
+    document: wishlist,
   });
 });
 

@@ -1,0 +1,54 @@
+extends base/_account
+
+include mixins/_account-box
+include mixins/_menu
+
+block accountContent
+  +accountBox('Wishlist', [['#', 'Wishlist']])
+
+    section.wishlist__main
+
+      each product in document.products
+        .inner-card.reset-anchor.js--ajax--wishlist-each: .product-inner-card
+          a.product-inner-card__img-box(href=`/products/${product.productId}` target='_blank')
+            - const src = product.product?.images?.[0]?.path ||product.thumbnail?.path || '/assets/user/img/no-image.jpg';
+            img.product-inner-card__img(src=src alt='Product image')  
+          .product-inner-card__main
+            .product-desc
+              //- Brand
+              .product-desc__brand= (product.product && product.product.brand.name || product.brand)
+
+              //- Name
+              a.product-desc__name.products__name(href=`/products/${product.productId}` target='_blank')= (product.product && product.product.name || product.name)
+
+              //- Prices
+              .product-desc__price
+                if !product.product
+                  span.product-desc__price-act.product-desc__price-act--red Not Available
+                else if product.product.currentStock === 0
+                  span.product-desc__price-act.product-desc__price-act--red Out of Stock
+                else 
+                  span.product-desc__price-act ₹#{Number(product.product.discountedPrice).toLocaleString('en-IN', {maximumFractionDigits: 2})}
+                  | &nbsp;
+                  strike.product-desc__price-strike ₹#{Number(product.product.price).toLocaleString('en-IN', {maximumFractionDigits: 2})}
+                  | &nbsp;
+                  span.product-desc__price-off #{parseInt(Math.round( (product.product.price - product.product.discountedPrice) / product.price * 100 ))}% off
+
+              //- Extras
+              .product-desc__extras
+                //- Add to cart button
+                if !product.product || product.product.currentStock === 0
+                  button.btn.btn--round.wishlist__btn(disabled)  + Add to cart
+                else 
+                  button.btn.btn--round.wishlist__btn.btn--load.js--ajax--add-cart-btn(data-product=product.productId)
+                    span.btn--load__content + Add To Cart
+                    span.btn--load__load-content
+                      i.fa.fa-circle-o-notch.fa-spin
+                      | &nbsp;Loading
+
+                //- Remove button
+                button.btn.btn--text.btn--text-inital-dark.btn--primary.btn--load.js--ajax--wishlist-each__remove-btn(data-product=product.productId)
+                  span.btn--load__content Remove
+                  span.btn--load__load-content
+                    i.fa.fa-circle-o-notch.fa-spin
+                    | &nbsp;Loading

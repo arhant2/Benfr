@@ -14,14 +14,14 @@ Array.from(imgs).forEach((img) => {
     }
 
     bigImg.src = this.src;
-    zoomedImg.style.backgroundImage = `url("${bigImg.src}")`;
+    zoomedImg.style.background = `url("${bigImg.src}"), #fff`;
   });
 });
 
 if (lens && zoomedImg && toZoom && bigImg) {
   let ratioX, ratioY;
 
-  zoomedImg.style.backgroundImage = `url("${bigImg.src}")`;
+  zoomedImg.style.background = `url("${bigImg.src}"), #fff`;
 
   /*execute a function when someone moves the cursor over the image, or the lens:*/
   lens.addEventListener('mousemove', moveLens);
