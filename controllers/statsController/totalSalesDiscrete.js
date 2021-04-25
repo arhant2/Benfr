@@ -1,5 +1,4 @@
 const moment = require('moment-timezone');
-const ms = require('ms');
 
 const Order = require('../../models/orderModel');
 const dateFormator = require('../../utils/dateFormator');
