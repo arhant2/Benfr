@@ -4,11 +4,16 @@ const express = require('express');
 // const dateFormator = require('../utils/dateFormator');
 
 const adminViewController = require('../controllers/adminViewController');
+const statsController = require('../controllers/statsController');
 
 const router = express.Router();
 
 router.get('/', adminViewController.redirectDashboard);
-router.get('/dashboard', adminViewController.getDashboard);
+router.get(
+  '/dashboard',
+  statsController.attachStats,
+  adminViewController.getDashboard
+);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Brands

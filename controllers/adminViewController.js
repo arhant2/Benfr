@@ -30,7 +30,17 @@ exports.redirectDashboard = (req, res, next) => {
 };
 
 exports.getDashboard = (req, res, next) => {
-  res.render('admin/index');
+  // console.log(req.customs.statsData);
+  let offset = false;
+
+  if (req.query.offset === 'true') {
+    offset = true;
+  }
+
+  res.render('admin/index', {
+    statsData: req.customs.statsData,
+    offset,
+  });
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

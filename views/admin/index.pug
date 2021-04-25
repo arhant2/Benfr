@@ -1,1 +1,106 @@
 extends base/_base
+
+block append variables
+  - 
+    const flashMessages = offset ? [{
+      type: 'warning',
+      message: 'Please note that offsets has been added to the values. Multiple of 1,00,00,000 to sales and multiple of 10,000 to other values.'
+    }] : [];
+
+mixin statsNumber(name, icon, color, value, offsetMultiple = 0)
+  - const offsetCurrent = offset ? Math.ceil(Math.random() * 9) * offsetMultiple: 0;
+  - const offsetPrevious = offset ? Math.ceil(Math.random() * 9) * offsetMultiple: 0;
+
+  .stats-number(class=`stats-number--${color}`)
+    .stats-number__icon: i(class=icon)
+    h3.stats-number__name= name 
+    .stats-number__quantity= Number(value.current + offsetCurrent).toLocaleString('en-IN', {maximumFractionDigits: 2})
+
+    - const diffPercentage = (offsetPrevious + value.previous) === 0 ? 100: Math.floor((offsetCurrent + value.current - offsetPrevious - value.previous) / (offsetPrevious + value.previous) * 100);
+
+    .stats-number__percent-box
+      .stats-number__percent-type= diffPercentage >= 0 ? 'High': 'Low'
+      .stats-number__percent-number 
+        | #{Math.abs(diffPercentage)}% 
+        if diffPercentage >= 0
+          | &#8679;
+        else 
+          | &#8681;
+
+    p.stats-number__time Total for the #{statsData.duration}
+
+
+block content
+  +header('Benfr Dashboard', [])
+
+    - 
+      let currentActive;
+      if (statsData.duration === 'day') {
+        currentActive = 0;
+      } else if (statsData.duration === 'week') {
+        currentActive = 1;
+      } else if (statsData.duration === 'month') {
+        currentActive = 2;
+      } else {
+        currentActive = 3;
+      }
+    +menuBtnCollection([
+      [`/a/dashboard?duration=day&offset=${offset}`, 'Daily'],
+      [`/a/dashboard?duration=week&offset=${offset}`, 'Weekly'],
+      [`/a/dashboard?duration=month&offset=${offset}`, 'Monthly'],
+      [`/a/dashboard?duration=year&offset=${offset}`, 'Yearly'],
+    ], currentActive)
+
+    +menuBtnCollection([
+      [`/a/dashboard?duration=${statsData.duration}&date=${statsData.dates.prevDate}&offset=${offset}`, '<'],
+      [undefined, statsData.dates.currentDateRange],
+      [`/a/dashboard?duration=${statsData.duration}&date=${statsData.dates.nextDate}&offset=${offset}`, '>'],
+    ], 1)
+
+    +menuDropdown('Offset', [
+      ['/a/dashboard?offset=true', 'Enabled'],
+      ['/a/dashboard?offset=false', 'Disabled']
+    ], offset ? 0: 1, true)
+  
+
+  main.main
+    section.section-stats-number
+      +statsNumber('Sales', 'fas fa-money-bill-wave-alt', 'red', statsData.stats.sales, 10000000)
+      +statsNumber('New Customers', 'fas fa-user-tie', 'green', statsData.stats.customer, 10000)
+      +statsNumber('Visitors', 'fas fa-biking', 'blue', statsData.stats.visitors, 10000)
+      +statsNumber('Orders', 'fas fa-boxes', 'yellow', statsData.stats.order, 10000)
+
+
+    section.section-stats-charts
+
+      // Line graph
+      div.card.stats-chart.stats-chart--big.section-stats-charts__item.section-stats-charts__item--big
+        h3.card__heading.heading-secondary Sales
+        .card__body.stats-chart__body
+          h4.heading-tertiary.stats-chart__heading-sub Total Sales for the #{statsData.duration}
+          .stats-chart__canvas-outer
+
+            - 
+              const offsetGetSales = () => (offset ? Math.ceil(Math.random() * 9) * 10000000 : 0);
+              const jsonVal = JSON.stringify(
+                statsData.totalSalesDiscreteStats.map((eachVal) => ({
+                  title: eachVal.title,
+                  value: eachVal.value + offsetGetSales(),
+                }))
+              );
+
+            //-  data-chartdata = '{"label":"Sales","data":[{"title":"Jan","value":20258},{"title":"Feb","value":10158}}'
+            canvas#myChart.js--components-function--chart(data-charttype='line' data-chartcolors='["red"]'
+            data-chartdata=`{"label":"Sales","data":${jsonVal}}`
+            )
+
+      - const offsetGetOthers = () => offset ? Math.ceil(Math.random() * 9) * 10000: 0;
+      // Doughnut chart
+      .card.stats-chart.stats-chart--small.section-stats-charts__item.section-stats-charts__item--small
+        h3.card__heading.heading-secondary Traffic
+        .card__body.stats-chart__body
+          h4.heading-tertiary.stats-chart__heading-sub Total Traffic for the #{statsData.duration}
+          .stats-chart__canvas-outer
+            canvas.js--components-function--chart(data-charttype='doughnut' data-chartcolors='["red", "blue", "yellow"]'
+            data-chartdata=`{"labels":"Traffic","data":[{"title":"Visitors","value":"${offsetGetOthers() + statsData.stats.visitors.current}"},{"title":"New Users","value":"${offsetGetOthers() + statsData.stats.newUser.current}"},{"title":"New Customers","value":"${offsetGetOthers() + statsData.stats.customer.current}"}]}`
+            )

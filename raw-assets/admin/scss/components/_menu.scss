@@ -108,7 +108,9 @@
   }
 
   &__link {
-    display: inline-block;
+    // display: inline-block;
+    display: flex;
+    align-items: center;
     line-height: inherit;
     text-decoration: none;
     color: var(--color-font);

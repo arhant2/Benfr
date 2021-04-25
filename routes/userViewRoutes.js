@@ -5,8 +5,12 @@ const authController = require('../controllers/authController');
 const addressController = require('../controllers/addressController');
 const cartController = require('../controllers/cartController');
 const orderController = require('../controllers/orderController');
+const visitorController = require('../controllers/visitorController');
 
 const router = express.Router();
+
+// Manage visitor
+router.use(visitorController.manageVisitor);
 
 router.get('/login', userViewController.getLogin);
 

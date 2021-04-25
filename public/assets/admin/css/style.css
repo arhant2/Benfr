@@ -928,7 +928,8 @@ textarea {
   padding: 0.35rem 0;
 }
 .menu-dropdown__link {
-  display: inline-block;
+  display: flex;
+  align-items: center;
   line-height: inherit;
   text-decoration: none;
   color: var(--color-font);

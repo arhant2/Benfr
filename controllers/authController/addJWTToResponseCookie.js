@@ -9,9 +9,9 @@ const signJWTToken = async (id) => {
 };
 
 module.exports = async (req, res, userId) => {
-  res.clearCookie('changeEmailJwt');
+  // res.clearCookie('changeEmailJwt');
   const token = await signJWTToken(userId);
-  console.log('Added jwt');
+  // console.log('Added jwt');
   res.cookie('jwt', token, {
     expires: new Date(Date.now() + ms(process.env.JWT_EXPIRES_IN)),
     httpOnly: true,

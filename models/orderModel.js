@@ -206,7 +206,7 @@ orderSchema.statics.newOrder = async function (user, address, cart) {
 
   await order.save();
 
-  const arr = await Promise.allSettled([
+  await Promise.allSettled([
     ...order.products.map(({ product, quantity }) => {
       product.currentStock -= quantity.now;
       product.quantitySold += quantity.now;
