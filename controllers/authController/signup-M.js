@@ -4,7 +4,8 @@ const catchAsync = require('../../utils/catchAsync');
 const AppError = require('../../utils/AppError');
 const User = require('../../models/userModel');
 const UnverifiedUser = require('../../models/unverifiedUserModel');
-const sendEmail = require('../../utils/sendEmail');
+const Email = require('../../utils/email');
+const getBaseUrl = require('../../utils/getBaseUrl');
 const addJWTToResponseCookie = require('./addJWTToResponseCookie');
 const cryptography = require('../../utils/crytography');
 
@@ -23,7 +24,6 @@ exports.signup = catchAsync(async (req, res, next) => {
 
   // 2) check if user exits with that email
   if (await User.findOne({ email, active: { $in: [true, false] } })) {
-    console.log('Users exists with that email');
     return next(
       new AppError(
         'User already exists with that email, please login instead',
@@ -37,7 +37,6 @@ exports.signup = catchAsync(async (req, res, next) => {
 
   //4.1) check if the maximum signup attempts has been exhausted
   if (unverfiedUser && unverfiedUser.attemptsExceeded()) {
-    console.log('Maximum tries exceeded');
     return res.status(200).json(response);
   }
 
@@ -51,15 +50,10 @@ exports.signup = catchAsync(async (req, res, next) => {
   await unverfiedUser.save();
 
   try {
-    const url = `${req.protocol}://${req.get('host')}/signup/complete/${token}`;
-
-    await sendEmail({
-      email,
-      subject: 'Complete signup request on Benfr(Link Valid for 5 mins)',
-      message: `To complete signup on Benfr click on the url: ${url}\nIf you haven't made the request, kindly ignore this email.`,
+    new Email({ email: email, name: 'User' }, getBaseUrl(req)).sendSignup({
+      relativeUrl: `/signup/complete/${token}`,
+      time: '24 hours',
     });
-
-    console.log('Email sent for signup');
   } catch (err) {
     return next(new AppError('Internal server error! Try again later', 500));
   }
@@ -101,11 +95,7 @@ exports.signupComplete = catchAsync(async (req, res, next) => {
   // 5) Issue JWT
   await addJWTToResponseCookie(req, res, user.id);
 
-  await sendEmail({
-    email,
-    subject: `Welcome to Benfr family`,
-    message: `You have successfully signuped at Benfr`,
-  });
+  new Email(user, getBaseUrl(req)).sendWelcome();
 
   // 7) Send Response
   return res.status(201).json({

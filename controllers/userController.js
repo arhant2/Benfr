@@ -1,4 +1,5 @@
 const User = require('../models/userModel');
+const getBaseUrl = require('../utils/getBaseUrl');
 const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
 
@@ -25,6 +26,8 @@ exports.makeUserActive = catchAsync(async (req, res, next) => {
 
   user.active = true;
 
+  user.baseUrlForEmail = getBaseUrl(req);
+
   await user.save();
 
   res.status(200).json({
@@ -43,6 +46,8 @@ exports.makeUserInactive = catchAsync(async (req, res, next) => {
 
   user.active = false;
   user.inActiveReason = req.body.inActiveReason;
+
+  user.baseUrlForEmail = getBaseUrl(req);
 
   await user.save();
 

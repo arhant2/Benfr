@@ -121,9 +121,13 @@ block content
               
 
           else 
-            button.btn.btn--red.tooltip.js--ajax--review-each__make-active(data-user-id=document.id)
-              | Make active
-              .tooltip__element.tooltip__element--right Re-grant user access
+            button.btn.btn--red.tooltip.btn--load.js--ajax--review-each__make-active(data-user-id=document.id)
+              .btn--load__content
+                | Make active
+                .tooltip__element.tooltip__element--right Re-grant user access
+              span.btn--load__load-content
+                i.fa.fa-circle-o-notch.fa-spin
+                | &nbsp;&nbsp;Loading
 
 
       // Addresses

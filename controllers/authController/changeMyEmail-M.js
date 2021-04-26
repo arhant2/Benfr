@@ -7,7 +7,9 @@ const jwt = require('jsonwebtoken');
 const catchAsync = require('../../utils/catchAsync');
 const AppError = require('../../utils/AppError');
 const User = require('../../models/userModel');
-const sendEmail = require('../../utils/sendEmail');
+const Email = require('../../utils/email');
+const getBaseUrl = require('../../utils/getBaseUrl');
+// const sendEmail = require('../../utils/sendEmail');
 
 exports.changeMyEmail = catchAsync(async (req, res, next) => {
   if (!req.body.email || !validator.isEmail(req.body.email)) {
@@ -53,17 +55,20 @@ exports.changeMyEmail = catchAsync(async (req, res, next) => {
   await user.save({ validateBeforeSave: false });
 
   try {
+    const baseUrl = getBaseUrl(req);
     const validFor = ms(ms(process.env.OTP_EXPIRES_IN), { long: true });
+
     await Promise.all([
-      sendEmail({
-        email: oldEmail,
-        subject: `Otp to change email on Benfr (valid for ${validFor})`,
-        message: `Otp to change on Benfr to ${newEmail} is: ${oldEmailOtp}`,
-      }),
-      sendEmail({
-        email: newEmail,
-        subject: `Otp to add your email on Benfr (valid for ${validFor})`,
-        message: `Otp to add your email with an account on Benfr is: ${newEmailOtp}`,
+      new Email(
+        { email: oldEmail, name: user.name },
+        baseUrl
+      ).sendEmailChangeOtpToOldEmail({ otp: oldEmailOtp, time: validFor }),
+      new Email(
+        { email: newEmail, name: 'User' },
+        baseUrl
+      ).sendEmailChangeOtpToNewEmail({
+        otp: newEmailOtp,
+        time: validFor,
       }),
     ]);
   } catch (err) {
@@ -164,18 +169,17 @@ exports.changeMyEmailVerify = catchAsync(async (req, res, next) => {
   res.clearCookie('changeEmailJwt');
 
   try {
-    // const validFor = ms(ms(process.env.OTP_EXPIRES_IN), { long: true });
+    const baseUrl = getBaseUrl(req);
+
     await Promise.all([
-      sendEmail({
-        email: oldEmail,
-        subject: `Email changed sucessfully on Benfr`,
-        message: `Your email has been changed successfully on Benfr.`,
-      }),
-      sendEmail({
-        email: newEmail,
-        subject: `Email added sucessfully`,
-        message: `Your email has been successfully added to an existing account on Benfr`,
-      }),
+      new Email(
+        { email: oldEmail, user: user.name },
+        baseUrl
+      ).sendEmailChangeConfirmationToOldEmail(),
+      new Email(
+        { email: newEmail, user: user.name },
+        baseUrl
+      ).sendEmailChangeConfirmationToNewEmail(),
     ]);
   } catch (err) {
     return res.status(200).json({
@@ -204,19 +208,20 @@ exports.changeMyEmailResendOtp = (type) =>
     await user.save({ validateBeforeSave: false });
 
     const validFor = ms(ms(process.env.OTP_EXPIRES_IN), { long: true });
+    const baseUrl = getBaseUrl(req);
 
     try {
-      await sendEmail({
-        email: user.changeEmailDetails[type].email,
-        subject:
-          type === 'old'
-            ? `Otp to change email on Benfr (valid for ${validFor})`
-            : `Otp to add your email on Benfr (valid for ${validFor})`,
-        message:
-          type === 'old'
-            ? `Otp to change on Benfr to ${user.changeEmailDetails.new.email} is: ${otp}`
-            : `Otp to add your email with an account on Benfr is: ${otp}`,
-      });
+      if (type === 'old') {
+        new Email(
+          { email: user.changeEmailDetails.old.email, name: user.name },
+          baseUrl
+        ).sendEmailChangeOtpToOldEmail({ otp, time: validFor });
+      } else {
+        new Email(
+          { email: user.changeEmailDetails.new.email, name: 'User' },
+          baseUrl
+        ).sendEmailChangeOtpToNewEmail({ otp, time: validFor });
+      }
     } catch (err) {
       return next(new AppError('Internal server error! Try again later', 500));
     }

@@ -1,7 +1,8 @@
 const catchAsync = require('../../utils/catchAsync');
 const AppError = require('../../utils/AppError');
 const User = require('../../models/userModel');
-const sendEmail = require('../../utils/sendEmail');
+const Email = require('../../utils/email');
+const getBaseUrl = require('../../utils/getBaseUrl');
 const { dateTimeDayFormatted } = require('../../utils/dateFormator');
 const addJWTToResponseCookie = require('./addJWTToResponseCookie');
 
@@ -25,17 +26,11 @@ module.exports.updateMyPassword = catchAsync(async (req, res, next) => {
   user.passwordConfirm = req.body.passwordConfirm;
   await user.save();
 
-  await sendEmail({
-    email: user.email,
-    subject: 'Password is changed sucessfully',
-    message: `This is to inform you that your password on Benfr has been changed recently at ${dateTimeDayFormatted(
-      Date.now()
-    )}(IST).\nPlease don't share your login details with anyone even if the person claim to be Benfr employee.`,
+  await new Email(user, getBaseUrl(req)).sendPasswordUpdateConfirmation({
+    date: dateTimeDayFormatted(Date.now()),
   });
 
   await addJWTToResponseCookie(req, res, user.id);
-
-  console.log('Yaha aayaikhuh');
 
   res.status(200).json({
     status: 'success',

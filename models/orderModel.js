@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const pug = require('pug');
 
 const Product = require('./productModel');
+const Email = require('../utils/email');
 const AppError = require('../utils/AppError');
 const generatePdf = require('../utils/generatePdf');
 const dateFormator = require('../utils/dateFormator');
@@ -135,6 +136,14 @@ const orderSchema = new mongoose.Schema(
   }
 );
 
+orderSchema.pre(/^find/, async function (next) {
+  // console.log(this);
+  this.populate({
+    path: 'user',
+  });
+  next();
+});
+
 orderSchema.pre('save', function (next) {
   // console.log(this.isModified('statusAll'));
 
@@ -169,7 +178,7 @@ orderSchema.pre('save', function (next) {
 //////////////////////////////////////////
 // New Order
 //////////////////////////////////////////
-orderSchema.statics.newOrder = async function (user, address, cart) {
+orderSchema.statics.newOrder = async function (user, address, cart, baseUrl) {
   const Order = this;
 
   const order = new Order();
@@ -216,6 +225,8 @@ orderSchema.statics.newOrder = async function (user, address, cart) {
     cart.remove(),
   ]);
 
+  await new Email(user, baseUrl).sendOrderBookedAlert({ order });
+
   return order;
 };
 
@@ -229,7 +240,8 @@ orderSchema.statics.newOrder = async function (user, address, cart) {
 
 orderSchema.methods.nextStage = async function (
   expectedStatus,
-  productsRequested
+  productsRequested,
+  baseUrl
 ) {
   if (this.status.name !== expectedStatus) {
     throw new AppError(
@@ -355,12 +367,27 @@ orderSchema.methods.nextStage = async function (
 
     // console.log(mongooseQueries);
   }
+
+  const order = this;
+
+  if (order.status.name === 'confirmed') {
+    await new Email(order.user, baseUrl).sendOrderConfirmedAlert({ order });
+  } else if (order.status.name === 'packed') {
+    await new Email(order.user, baseUrl).sendOrderPackedAlert({ order });
+  } else if (order.status.name === 'inTransit') {
+    await new Email(order.user, baseUrl).sendOrderShippedAlert({ order });
+  } else if (order.status.name === 'delivered') {
+    await new Email(order.user, baseUrl).sendOrderDeliveredAlert({
+      order,
+      invoice: await order.pdfInvoice(baseUrl),
+    });
+  }
 };
 
 //////////////////////////////////////////
 // Cancel Order
 //////////////////////////////////////////
-orderSchema.methods.cancelOrder = async function (user, reason) {
+orderSchema.methods.cancelOrder = async function (user, reason, baseUrl) {
   // If cancelled or delivered nothing can be done
   if (this.status.name === 'cancelled') {
     throw new AppError('Order is already cancelled', 400);
@@ -421,6 +448,18 @@ orderSchema.methods.cancelOrder = async function (user, reason) {
 
   if (mongooseQueries.length > 0) {
     await Promise.allSettled(mongooseQueries);
+  }
+
+  const order = this;
+  if (user.role === 'user') {
+    await new Email(order.user, baseUrl).sendOrderCancellationByUserAlert({
+      order,
+    });
+  } else {
+    await new Email(order.user, baseUrl).sendOrderCancellationByAdminAlert({
+      order,
+      reason,
+    });
   }
 };
 

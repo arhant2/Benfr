@@ -3,7 +3,7 @@ const validator = require('validator');
 const brcypt = require('bcryptjs');
 const ms = require('ms');
 
-const sendEmail = require('../utils/sendEmail');
+const Email = require('../utils/email');
 const AppError = require('../utils/AppError');
 const otpGenerate = require('../utils/otpGenerate');
 const userDetailsOptions = require('./helpers/userDetailsOptions')(
@@ -140,11 +140,14 @@ userSchema.pre('save', function (next) {
 
   if (this.active === true) {
     this.inActiveReason = undefined;
+    this.wasReactivated = true;
   } else if (!this.inActiveReason) {
     throw new AppError(
       'There must be some reason for making user inactive',
       400
     );
+  } else {
+    this.wasMadeInactiveByAdmin = true;
   }
 
   next();
@@ -172,17 +175,36 @@ userSchema.pre('save', async function (next) {
   this.active = false;
   this.inActiveReason = `Auto suspension. Detected as a spammers. Auto deleted ${this.deletedReviewCount} reviews.`;
 
+  this.wasMadeInactiveDueToSpamming = true;
+
+  this.deletedReviewCount = 0;
+});
+
+userSchema.post('save', async function (doc, next) {
   try {
-    await sendEmail({
-      email: this.email,
-      subject: `Account suspended`,
-      message: `You have been detected as a spammer on Benfr and hence your account has been suspended. Contact admin at Benfr for more info`,
-    });
+    // Suspension due to spamming
+    if (doc.wasMadeInactiveDueToSpamming) {
+      await new Email(
+        doc,
+        doc.baseUrlForEmail
+      ).sendAccountSuspesionAlertDueToSpamming();
+    }
+    // Suspension done by admin
+    else if (doc.wasMadeInactiveByAdmin) {
+      await new Email(
+        doc,
+        doc.baseUrlForEmail
+      ).sendAccountSuspesionAlertByAdmin({ reason: doc.inActiveReason });
+    }
+    // Reactivation
+    else if (doc.wasReactivated) {
+      await new Email(doc, doc.baseUrlForEmail).sendAccountReactivationAlert();
+    }
   } catch (err) {
     // Nothing
   }
 
-  this.deletedReviewCount = 0;
+  next();
 });
 
 userSchema.methods.createToken = function () {

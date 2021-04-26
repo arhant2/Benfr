@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 // ====== CICULAR DEPENDENCIES ======
 // var Product = require('./productModel'); // defined below to handle circular dependencies
 const User = require('./userModel');
-const sendEmail = require('../utils/sendEmail');
+const Email = require('../utils/email');
 
 const reviewSchema = new mongoose.Schema(
   {
@@ -114,8 +114,6 @@ reviewSchema.post('save', async function (doc, next) {
   product.review.totalSum +=
     doc.star - (!doc.wasNew ? this.originalFields.star : 0);
 
-  console.log(product.review.totalSum);
-
   await product.save();
   next();
 });
@@ -123,22 +121,22 @@ reviewSchema.post('save', async function (doc, next) {
 reviewSchema.post('save', async function (doc, next) {
   try {
     if (!doc.wasModifiedMarked) return next();
+
     if (doc.markedCount < process.env.MAXIMUM_MARK_REVIEW_FOR_AUTO_DELETE)
       return next();
 
     const Review = doc.constructor;
     const review = await Review.findByIdAndDelete(doc.id);
 
-    await sendEmail({
-      email: doc.user.email,
-      subject: `Deleted review`,
-      message: `Your review: "${
-        review.description || '(no body)'
-      }" was not found to match the guidlines of Benfr. Hence had been deleted. Giving such reviews in future may lead to your account suspension and strict actions against you may be taken. If you found this is a mistake, contact the admin at Benfr.`,
+    await new Email(doc.user, doc.baseUrlForEmail).sendReviewDeleteAlert({
+      title: doc.title,
+      body: review.description || '(no body)',
     });
 
     const user = await User.findById(doc.user._id);
     user.deletedReviewCount += 1;
+
+    user.baseUrlForEmail = doc.baseUrlForEmail;
 
     await user.save();
   } catch (err) {
@@ -152,8 +150,6 @@ reviewSchema.post('save', async function (doc, next) {
 reviewSchema.post('findOneAndDelete', async function (doc, next) {
   // eslint-disable-next-line no-use-before-define
   const product = await Product.findById(doc.product);
-
-  console.log('Yaha aaya');
 
   product.review.count -= 1;
   product.review.totalSum -= doc.star;

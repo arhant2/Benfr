@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+const getBaseUrl = require('../utils/getBaseUrl');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/AppError');
 const Order = require('../models/orderModel');
@@ -33,7 +34,12 @@ exports.checkout = catchAsync(async (req, res, next) => {
 
   // return res.send('Verified');
 
-  const order = await Order.newOrder(req.customs.user, address, cart);
+  const order = await Order.newOrder(
+    req.customs.user,
+    address,
+    cart,
+    getBaseUrl(req)
+  );
 
   res.status(201).json({
     status: 'success',
@@ -54,7 +60,11 @@ exports.nextStage = catchAsync(async (req, res, next) => {
     return next(new AppError('No order found with given details'));
   }
 
-  await order.nextStage(req.body.currentStage, req.body.products);
+  await order.nextStage(
+    req.body.currentStage,
+    req.body.products,
+    getBaseUrl(req)
+  );
 
   res.status(200).json({
     status: 'success',
@@ -86,7 +96,7 @@ exports.orderExistsAndHavePriviliges = catchAsync(async (req, res, next) => {
 exports.cancelOrder = catchAsync(async (req, res, next) => {
   const order = req.customs.document;
 
-  await order.cancelOrder(req.customs.user, req.body.reason);
+  await order.cancelOrder(req.customs.user, req.body.reason, getBaseUrl(req));
 
   res.status(200).json({
     status: 'success',

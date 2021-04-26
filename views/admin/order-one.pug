@@ -166,10 +166,10 @@ block content
             if (document.status.name === 'booked' || document.status.name === 'inTransit')
               p 
               | #{(document.status.name === 'booked') ? 'Confirm': 'Deliver'} - 
-              input.form-group-input.form__input--small(type='number' placeholder=product.quantity.now min=0 max=product.quantity.now value=product.quantity.now name=`product[${i}][quantity]`)
+              input.form-group-input.form__input--small(type='number' placeholder=product.quantity.now min=0 max=product.quantity.now value=product.quantity.now name=`products[${i}][quantity]`)
 
               // Hidden
-              input.u-display-none(type='text' value=product.id name=`product[${i}][product]` readonly)
+              input.u-display-none(type='text' value=product.product name=`products[${i}][product]` readonly)
 
           .main-table__item.main-table__item--important= product.totalEach
 

@@ -2,6 +2,7 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/AppError');
 const Review = require('../models/reviewModel');
 const Product = require('../models/productModel');
+const getBaseUrl = require('../utils/getBaseUrl');
 
 const handlerFactory = require('./handlerFactory')(Review, 'review', 'reviews');
 
@@ -58,6 +59,8 @@ const likeMarkReview = (like = true, undo = false) =>
         message: 'No review found with that ID',
       });
     }
+
+    review.baseUrlForEmail = getBaseUrl(req);
 
     const arrName = like ? 'likes' : 'marked';
     const lengthName = like ? 'likesCount' : 'markedCount';
