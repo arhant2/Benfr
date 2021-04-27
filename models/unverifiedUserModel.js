@@ -25,8 +25,8 @@ const unverifiedUserSchema = new mongoose.Schema(
 );
 
 unverifiedUserSchema.index({ token: 1 });
-// unverifiedUserSchema.index({ updatedAt: 1 }, { expires: '1d' });
-unverifiedUserSchema.index({ updatedAt: 1 }, { expires: '5min' });
+unverifiedUserSchema.index({ updatedAt: 1 }, { expires: '1d' });
+// unverifiedUserSchema.index({ updatedAt: 1 }, { expires: '5min' });
 
 unverifiedUserSchema.methods.createToken = function () {
   const tokenUnhashed = createRandomString(32);

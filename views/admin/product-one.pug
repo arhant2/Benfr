@@ -25,6 +25,11 @@ block content
               | Name 
             input.form-group-input.form__input--single-line.u-width-full(type='text' placeholder='Apple iPhone 11' minlength=3 maxlength=40 id='name' required name='name' value=document && document.name)
           .form__group
+            label.form__group-label(for='since') Since 
+            .form-group-input.form__input--single-line.form__input--disabled.u-width-full.tooltip
+              | #{helpers.dateFormator.dateFormatted(document&&document.createdAt || Date.now())}
+              .tooltip__element.tooltip__element--right You cannot edit this
+          .form__group
             label.form__group-label(for='brand')
               span.form__star *
               | Brand 
