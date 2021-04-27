@@ -103,7 +103,7 @@ exports.cancelOrder = catchAsync(async (req, res, next) => {
     status: 'success',
     message: 'Cancelled order successfully',
     document: {
-      order: order(sanitizeOutputDataToIncludeOnlyIds),
+      order: sanitizeOutputDataToIncludeOnlyIds(order),
     },
   });
 });
