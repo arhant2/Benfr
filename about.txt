@@ -59,3 +59,4 @@
     -> Atmost MAXIMUM_FAILED_EMAIL_CHANGE_ATTEMPTS_COUNT can be made to enter correct otp, if the limit is exhausted the user cannot change email with the current request even after resending any of otps, he needs to make a new request, this PREVENTS BRUTE FORCE ATTACKS(this should be kept low, at max 10, suggested 5)
     -> The user can resend otp to old or new email if he wishes at most MAXIMUM_OTP_COUNT times, after the limit is exhausted no otp is send but he user is told that the otp has been resent
     -> Each time user resend otp new otp is generated and sent, this is must as server donot keep a copy of otp is raw form and cannot detect the otp sent earlier
+    
