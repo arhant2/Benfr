@@ -25,6 +25,8 @@ class APIFeatures {
       (match) => `"$${match.substring(1, match.length - 2)}":`
     );
 
+    queryStr = queryStr.replace(/__SANITIZED_FOR_QUERY__/g, '.');
+
     const filterQuery = JSON.parse(queryStr);
 
     if (this.initialQuery) {
