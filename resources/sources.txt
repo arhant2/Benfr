@@ -1,0 +1,2 @@
+Email template(paste-template) from https://github.com/sendgrid/email-templates
+Invoice template(Aldona (black)) from https://www.smallbusinessbonfire.com/free-invoice-templates/

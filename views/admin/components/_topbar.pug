@@ -18,7 +18,7 @@ section.topbar
   .topbar__profile.topbar__dropdown.reset-anchor
     img.topbar__profile-img(src='/assets/admin/img/admin.png' alt='Admin')
     p.topbar__profile-name
-      | Arhant Jain 
+      | #{user.name}
       i.fas.fa-sort
     .topbar__dropdown-box: ul.topbar__dropdown-list
       +topDropdownListItem('/a/dashboard', 'fas fa-network-wired', 'Admin panel')

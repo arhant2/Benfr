@@ -3,6 +3,7 @@ extends base/_base
 include mixins/_rating-helpers
 include mixins/_review-section
 include mixins/_menu
+include mixins/_general-product-section
 
 block content
 
@@ -21,3 +22,6 @@ block content
         +menuPagination
 
     +reviewsSectionBody(product, reviewCurrent, documents, true)
+
+  // Popular Products
+  +generalProductSection('Popular Products', popularProducts)

@@ -2,6 +2,7 @@ extends base/_base
 
 include mixins/_rating-helpers
 include mixins/_review-section
+include mixins/_general-product-section
 
 block content
   section.each-product-main
@@ -103,4 +104,8 @@ block content
     h2.heading-tertiary.card__heading Reviews
     +reviewsSectionBody(document, reviewCurrent, reviews)
     a.btn.btn--text(href=`/products/${document.nameNormalized}/${document.id}/reviews`) See more &gt;
+
+
+  // Popular Products
+  +generalProductSection('Popular Products', popularProducts)
 

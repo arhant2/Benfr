@@ -130,6 +130,11 @@ router.get(
   '/products/:name?/:id',
   userViewController.setSidebarItems,
   authController.isLoggedIn,
+  userViewController.setProducts(
+    'popularProducts',
+    '-quantitySold -review.averageNormalized -createdAt',
+    4
+  ),
   userViewController.getOneProduct
 );
 
@@ -168,6 +173,11 @@ router.get(
   userViewController.setSidebarItems,
   authController.isLoggedIn,
   userViewController.getAllReviewsMiddleware,
+  userViewController.setProducts(
+    'popularProducts',
+    '-quantitySold -review.averageNormalized -createdAt',
+    4
+  ),
   userViewController.getAllReviews
 );
 
