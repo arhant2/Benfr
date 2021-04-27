@@ -1,3 +1,4 @@
+const sanitizeOutputDataToIncludeOnlyIds = require('../../utils/sanitizeOutputDataToIncludeOnlyIds');
 const APIFeatures = require('../../utils/APIFeatures');
 const catchAsync = require('../../utils/catchAsync');
 
@@ -19,7 +20,7 @@ module.exports = (Model, { pluralName }) => {
       status: 'success',
       results: docs.length,
       data: {
-        [pluralName.small]: docs,
+        [pluralName.small]: sanitizeOutputDataToIncludeOnlyIds(docs),
       },
     });
   });

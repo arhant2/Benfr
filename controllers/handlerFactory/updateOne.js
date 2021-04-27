@@ -1,3 +1,4 @@
+const sanitizeOutputDataToIncludeOnlyIds = require('../../utils/sanitizeOutputDataToIncludeOnlyIds');
 const catchAsync = require('../../utils/catchAsync');
 const AppError = require('../../utils/AppError');
 
@@ -18,7 +19,7 @@ module.exports = (Model, { singularName }) => {
       status: 'success',
       message: `Updated ${singularName.small} successfully`,
       data: {
-        [singularName.small]: doc,
+        [singularName.small]: sanitizeOutputDataToIncludeOnlyIds(doc),
       },
     });
   });

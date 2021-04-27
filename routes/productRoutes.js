@@ -1,6 +1,6 @@
 const express = require('express');
 
-// const authController = require('../controllers/authController');
+const authController = require('../controllers/authController');
 const productController = require('../controllers/productController');
 const productFilters = require('../filters/productFilters');
 
@@ -12,7 +12,11 @@ router.use('/:productId/reviews', reviewRouter);
 
 router
   .route('/')
-  .get(productController.getAll)
+  .get(
+    authController.protect,
+    authController.restrictTo('admin'),
+    productController.getAll
+  )
   .post(
     productController.uploadFiles,
     productController.uploadFilesCloudinary,
@@ -22,7 +26,11 @@ router
 
 router
   .route('/:id')
-  .get(productController.getOne)
+  .get(
+    authController.protect,
+    authController.restrictTo('admin'),
+    productController.getOne
+  )
   .patch(
     productController.uploadFiles,
     productController.uploadFilesCloudinary,

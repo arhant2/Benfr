@@ -1,6 +1,6 @@
 const express = require('express');
 
-// const authController = require('../controllers/authController');
+const authController = require('../controllers/authController');
 const brandController = require('../controllers/brandController');
 const brandFilters = require('../filters/brandFilters');
 
@@ -8,7 +8,11 @@ const router = express.Router();
 
 router
   .route('/')
-  .get(brandController.getAll)
+  .get(
+    authController.protect,
+    authController.restrictTo('admin'),
+    brandController.getAll
+  )
   .post(
     brandController.uploadFiles,
     brandController.uploadFilesCloudinary,
@@ -18,7 +22,11 @@ router
 
 router
   .route('/:id')
-  .get(brandController.getOne)
+  .get(
+    authController.protect,
+    authController.restrictTo('admin'),
+    brandController.getOne
+  )
   .patch(
     brandController.uploadFiles,
     brandController.uploadFilesCloudinary,

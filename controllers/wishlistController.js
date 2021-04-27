@@ -1,3 +1,4 @@
+const sanitizeOutputDataToIncludeOnlyIds = require('../utils/sanitizeOutputDataToIncludeOnlyIds');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/AppError');
 const Product = require('../models/productModel');
@@ -13,7 +14,7 @@ exports.getWishlist = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     data: {
-      wishlist,
+      wishlist: sanitizeOutputDataToIncludeOnlyIds(wishlist),
     },
   });
 });

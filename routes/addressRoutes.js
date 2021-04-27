@@ -14,6 +14,7 @@ router
   .route('/')
   .get(
     authController.protect,
+    authController.restrictTo('admin'),
     addressController.getAllMiddleware,
     addressController.getAll
   )

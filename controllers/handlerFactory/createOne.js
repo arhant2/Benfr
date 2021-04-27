@@ -1,3 +1,4 @@
+const sanitizeOutputDataToIncludeOnlyIds = require('../../utils/sanitizeOutputDataToIncludeOnlyIds');
 const catchAsync = require('../../utils/catchAsync');
 const { deleteFilesCloudinary } = require('../../cloudinary');
 
@@ -22,7 +23,7 @@ module.exports = (Model, { singularName }) => {
         status: 'success',
         message: `Sucessfully created ${singularName.small}`,
         data: {
-          [singularName.small]: doc,
+          [singularName.small]: sanitizeOutputDataToIncludeOnlyIds(doc),
         },
       });
     } catch (err) {

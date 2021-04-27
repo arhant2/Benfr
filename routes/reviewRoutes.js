@@ -10,7 +10,11 @@ const router = express.Router({ mergeParams: true });
 
 router
   .route('/')
-  .get(reviewController.getAll)
+  .get(
+    authController.protect,
+    authController.restrictTo('admin'),
+    reviewController.getAll
+  )
   .post(
     authController.protect,
     authController.restrictTo('user'),

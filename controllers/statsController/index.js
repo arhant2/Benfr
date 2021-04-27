@@ -1,3 +1,4 @@
+const sanitizeOutputDataToIncludeOnlyIds = require('../../utils/sanitizeOutputDataToIncludeOnlyIds');
 const catchAsync = require('../../utils/catchAsync');
 
 const durationResolver = require('./durationResolver');
@@ -49,7 +50,7 @@ exports.getStats = (req, res, next) => {
   res.status(200).json({
     status: 'success',
     data: {
-      statsData: req.customs.statsData,
+      statsData: sanitizeOutputDataToIncludeOnlyIds(req.customs.statsData),
     },
   });
 };

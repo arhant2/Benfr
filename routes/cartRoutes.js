@@ -10,7 +10,11 @@ const router = express.Router();
 
 router
   .route('/')
-  .get(authController.protect, cartController.getCart)
+  .get(
+    authController.protect,
+    authController.restrictTo('admin'),
+    cartController.getCart
+  )
   .put(
     authController.protect,
     upload.none(),

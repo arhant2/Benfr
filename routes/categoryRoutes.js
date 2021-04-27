@@ -8,7 +8,11 @@ const router = express.Router();
 
 router
   .route('/')
-  .get(categoryController.getAll)
+  .get(
+    authController.protect,
+    authController.restrictTo('admin'),
+    categoryController.getAll
+  )
   .post(
     categoryController.uploadFiles,
     categoryController.uploadFilesCloudinary,
@@ -18,7 +22,11 @@ router
 
 router
   .route('/:id')
-  .get(categoryController.getOne)
+  .get(
+    authController.protect,
+    authController.restrictTo('admin'),
+    categoryController.getOne
+  )
   .patch(
     categoryController.uploadFiles,
     categoryController.uploadFilesCloudinary,

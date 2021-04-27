@@ -1,3 +1,4 @@
+const sanitizeOutputDataToIncludeOnlyIds = require('../../utils/sanitizeOutputDataToIncludeOnlyIds');
 const catchAsync = require('../../utils/catchAsync');
 const AppError = require('../../utils/AppError');
 const { deleteFilesCloudinary } = require('../../cloudinary');
@@ -90,7 +91,7 @@ module.exports = (Model, { singularName }) => {
         status: 'success',
         message: `Updated ${singularName.small} successfully`,
         data: {
-          [singularName.small]: updatedDoc,
+          [singularName.small]: sanitizeOutputDataToIncludeOnlyIds(updatedDoc),
         },
       });
     } catch (err) {

@@ -1,3 +1,4 @@
+const sanitizeOutputDataToIncludeOnlyIds = require('../utils/sanitizeOutputDataToIncludeOnlyIds');
 const catchAsync = require('../utils/catchAsync');
 const gramsGenerator = require('../utils/gramsGenerator');
 
@@ -53,8 +54,7 @@ exports.productSearch = catchAsync(async (req, res, next) => {
   ]);
 
   res.status(200).json({
-    products,
-    query,
+    products: sanitizeOutputDataToIncludeOnlyIds(products),
   });
 });
 

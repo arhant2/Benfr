@@ -10,8 +10,18 @@ const upload = multer();
 
 const router = express.Router();
 
-router.get('/', orderController.getAll);
-router.get('/:id', orderController.getOne);
+router.get(
+  '/',
+  authController.protect,
+  authController.restrictTo('admin'),
+  orderController.getAll
+);
+router.get(
+  '/:id',
+  authController.protect,
+  authController.restrictTo('admin'),
+  orderController.getOne
+);
 
 router.post(
   '/checkout',

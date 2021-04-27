@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+const sanitizeOutputDataToIncludeOnlyIds = require('../utils/sanitizeOutputDataToIncludeOnlyIds');
 const getBaseUrl = require('../utils/getBaseUrl');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/AppError');
@@ -45,7 +46,7 @@ exports.checkout = catchAsync(async (req, res, next) => {
     status: 'success',
     message: 'Successfully placed the order',
     data: {
-      order,
+      order: sanitizeOutputDataToIncludeOnlyIds(order),
     },
   });
 });
@@ -69,7 +70,7 @@ exports.nextStage = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     data: {
-      order,
+      order: sanitizeOutputDataToIncludeOnlyIds(order),
     },
   });
 });
@@ -102,7 +103,7 @@ exports.cancelOrder = catchAsync(async (req, res, next) => {
     status: 'success',
     message: 'Cancelled order successfully',
     document: {
-      order,
+      order: order(sanitizeOutputDataToIncludeOnlyIds),
     },
   });
 });

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+const sanitizeOutputDataToIncludeOnlyIds = require('../utils/sanitizeOutputDataToIncludeOnlyIds');
 const catchAsync = require('../utils/catchAsync');
 const Cart = require('../models/cartModel');
 const AppError = require('../utils/AppError');
@@ -18,7 +19,7 @@ exports.getCart = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    cart,
+    cart: sanitizeOutputDataToIncludeOnlyIds(cart),
   });
 });
 

@@ -1,3 +1,4 @@
+const sanitizeOutputDataToIncludeOnlyIds = require('../utils/sanitizeOutputDataToIncludeOnlyIds');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/AppError');
 const Review = require('../models/reviewModel');
@@ -82,7 +83,7 @@ const likeMarkReview = (like = true, undo = false) =>
         like ? 'Liked' : 'Marked'
       } the review successfully!`,
       data: {
-        review,
+        review: sanitizeOutputDataToIncludeOnlyIds(review),
       },
     });
   });

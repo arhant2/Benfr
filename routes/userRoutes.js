@@ -92,32 +92,4 @@ router.patch(
   userController.makeUserInactive
 );
 
-// router.get('/email', (req, res, next) => {
-//   res.status(200).render('email/index', {
-//     heading: 'Welcome to Benfr Family!',
-//     text:
-//       'Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque harum laboriosam magni vitae magnam reprehenderit quo, perferendis obcaecati dolores sunt doloremque ab at ipsa quia incidunt voluptate deserunt, corporis quasi eius veniam esse. Eos omnis eveniet facilis tempore cupiditate soluta sunt odio quos earum id corporis possimus odit, quis, unde ab debitis, quod dolorum esse alias labore enim atque. Dolor commodi animi repellendus temporibus unde numquam dolore, sunt, alias voluptatem eaque non aliquam dignissimos nostrum nam deserunt cupiditate optio! Pariatur molestias facere aut culpa, suscipit laudantium veritatis accusantium est ducimus voluptatum sapiente dicta dolorem exercitationem placeat aliquid hic harum in?',
-//     link: {
-//       href: 'www.benfr.com',
-//       text: 'Go to Benfr',
-//     },
-//   });
-// });
-
-// const Email = require('../utils/email');
-
-// router.get(
-//   '/sendEmail',
-//   authController.isLoggedIn,
-//   authController.protectView,
-//   async (req, res, next) => {
-//     new Email(
-//       req.customs.user,
-//       `${req.protocol}://${req.get('host')}`
-//     ).sendWelcome();
-
-//     res.status(200).send('Sucessful');
-//   }
-// );
-
 module.exports = router;
