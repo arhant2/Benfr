@@ -25,7 +25,7 @@
     "watch:admin": "npm-run-all -p watch:admin:scss watch:admin:js",
     "build:admin": "npm-run-all build:admin:scss build:admin:js",
     "watch": "npm-run-all -p watch:user watch:admin",
-    "build": "npm-run-all build:user build:admin"
+    "build:all": "npm-run-all build:user build:admin"
   },
   "author": "Arhant Jain",
   "license": "ISC",
