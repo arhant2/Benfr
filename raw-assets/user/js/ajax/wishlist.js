@@ -3,6 +3,28 @@ import axios from 'axios';
 
 import handleError from '../utils/handleError';
 
+const showNoProductsText = () => {
+  if (document.getElementsByClassName('js--ajax--wishlist-each')[0]) {
+    return;
+  }
+
+  const element = document.getElementsByClassName(
+    'js--ajax--wishlist-each--none'
+  )[0];
+
+  if (!element) {
+    return;
+  }
+
+  const { noneClass } = element.dataset;
+
+  if (!noneClass) {
+    return;
+  }
+
+  element.classList.remove(noneClass);
+};
+
 Array.from(
   document.getElementsByClassName('js--ajax--wishlist-each__remove-btn')
 ).forEach((btn) => {
@@ -24,6 +46,8 @@ Array.from(
       });
 
       item.remove();
+
+      showNoProductsText();
     } catch (err) {
       handleError(err, true);
       this.removeAttribute('disabled');

@@ -111,3 +111,42 @@ if (deleteBtn) {
     );
   });
 }
+
+///////////////// Show no products text
+const showNoProductsText = () => {
+  if (document.getElementsByClassName('js--ajax--cart-each')[0]) {
+    return;
+  }
+
+  const element = document.getElementsByClassName(
+    'js--ajax--cart-each--none'
+  )[0];
+
+  if (!element) {
+    return;
+  }
+
+  const { noneClass } = element.dataset;
+
+  if (!noneClass) {
+    return;
+  }
+
+  element.classList.remove(noneClass);
+};
+
+///////////////// Remove btn
+Array.from(
+  document.getElementsByClassName('js--ajax--cart-each__remove-btn')
+).forEach((btn) => {
+  btn.addEventListener('click', function () {
+    const item = this.closest('.js--ajax--cart-each');
+
+    if (!item) {
+      handleError('Cannot remove product');
+    }
+
+    item.remove();
+    showNoProductsText();
+  });
+});

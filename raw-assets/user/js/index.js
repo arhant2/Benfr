@@ -23,7 +23,6 @@ import './component-functions/dropdown';
 import './component-functions/flash-messages';
 import './component-functions/form-rating';
 // import './component-functions/login-to-continue';
-import './component-functions/remove-on-click';
 import './component-functions/search';
 import './component-functions/sidebar';
 import './component-functions/sliders';

@@ -7,40 +7,46 @@ block accountContent
   +accountBox('My Orders', [['#', 'Orders']])
     section.my-orders__main
 
-      each order in documents 
-        a.inner-card.my-orders__card.reset-anchor(href=`/orders/${order.id}`)
+      if !documents || documents.length <= 0
+        .inner-card
+          p.heading-pentaniary.light-text No orders
 
-          .my-orders__box-1
-            - const src = order.products.find((product) => product.thumbnail.path)?.thumbnail.path || '/assets/user/img/no-image.jpg';
-            img.my-orders__img(src=src)
+      else
 
-          .my-orders__box-2
-            .my-orders__order-no 
-              | Order
-              br
-              | ##{order.id}
-            .my-orders__small-text By #{order.address.name}
-            .my-orders__quantity-and-amount
-              .my-orders__quantity.my-orders__small-text Items: #{order.products.length}
-              .my-orders__price ₹#{Number(order.grandTotal).toLocaleString('en-IN', {maximumFractionDigits: 2})}
+        each order in documents 
+          a.inner-card.my-orders__card.reset-anchor(href=`/orders/${order.id}`)
 
-          .my-orders__box-3
-            .my-orders__status-heading.my-orders__small-text Status
-            - 
-              const statusOptions = {
-                booked: ['Booked', 'yellow'],
-                confirmed: ['Confirmed', 'blue'],
-                packed: ['Packed', 'pink'],
-                inTransit: ['In-Transit', 'purple'],
-                delivered: ['Delivered', 'green'],
-                cancelled: ['Cancelled', 'red'],
-              };
-            .my-orders__status(class=`my-orders__status--${statusOptions[order.status.name][1]}`)= statusOptions[order.status.name][0]
+            .my-orders__box-1
+              - const src = order.products.find((product) => product.thumbnail.path)?.thumbnail.path || '/assets/user/img/no-image.jpg';
+              img.my-orders__img(src=src)
 
-          .my-orders__box-4
-            .my-orders__date-heading.my-orders__small-text Booked on 
-            .my-orders__date= helpers.dateFormator.dateFormatted(order.createdAt)
+            .my-orders__box-2
+              .my-orders__order-no 
+                | Order
+                br
+                | ##{order.id}
+              .my-orders__small-text By #{order.address.name}
+              .my-orders__quantity-and-amount
+                .my-orders__quantity.my-orders__small-text Items: #{order.products.length}
+                .my-orders__price ₹#{Number(order.grandTotal).toLocaleString('en-IN', {maximumFractionDigits: 2})}
 
-      // Pagination
-      .my-orders__pagination
-        +menuPagination
+            .my-orders__box-3
+              .my-orders__status-heading.my-orders__small-text Status
+              - 
+                const statusOptions = {
+                  booked: ['Booked', 'yellow'],
+                  confirmed: ['Confirmed', 'blue'],
+                  packed: ['Packed', 'pink'],
+                  inTransit: ['In-Transit', 'purple'],
+                  delivered: ['Delivered', 'green'],
+                  cancelled: ['Cancelled', 'red'],
+                };
+              .my-orders__status(class=`my-orders__status--${statusOptions[order.status.name][1]}`)= statusOptions[order.status.name][0]
+
+            .my-orders__box-4
+              .my-orders__date-heading.my-orders__small-text Booked on 
+              .my-orders__date= helpers.dateFormator.dateFormatted(order.createdAt)
+
+        // Pagination
+        .my-orders__pagination
+          +menuPagination

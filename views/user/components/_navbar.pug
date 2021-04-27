@@ -42,6 +42,10 @@ nav.navbar: .navbar__inner.reset-anchor
         else
           +userDropdownList(`/login?redirect=${encodedUrl}`, 'fas fa-user-circle', 'Login')
           +userDropdownList('/signup', 'fas fa-user-circle', 'Sign up')
+        
+        if user && user.role === 'admin'
+          +userDropdownList('/a', 'fas fa-network-wired', 'Admin Panel')
+        
         +userDropdownList('/orders', 'fas fa-box-open', 'My Orders')
         +userDropdownList('/addresses', 'fas fa-map-marker-alt', 'Addresses')
         if user
@@ -49,7 +53,7 @@ nav.navbar: .navbar__inner.reset-anchor
 
     // Wishlist
     li.navbar__item
-      a.navbar__link(href='#'): i.far.fa-heart
+      a.navbar__link(href='/wishlist'): i.far.fa-heart
 
     // Shoping cart
     li.navbar__item

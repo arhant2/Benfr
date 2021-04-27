@@ -3,10 +3,17 @@ const express = require('express');
 
 // const dateFormator = require('../utils/dateFormator');
 
+const authController = require('../controllers/authController');
 const adminViewController = require('../controllers/adminViewController');
 const statsController = require('../controllers/statsController');
 
 const router = express.Router();
+
+router.use(
+  authController.isLoggedIn,
+  authController.protectView,
+  authController.restrictTo('admin')
+);
 
 router.get('/', adminViewController.redirectDashboard);
 router.get(

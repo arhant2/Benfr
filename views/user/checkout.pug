@@ -12,7 +12,7 @@ mixin addressLine(value, comma=false, blockElement=false)
 
 //- Each Product Card
 mixin eachCartProductCard(product, idx)
-  .inner-card.reset-anchor.js--components-function--remove-onclick: .product-inner-card
+  .inner-card.reset-anchor: .product-inner-card
     a.product-inner-card__img-box(href=`/products/${product.product.name}/${product.product.id}` target='_blank')
       img.product-inner-card__img(src=(product.product.images && product.product.images[0] && product.product.images[0].path) || '/assets/user/img/no-image.jpg')
 

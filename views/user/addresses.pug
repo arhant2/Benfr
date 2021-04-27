@@ -30,6 +30,9 @@ mixin addressCard(address)
 
 block accountContent
   +accountBox('Address Book', [['/myAccount', 'Account'], ['#', 'Adddress Book']])
+    .inner-card.address__box.js--ajax--delete-address--none(class=(documents && documents.length > 0) ? 'u-display-none': '' data-none-class='u-display-none')
+      p.heading-pentaniary.light-text No addresses
+    
     each address in documents 
       +addressCard(address)
     .address__box.address__box--last-btns-right

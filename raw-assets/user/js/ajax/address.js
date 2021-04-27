@@ -78,6 +78,29 @@ import popup from '../component-functions/popup/index';
   }
 })();
 
+// Show no addresses text
+const showNoAddressesText = () => {
+  if (document.getElementsByClassName('js--ajax--delete-address')[0]) {
+    return;
+  }
+
+  const element = document.getElementsByClassName(
+    'js--ajax--delete-address--none'
+  )[0];
+
+  if (!element) {
+    return;
+  }
+
+  const { noneClass } = element.dataset;
+
+  if (!noneClass) {
+    return;
+  }
+
+  element.classList.remove(noneClass);
+};
+
 // Delete address
 Array.from(
   document.getElementsByClassName('js--ajax--delete-address__btn')
@@ -108,6 +131,8 @@ Array.from(
           });
 
           element.remove();
+
+          showNoAddressesText();
 
           addFlashMessage('success', 'Deleted address sucessfully!');
         } catch (err) {

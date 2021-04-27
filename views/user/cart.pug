@@ -2,7 +2,7 @@ extends base/_base
 include mixins/_product-desc
 
 mixin eachCartProductCard(product, idx)
-  .inner-card.reset-anchor.js--components-function--remove-onclick: .product-inner-card
+  .inner-card.reset-anchor.js--ajax--cart-each: .product-inner-card
     a.product-inner-card__img-box(href=`/products/${product.product.name}/${product.product.id}`)
       img.product-inner-card__img(src=(product.product.images && product.product.images[0] && product.product.images[0].path) || '/assets/user/img/no-image.jpg')
 
@@ -17,7 +17,7 @@ mixin eachCartProductCard(product, idx)
           input.cart__quantity-input.js--components-function--increment-decrement-input-number__input(type='number' min='1' max=product.product.maxQuantityAllowedNow value=product.quantity name=`products[${idx}][quantity]`)
           button.cart__quantity-btn.cart__quantity-btn--increase.js--components-function--increment-decrement-input-number__increase(type='button') +
 
-        button.btn.btn--text.btn--text-inital-dark.btn--primary.js--components-function--remove-onclick__btn(type='button') Remove
+        button.btn.btn--text.btn--text-inital-dark.btn--primary.js--ajax--cart-each__remove-btn(type='button') Remove
         
 
 block content
@@ -30,6 +30,10 @@ block content
 
         each product, idx in document.products 
             +eachCartProductCard(product, idx)
+
+        //- No products
+        .inner-card.js--ajax--cart-each--none(class=(document && document.products && document.products.length > 0) ? 'u-display-none': '' data-none-class='u-display-none')
+          p.heading-pentaniary.light-text Cart is empty
 
         if document.products && document.products.length > 0
           .cart__btns 
@@ -50,10 +54,6 @@ block content
               span.btn--load__load-content
                 i.fa.fa-circle-o-notch.fa-spin
                 | &nbsp;Loading
-
-        else 
-          .inner-card
-            p Cart is empty
 
       -
         const amount = (cost) => {

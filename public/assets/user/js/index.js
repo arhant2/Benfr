@@ -3247,7 +3247,28 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       };
     }());
   }
-})(); // Delete address
+})(); // Show no addresses text
+
+
+var showNoAddressesText = function showNoAddressesText() {
+  if (document.getElementsByClassName('js--ajax--delete-address')[0]) {
+    return;
+  }
+
+  var element = document.getElementsByClassName('js--ajax--delete-address--none')[0];
+
+  if (!element) {
+    return;
+  }
+
+  var noneClass = element.dataset.noneClass;
+
+  if (!noneClass) {
+    return;
+  }
+
+  element.classList.remove(noneClass);
+}; // Delete address
 
 
 Array.from(document.getElementsByClassName('js--ajax--delete-address__btn')).forEach(function (btn) {
@@ -3280,12 +3301,13 @@ Array.from(document.getElementsByClassName('js--ajax--delete-address__btn')).for
 
             case 4:
               element.remove();
+              showNoAddressesText();
               (0, _flashMessages.addFlashMessage)('success', 'Deleted address sucessfully!');
-              _context3.next = 13;
+              _context3.next = 14;
               break;
 
-            case 8:
-              _context3.prev = 8;
+            case 9:
+              _context3.prev = 9;
               _context3.t0 = _context3["catch"](1);
 
               _this2.removeAttribute('disabled');
@@ -3293,12 +3315,12 @@ Array.from(document.getElementsByClassName('js--ajax--delete-address__btn')).for
               (0, _flashMessages.clearFlashMessages)();
               (0, _handleError.default)(_context3.t0, true);
 
-            case 13:
+            case 14:
             case "end":
               return _context3.stop();
           }
         }
-      }, _callee3, null, [[1, 8]]);
+      }, _callee3, null, [[1, 9]]);
     })));
   });
 });
@@ -3448,7 +3470,42 @@ if (deleteBtn) {
       }, _callee2, null, [[1, 9]]);
     })));
   });
-}
+} ///////////////// Show no products text
+
+
+var showNoProductsText = function showNoProductsText() {
+  if (document.getElementsByClassName('js--ajax--cart-each')[0]) {
+    return;
+  }
+
+  var element = document.getElementsByClassName('js--ajax--cart-each--none')[0];
+
+  if (!element) {
+    return;
+  }
+
+  var noneClass = element.dataset.noneClass;
+
+  if (!noneClass) {
+    return;
+  }
+
+  element.classList.remove(noneClass);
+}; ///////////////// Remove btn
+
+
+Array.from(document.getElementsByClassName('js--ajax--cart-each__remove-btn')).forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var item = this.closest('.js--ajax--cart-each');
+
+    if (!item) {
+      (0, _handleError.default)('Cannot remove product');
+    }
+
+    item.remove();
+    showNoProductsText();
+  });
+});
 },{"regenerator-runtime/runtime":"../../../node_modules/regenerator-runtime/runtime.js","axios":"../../../node_modules/axios/index.js","../utils/handleError":"utils/handleError.js","../component-functions/flash-messages":"component-functions/flash-messages.js","../component-functions/popup/index":"component-functions/popup/index.js"}],"ajax/change-my-email.js":[function(require,module,exports) {
 "use strict";
 
@@ -4865,6 +4922,26 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+var showNoProductsText = function showNoProductsText() {
+  if (document.getElementsByClassName('js--ajax--wishlist-each')[0]) {
+    return;
+  }
+
+  var element = document.getElementsByClassName('js--ajax--wishlist-each--none')[0];
+
+  if (!element) {
+    return;
+  }
+
+  var noneClass = element.dataset.noneClass;
+
+  if (!noneClass) {
+    return;
+  }
+
+  element.classList.remove(noneClass);
+};
+
 Array.from(document.getElementsByClassName('js--ajax--wishlist-each__remove-btn')).forEach(function (btn) {
   btn.addEventListener('click', /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
@@ -4894,21 +4971,22 @@ Array.from(document.getElementsByClassName('js--ajax--wishlist-each__remove-btn'
 
             case 8:
               item.remove();
-              _context.next = 15;
+              showNoProductsText();
+              _context.next = 16;
               break;
 
-            case 11:
-              _context.prev = 11;
+            case 12:
+              _context.prev = 12;
               _context.t0 = _context["catch"](5);
               (0, _handleError.default)(_context.t0, true);
               this.removeAttribute('disabled');
 
-            case 15:
+            case 16:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, this, [[5, 11]]);
+      }, _callee, this, [[5, 12]]);
     }));
 
     return function (_x) {
@@ -5021,18 +5099,6 @@ Array.from(document.getElementsByClassName('js--components-function--form-rating
     label.addEventListener('mouseout', function (e) {
       setValue(this, getValue(this));
     });
-  });
-});
-},{}],"component-functions/remove-on-click.js":[function(require,module,exports) {
-Array.from(document.getElementsByClassName('js--components-function--remove-onclick__btn')).forEach(function (btn) {
-  btn.addEventListener('click', function (e) {
-    var element = this.closest('.js--components-function--remove-onclick');
-
-    if (!element) {
-      return;
-    }
-
-    element.remove();
   });
 });
 },{}],"component-functions/search.js":[function(require,module,exports) {
@@ -6332,8 +6398,6 @@ require("./component-functions/flash-messages");
 
 require("./component-functions/form-rating");
 
-require("./component-functions/remove-on-click");
-
 require("./component-functions/search");
 
 require("./component-functions/sidebar");
@@ -6347,7 +6411,7 @@ require("./component-functions/toggle-on-click");
 require("./component-functions/increment-decrement-input-number");
 
 require("./pages/each-product");
-},{"./ajax/add-to-cart-btn":"ajax/add-to-cart-btn.js","./ajax/add-to-wishlist-btn":"ajax/add-to-wishlist-btn.js","./ajax/address":"ajax/address.js","./ajax/cart":"ajax/cart.js","./ajax/change-my-email":"ajax/change-my-email.js","./ajax/checkout":"ajax/checkout.js","./ajax/checkout-address":"ajax/checkout-address.js","./ajax/forgot-password":"ajax/forgot-password.js","./ajax/login":"ajax/login.js","./ajax/order-one":"ajax/order-one.js","./ajax/reset-password":"ajax/reset-password.js","./ajax/review":"ajax/review.js","./ajax/signup":"ajax/signup.js","./ajax/signup-complete":"ajax/signup-complete.js","./ajax/update-me":"ajax/update-me.js","./ajax/update-my-password":"ajax/update-my-password.js","./ajax/wishlist":"ajax/wishlist.js","./component-functions/btn-confirm-redirect":"component-functions/btn-confirm-redirect.js","./component-functions/dropdown":"component-functions/dropdown.js","./component-functions/flash-messages":"component-functions/flash-messages.js","./component-functions/form-rating":"component-functions/form-rating.js","./component-functions/remove-on-click":"component-functions/remove-on-click.js","./component-functions/search":"component-functions/search.js","./component-functions/sidebar":"component-functions/sidebar.js","./component-functions/sliders":"component-functions/sliders.js","./component-functions/state-district-select":"component-functions/state-district-select.js","./component-functions/toggle-on-click":"component-functions/toggle-on-click.js","./component-functions/increment-decrement-input-number":"component-functions/increment-decrement-input-number.js","./pages/each-product":"pages/each-product.js"}],"../../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./ajax/add-to-cart-btn":"ajax/add-to-cart-btn.js","./ajax/add-to-wishlist-btn":"ajax/add-to-wishlist-btn.js","./ajax/address":"ajax/address.js","./ajax/cart":"ajax/cart.js","./ajax/change-my-email":"ajax/change-my-email.js","./ajax/checkout":"ajax/checkout.js","./ajax/checkout-address":"ajax/checkout-address.js","./ajax/forgot-password":"ajax/forgot-password.js","./ajax/login":"ajax/login.js","./ajax/order-one":"ajax/order-one.js","./ajax/reset-password":"ajax/reset-password.js","./ajax/review":"ajax/review.js","./ajax/signup":"ajax/signup.js","./ajax/signup-complete":"ajax/signup-complete.js","./ajax/update-me":"ajax/update-me.js","./ajax/update-my-password":"ajax/update-my-password.js","./ajax/wishlist":"ajax/wishlist.js","./component-functions/btn-confirm-redirect":"component-functions/btn-confirm-redirect.js","./component-functions/dropdown":"component-functions/dropdown.js","./component-functions/flash-messages":"component-functions/flash-messages.js","./component-functions/form-rating":"component-functions/form-rating.js","./component-functions/search":"component-functions/search.js","./component-functions/sidebar":"component-functions/sidebar.js","./component-functions/sliders":"component-functions/sliders.js","./component-functions/state-district-select":"component-functions/state-district-select.js","./component-functions/toggle-on-click":"component-functions/toggle-on-click.js","./component-functions/increment-decrement-input-number":"component-functions/increment-decrement-input-number.js","./pages/each-product":"pages/each-product.js"}],"../../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -6375,7 +6439,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59111" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61415" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
