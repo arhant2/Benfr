@@ -6,12 +6,12 @@ block accountContent
   +accountBox('My Account', [['#', 'Account']])
     +accountBoxList([
       ['/updateMyAccount', 'Edit your account information'],
-      ['#', 'Edit login information'],
-      ['#', 'Manage password'],
-      ['#', 'Manage addresses']
+      ['/changeMyEmail', 'Edit login information'],
+      ['/updateMyPassword', 'Manage password'],
+      ['/addresses', 'Manage addresses']
     ])
   +accountBox('Manage')
     +accountBoxList([
-      ['#', 'View order history'],
-      ['#', 'View wishlist']
+      ['/orders', 'View order history'],
+      ['/wishlist', 'View wishlist']
     ])
