@@ -3,6 +3,7 @@ const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
+const compression = require('compression');
 
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
@@ -40,6 +41,8 @@ app.use(
 );
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+app.use(compression());
 
 // Security headers
 app.use(
