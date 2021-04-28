@@ -69,8 +69,8 @@ cartSchema.methods.verifyCart = function () {
   this.products = this.products.filter(
     (product) =>
       product.product &&
-      product.quantity >= 0 &&
-      product.product.maxQuantityAllowedNow >= 0
+      product.quantity > 0 &&
+      product.product.maxQuantityAllowedNow > 0
   );
 
   this.products.forEach((product) => {
