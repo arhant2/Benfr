@@ -1,0 +1,1 @@
+This file is needed for git so that it can keep this directory inact. Note that git doesn't allow empty directory. But it is needed for handling image uploads.
